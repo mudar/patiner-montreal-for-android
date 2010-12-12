@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="hello">Hello World, Patinoires!</string>
+	<string name="app_name">Patiner Montréal</string>
+	<string name="app_name_map">Map of Patiner Montréal</string>
+	<string name="app_name_details">Rink information</string>
+	<string name="app_name_manifest">Patiner Montreal</string>
+	<string name="menu_refresh_list">Refresh</string>
+	<string name="menu_refresh_map">Refresh</string>
+	<string name="menu_refresh_rink">Refresh</string>
+	<string name="menu_select_conditions">Conditions</string>
+	<string name="menu_view_map">Map</string>
+	<string name="menu_sort">Sort</string>
+	<string name="menu_links">Links</string>
+	<string name="menu_about">About</string>
+	<string name="menu_language">Language</string>
+	<string name="menu_share_map">Share</string>
+	<string name="menu_favorites_add">Add to favorites</string>
+	<string name="menu_favorites_remove">Remove from favorites</string>
+	<string name="menu_call_rink">Call</string>
+	<string name="menu_map_view_rink">View in map</string>
+
+	<string name="context_menu_favorites_add">Add to favorites</string>
+	<string name="context_menu_favorites_remove">Remove from favorites</string>
+	<string name="context_menu_call_rink">Call</string>
+	<string name="context_menu_map_view_rink">View in map</string>
+
+	<string name="dialog_ok">OK</string>
+	<string name="dialog_cancel">Cancel</string>
+
+	<string name="dialog_sort_title">Sort by</string>
+	<string name="dialog_sort_distance">Distance</string>
+	<string name="dialog_sort_rink">Rink</string>
+	<string name="dialog_sort_park">Park</string>
+	<string name="dialog_sort_borough">Borough</string>
+
+	<string name="dialog_language_title">Interface language</string>
+	<string name="dialog_language_french">Français</string>
+	<string name="dialog_language_english">English</string>
+
+	<string name="dialog_condition_title">Rink condition</string>
+	<string name="dialog_condition_excellent">Excellent</string>
+	<string name="dialog_condition_good">Good</string>
+	<string name="dialog_condition_bad">Bad</string>
+	<string name="dialog_condition_closed">Closed</string>
+
+	<string name="list_no_rinks">Empty list...</string>
+
+	<string name="tab_favorites">Favorites</string>
+	<string name="tab_skating">Skating</string>
+	<string name="tab_hockey">Hockey</string>
+	<string name="tab_all">All</string>
+
+	<string name="dialog_about_title">About Patiner Montréal</string>
+	<string name="logo_open_data">@drawable/logo_open_data_en</string>
+	<string name="dialog_about_intro">Patiner Montréal for Android is an open source
+		project to promote Open Data in Montréal. The City publishes PDF files
+		with daily information on the conditions and locations of outdoor
+		rinks. Patiner Montréal, with the help of an other Montréal Ouvert
+		project, scrapes the information to bring it to your phone. Enjoy the
+		Winter!</string>
+
+	<string name="dialog_about_credits">Android app developed by <a href="http://www.mudar.ca/">Mudar Noufal</a>. Source code is released under the GPLv3 license from the Free Software Foundation. Many thanks to <a href="http://www.slashpoundbang.com/">James McKinney</a> (open data API), Jonathan Brun &amp; Daniel Mireault.</string>
+
+	<string name="dialog_links_title">Useful links</string>
+	<string name="dialog_links_patiner_mtl"><a href="http://www.patinermontreal.ca/">patinermontreal.ca</a></string>
+	<string name="dialog_links_conditions_pdf"><a href="http://ville.montreal.qc.ca/portal/page?_pageid=5977,41729602&amp;_dad=portal&amp;_schema=PORTAL">Conditions at winter activity sites</a></string>
+	<string name="dialog_links_rinks_contact"><a href="http://www11.ville.montreal.qc.ca/sherlock2/servlet/template/sherlock%2CAfficherDocumentInternet.vm/nodocument/154">Skating rinks contact information</a></string>
+
+    <string name="rink_details_conditions">Conditions:&#160;</string>
+    <string name="rink_details_surface">Ice surface:&#160;</string>
+    <string name="rink_details_is_cleared">Cleared</string>
+    <string name="rink_details_is_flooded">Flooded</string>
+    <string name="rink_details_is_resurfaced">Resurfaced</string>
+    <string name="rink_details_is_favorite">Favorites</string>
+    <string name="rink_details_park_name">Park&#160;</string>
+    <string name="rink_details_park_address">Address:&#160;</string>
+    <string name="rink_details_park_phone">Phone:&#160;</string>
+    <string name="rink_details_borough_name">Borough:&#160;</string>
+    <string name="rink_details_borough_updated_at">Last updated by the City:&#160;</string>
+
+    <string name="rink_details_view_map">View in map</string>
+    <string name="dialog_updating_conditions">Updating conditions. Please wait&#8230;</string>
+    <string name="dialog_updating_all_rinks">Daily updates of rinks and conditions. Please wait&#8230;</string>
+    <string name="dialog_updating_result_ok">Updated successfully</string>
+    <string name="dialog_updating_result_error">Update has encountered an error. Please try again.</string>
+    
+
+</resources>

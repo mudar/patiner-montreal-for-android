@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/refresh_list"
+          android:title="@string/menu_refresh_list" />
+    <item android:id="@+id/select_conditions"
+          android:title="@string/menu_select_conditions" />
+    <item android:id="@+id/view_map"
+          android:title="@string/menu_view_map" />
+    <item android:id="@+id/options_sort"
+          android:title="@string/menu_sort" />
+    <item android:id="@+id/language"
+          android:title="@string/menu_language" />
+    <item android:id="@+id/links"
+          android:title="@string/menu_links" />
+    <item android:id="@+id/about"
+          android:title="@string/menu_about" />
+</menu>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/refresh_map"
+          android:title="@string/menu_refresh_map" />
+    <item android:id="@+id/select_conditions"
+          android:title="@string/menu_select_conditions" />
+    <item android:id="@+id/share_map"
+          android:title="@string/menu_share_map" />
+</menu>
