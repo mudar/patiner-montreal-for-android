@@ -19,7 +19,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package ca.mudar.patinoires;
 
@@ -43,26 +43,26 @@ import android.widget.TextView;
 public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filterable {
 	protected static final String TAG = "RinksListCursorAdapter";
 
-    private int layout;
-    private boolean showBorough;
+	private int layout;
+	private boolean showBorough;
 
-    private int mColFieldBorough;
+	private int mColFieldBorough;
 	private int mColFieldCondition;
 	private int mColFieldKindId;
-	
-    
-    public RinksListCursorAdapter (Context context, int layout, Cursor cursor , String[] from, int[] to , boolean showBorough ) {
-        super( context , layout , cursor , from , to );
 
-        this.layout = layout;
-        this.showBorough = showBorough;
-        
-        mColFieldBorough   = cursor.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_BOROUGH_ID );
+
+	public RinksListCursorAdapter (Context context, int layout, Cursor cursor , String[] from, int[] to , boolean showBorough ) {
+		super( context , layout , cursor , from , to );
+
+		this.layout = layout;
+		this.showBorough = showBorough;
+
+		mColFieldBorough   = cursor.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_BOROUGH_ID );
 		mColFieldCondition = cursor.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_CONDITION );
 		mColFieldKindId    = cursor.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_KIND_ID);
-    }
- 
-    public static int getConditionColor( int condition ) {
+	}
+
+	public static int getConditionColor( int condition ) {
 		if ( condition == PatinoiresDbAdapter.CONDITION_EXCELLENT_INDEX ) {	
 			return Color.parseColor( "#00CC00" );
 		}
@@ -75,12 +75,12 @@ public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filte
 		else {	// Closed	
 			return Color.parseColor( "#808080" );
 		}
-    }
-    
+	}
+
 
 	private boolean isNewBorough(Cursor cursor, int position) {
 		if ( position < 1 ) { return true; }	// First is always a new borough
-		
+
 		long nBoroughCurrent = cursor.getInt( mColFieldBorough );
 
 		cursor.moveToPosition( position - 1 );
@@ -90,28 +90,28 @@ public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filte
 
 		return ( nBoroughPrevious !=  nBoroughCurrent );
 	}
-    
-    
-    @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-    	
-        final LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(layout, parent, false);
+
+
+	@Override
+	public View newView(Context context, Cursor cursor, ViewGroup parent) {
+
+		final LayoutInflater inflater = LayoutInflater.from(context);
+		View view = inflater.inflate(layout, parent, false);
 
 		int position = cursor.getPosition();
 		if ( showBorough && isNewBorough( cursor , position ) ) {
 			TextView textViewBorough = (TextView) view.findViewById( R.id.l_borough_name );
 			textViewBorough.setVisibility( View.VISIBLE );
-			
+
 			TextView textViewRemarks = (TextView) view.findViewById( R.id.l_borough_remarks );
 			String remarks = (String) textViewRemarks.getText();
 			if ( remarks.trim().length() > 0 ) {
 				textViewRemarks.setVisibility( View.VISIBLE );				
 			}
 			else {
-				
+
 			}
-			
+
 			TextView textViewSeparator = (TextView) view.findViewById( R.id.l_borough_separator );
 			textViewSeparator.setVisibility( View.VISIBLE );
 		}
@@ -135,22 +135,22 @@ public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filte
 			}
 		}
 		( (ImageView) view.findViewById( R.id.l_rink_kind_id ) ).setImageResource( imageResource );
-/*
+		/*
 		ImageView imageView = (ImageView) view.findViewById( R.id.l_rink_kind_id );
 		int kindId = cursor.getInt( mColFieldKindId );
 		imageView.setImageResource( kindId == PatinoiresDbAdapter.OPEN_DATA_INDEX_PSE ? R.drawable.hockey : R.drawable.skating );
-    */    
-        return view;
-    }
+		 */    
+		return view;
+	}
 
-    
-    @Override
-    public void bindView( View view , Context context , Cursor cursor ) {
-    	super.bindView(view, context, cursor);
-/*
+
+	@Override
+	public void bindView( View view , Context context , Cursor cursor ) {
+		super.bindView(view, context, cursor);
+		/*
 		TextView textView = (TextView) view.findViewById( R.id.l_rink_condition );
 		textView.setBackgroundColor( getConditionColor( cursor.getInt( mColFieldCondition ) ) );
-*/
+		 */
 		int visibility;
 		int position = cursor.getPosition();
 		if ( showBorough && isNewBorough( cursor , position ) ) {
@@ -162,13 +162,13 @@ public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filte
 
 		TextView textViewBorough = (TextView) view.findViewById( R.id.l_borough_name );
 		textViewBorough.setVisibility( visibility );
-		
+
 		TextView textViewRemarks = (TextView) view.findViewById( R.id.l_borough_remarks );
 		String remarks = (String) textViewRemarks.getText();
 		if ( remarks.trim().length() > 0 ) {
 			textViewRemarks.setVisibility( visibility );				
 		}
-		
+
 		TextView textViewSeparator = (TextView) view.findViewById( R.id.l_borough_separator );
 		textViewSeparator.setVisibility( visibility );
 
@@ -191,9 +191,9 @@ public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filte
 			}
 		}
 		( (ImageView) view.findViewById( R.id.l_rink_kind_id ) ).setImageResource( imageResource );
-    }
+	}
 
-/*
+	/*
     @Override
     public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
 Log.w(TAG, " runQueryOnBackgroundThread ");
@@ -218,7 +218,7 @@ return mDbHelper.searchRinks( constraint.toString() , "" );
     	for (int i = 0; i < conditions.length ; i++) {
     		if ( conditions[i] ) { sqlConditionsFilter += " OR condition = " + i; }
     	}
-        
+
         return mDbHelper.query( "SELECT b.* , p.* , r.* , ( f._id IS NOT NULL ) AS " + PatinoiresDbAdapter.KEY_RINKS_IS_FAVORITE
     			+ " FROM " + PatinoiresDbAdapter.TABLE_NAME_BOROUGHS + " AS b "
     			+ " JOIN " + PatinoiresDbAdapter.TABLE_NAME_PARKS + " AS p ON p.borough_id = b._id "
@@ -229,5 +229,5 @@ return mDbHelper.searchRinks( constraint.toString() , "" );
     			null );
 
     }
-*/
+	 */
 }

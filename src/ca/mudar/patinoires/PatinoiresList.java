@@ -19,7 +19,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package ca.mudar.patinoires;
 
@@ -55,58 +55,58 @@ import android.widget.AdapterView.OnItemClickListener;
 public class PatinoiresList extends ListActivity {
 	private static final String TAG = "PatinoiresList";
 	public static final String PREFS_NAME = "PatinoiresPrefsFile";
-	
+
 	private PatinoiresOpenData mDbHelper;
 	private String interfaceLanguage;
 	private boolean[] tempConditions;
 	private static String currentTab;
-    private ProgressDialog dialog;
-    private Cursor cursor;
+	private ProgressDialog dialog;
+	private Cursor cursor;
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.rinks_list);
 
 		mDbHelper = new PatinoiresOpenData(this);
-		
+
 		currentTab = PatinerMontreal.getCurrentTabTag();
-		
+
 		if ( isFirstLaunch() ) {
 			new SyncOpenDataTask().execute( "openDataUpdateFirstLaunch" );
 		}
 
 		loadPreferences();
-		
+
 		fillData();
-		
+
 		registerForContextMenu( getListView() );
 
 		getListView().setOnItemClickListener(new OnItemClickListener() {
-        	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-        		displayRinksDetails( arg3 );
-        } } );
-        
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				displayRinksDetails( arg3 );
+			} } );
+
 	}
-	
+
 	// TODO: remove this duplicate function
 	private boolean isFirstLaunch() {
 		SharedPreferences settings = getSharedPreferences( PatinoiresList.PREFS_NAME , MODE_PRIVATE );
-		
+
 		return ( settings.getString( "language" , null ) == null );
 	}
 
 	private void loadPreferences() {
-		
+
 		SharedPreferences settings = getSharedPreferences( PREFS_NAME , MODE_PRIVATE );
 
 		mDbHelper.setSortList( settings.getInt( "sort" , mDbHelper.getSortList() ) );
 		setInterfaceLanguage( settings.getString("language", Locale.getDefault().getLanguage() ) );
 
 		boolean[] defaultConditions = mDbHelper.getConditions();
-		
+
 		mDbHelper.setShowExcellent( settings.getBoolean( "showExcellent" , defaultConditions[0] ) );
 		mDbHelper.setShowGood( settings.getBoolean( "showGood" , defaultConditions[1] ) );
 		mDbHelper.setShowBad( settings.getBoolean( "showBad" , defaultConditions[2] ) );
@@ -133,23 +133,23 @@ public class PatinoiresList extends ListActivity {
 		String[] from = new String[] { 
 				PatinoiresDbAdapter.KEY_RINKS_NAME, 
 				( interfaceLanguage.equals( "fr" ) ? PatinoiresDbAdapter.KEY_RINKS_DESC_FR : PatinoiresDbAdapter.KEY_RINKS_DESC_EN ) ,
-//				PatinoiresDbAdapter.KEY_RINKS_IS_FAVORITE ,
+				//				PatinoiresDbAdapter.KEY_RINKS_IS_FAVORITE ,
 				PatinoiresDbAdapter.KEY_BOROUGHS_NAME ,
 				PatinoiresDbAdapter.KEY_BOROUGHS_REMARKS 
-				
-				};
+
+		};
 		int[] to = new int[] { R.id.l_rink_name , R.id.l_rink_desc ,  
-//				R.id.l_rink_kind_id , 
-R.id.l_borough_name ,
-R.id.l_borough_remarks , 
-//				R.id.l_rink_is_favorite 
-				};
+				//				R.id.l_rink_kind_id , 
+				R.id.l_borough_name ,
+				R.id.l_borough_remarks , 
+				//				R.id.l_rink_is_favorite 
+		};
 
 		RinksListCursorAdapter rinks = new RinksListCursorAdapter(this, R.layout.rinks_list_item , cursor, from, to, mDbHelper.isSortOnBorough() );
-//		SimpleCursorAdapter rinks = new SimpleCursorAdapter(this, R.layout.rinks_list_item , c, from, to);
+		//		SimpleCursorAdapter rinks = new SimpleCursorAdapter(this, R.layout.rinks_list_item , c, from, to);
 
 		setListAdapter( rinks );
-		
+
 		mDbHelper.closeDb();
 	}
 
@@ -159,21 +159,21 @@ R.id.l_borough_remarks ,
 		startActivity( intent );
 	}
 
-	
+
 	public void displayRinksDetails( long rinkId ) {
 		Intent intent = new Intent( this, PatinoiresDetails.class );
 		intent.putExtra( "rinkId" , rinkId );
 		intent.putExtra( "interfaceLanguage" , interfaceLanguage );
 		startActivity( intent);
 	}
-	
-	
+
+
 	public void displayInfoDialog( int resource ) {
-		
+
 		Resources res = getResources();
 		LayoutInflater inflater =  getLayoutInflater(); 
 		View view  = inflater.inflate( resource , null );
-		
+
 		String title = (String) res.getText( resource == R.layout.links ? R.string.dialog_links_title : R.string.dialog_about_title );
 
 		if ( resource == R.layout.links ) {
@@ -188,18 +188,18 @@ R.id.l_borough_remarks ,
 			TextView textViewCredits = (TextView) view.findViewById( R.id.dialog_about_credits );
 			textViewCredits.setMovementMethod(LinkMovementMethod.getInstance());
 		} 
-		
+
 		new AlertDialog.Builder(this).setView( view )
 		.setTitle( title )
 		.setPositiveButton( android.R.string.ok , null )
 		.show();
 	}
 
-	
+
 	public void dialogSort() {
-		
+
 		Resources res = getResources();
-		
+
 		// TODO: verify this syntax
 		final CharSequence[] items = { 
 				res.getText( R.string.dialog_sort_distance ) , 
@@ -209,7 +209,7 @@ R.id.l_borough_remarks ,
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle( R.string.dialog_sort_title );
-		
+
 		builder.setSingleChoiceItems( items, mDbHelper.getSortList() , new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int item) {
 				setSortOrder( item );
@@ -225,7 +225,7 @@ R.id.l_borough_remarks ,
 		SharedPreferences.Editor editor = getSharedPreferences( PREFS_NAME, MODE_PRIVATE ).edit();
 		editor.putInt("sort", order ).commit();
 		mDbHelper.setSortList( order );
-		
+
 		fillData();
 	}
 
@@ -255,7 +255,7 @@ R.id.l_borough_remarks ,
 		builder.setPositiveButton( R.string.dialog_ok , new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				setConditions( tempConditions );
-				
+
 				fillData();
 			}
 		} );
@@ -286,7 +286,7 @@ R.id.l_borough_remarks ,
 
 	public void dialogLanguage() {
 		Resources res = getResources();
-		
+
 		// TODO: verify this syntax
 		final CharSequence[] items = { 
 				res.getText( R.string.dialog_language_french ) , 
@@ -308,14 +308,14 @@ R.id.l_borough_remarks ,
 
 
 	private void setInterfaceLanguage( String lg ) {
-//		Log.w(TAG, "Switch interface language to " + lg);
+		//		Log.w(TAG, "Switch interface language to " + lg);
 
 		SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE ).edit();
 		editor.putString( "language" , lg ).commit();
 		interfaceLanguage = lg;
 
 		Locale locale = new Locale( lg );
-//		Log.w(TAG, "New locale is " + locale.toString() );
+		//		Log.w(TAG, "New locale is " + locale.toString() );
 		Configuration config = getBaseContext().getResources().getConfiguration();
 		config.locale = locale;
 		Locale.setDefault( locale );
@@ -323,12 +323,12 @@ R.id.l_borough_remarks ,
 
 		fillData();
 	}
-	
+
 	public String getInterfaceLanguage() {
 		return interfaceLanguage;
 	}
-	
-	
+
+
 	/**
 	 * Verify if last DB update was more than 24 hours ago (or was never done)
 	 * @return True when last update is older than 24 hours.
@@ -336,20 +336,20 @@ R.id.l_borough_remarks ,
 	private boolean isDailySyncRequired() {
 		SharedPreferences settings = getSharedPreferences( PREFS_NAME , MODE_PRIVATE );
 
-        Long lastUpdateTime =  settings.getLong("lastUpdateTime", 0);
+		Long lastUpdateTime =  settings.getLong("lastUpdateTime", 0);
 
-        if ( (lastUpdateTime + (24 * 60 * 60 * 1000) ) < System.currentTimeMillis() ) {
-//        	Log.i( TAG , "Daily sync required. Last update was: " + lastUpdateTime );
+		if ( (lastUpdateTime + (24 * 60 * 60 * 1000) ) < System.currentTimeMillis() ) {
+			//        	Log.i( TAG , "Daily sync required. Last update was: " + lastUpdateTime );
 
-            settings.edit().putLong("lastUpdateTime", System.currentTimeMillis() ).commit();
-            return true;
-        }
+			settings.edit().putLong("lastUpdateTime", System.currentTimeMillis() ).commit();
+			return true;
+		}
 		else {
 			return false;
 		}
 	}
-	
-	
+
+
 	/*
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -361,23 +361,23 @@ R.id.l_borough_remarks ,
 
 	@Override 
 	public boolean onCreateOptionsMenu(Menu menu) {
-//		Log.w(TAG, "onCreateOptionsMenu. Language: " +  interfaceLanguage);
+		//		Log.w(TAG, "onCreateOptionsMenu. Language: " +  interfaceLanguage);
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Display a progress bar (daily update of all rinks) or a spinning wheel (fas conditions update).
 	 * Starts a new thread in the background 
 	 */
 	public void dialogUpdate() {
-//		mDbHelper.openDataUpdateConditions();
+		//		mDbHelper.openDataUpdateConditions();
 		mDbHelper.openDb();
 		int totalRinks = mDbHelper.countAllRinks();
 		mDbHelper.closeDb();
-		
+
 		SyncOpenDataTask syncOpenDataTask = new SyncOpenDataTask();
 		if ( isDailySyncRequired() || totalRinks == 0 ) {
 			dialog = new ProgressDialog(this);
@@ -387,7 +387,7 @@ R.id.l_borough_remarks ,
 			dialog.setProgress( 0 );
 			dialog.setMax( totalRinks  );
 			dialog.show();
-			
+
 			syncOpenDataTask.execute( "openDataSyncAll" );
 		}
 		else {
@@ -395,12 +395,12 @@ R.id.l_borough_remarks ,
 			syncOpenDataTask.execute( "openDataUpdateConditions" );
 		}
 	}
-	
-	
+
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
-// TODO : what's the use of the onOptionsItemSelected return value?!
+		// TODO : what's the use of the onOptionsItemSelected return value?!
 		switch ( item.getItemId() ) {
 		case R.id.refresh_list:
 			dialogUpdate();
@@ -433,26 +433,26 @@ R.id.l_borough_remarks ,
 	@Override 
 	public void onCreateContextMenu( ContextMenu menu, View v, ContextMenuInfo menuInfo ) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		
+
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
 		Cursor c = (Cursor) getListView().getItemAtPosition( info.position );
-        String name = c.getString( c.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_NAME ) );
+		String name = c.getString( c.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_NAME ) );
 
 		menu.setHeaderTitle( name );
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate( R.menu.rink_context_menu , menu);
-		
+
 		int isFavorite = c.getInt( c.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_IS_FAVORITE ) );
 		if ( isFavorite == 1 ) {
 			menu.findItem( R.id.favorites_add ).setVisible( false );
 			menu.findItem( R.id.favorites_remove ).setVisible( true );
 		}
-		
+
 		String phone = c.getString( c.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_PHONE ) );
 		if ( phone == null ) {
 			menu.findItem( R.id.call_rink ).setVisible( false );
 		}
-//		c.close();
+		//		c.close();
 	}
 
 
@@ -484,12 +484,12 @@ R.id.l_borough_remarks ,
 			break;
 		case R.id.map_view_rink:
 			result = true;
-			
+
 			Intent intentMap = new Intent( getApplicationContext() , PatinoiresGMaps.class );
 			startActivity( intentMap );
 			break;
 		}
-		
+
 		fillData();
 
 		return result;
@@ -504,8 +504,8 @@ R.id.l_borough_remarks ,
 	}
 
 
-    public class SyncOpenDataTask extends AsyncTask<String, Void , Boolean>
-    {
+	public class SyncOpenDataTask extends AsyncTask<String, Void , Boolean>
+	{
 		@Override
 		protected Boolean doInBackground( String... params ) 
 		{
@@ -533,13 +533,13 @@ R.id.l_borough_remarks ,
 			int displayLength = ( result ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG );
 			Toast.makeText(getApplicationContext(), message , displayLength ).show();
 		}
-    }	
-	
-/*
+	}	
+
+	/*
 	protected void onPause() {
-		
+
 		super.onPause();
 		cursor.close();
 	}
-*/
+	 */
 }

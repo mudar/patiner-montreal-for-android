@@ -19,7 +19,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package ca.mudar.patinoires;
 
@@ -39,18 +39,18 @@ public class PatinerMontreal extends TabActivity {
 	public static final String TAB_ALL       = "tab_all";
 
 	private static TabHost tabHost; 
-	
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.main);
-		
+
 		Resources res = getResources();
 		tabHost = getTabHost();
 		TabHost.TabSpec spec;
-		
+
 		Intent intent = new Intent().setClass(this, PatinoiresList.class);
 		spec = tabHost.newTabSpec( TAB_FAVORITES ).setIndicator( res.getText( R.string.tab_favorites ) ).setContent(intent);
 		tabHost.addTab(spec);
@@ -66,19 +66,19 @@ public class PatinerMontreal extends TabActivity {
 
 		tabHost.setCurrentTab( 0 );
 	}
-	
+
 	public static String getCurrentTabTag() {
 		return tabHost.getCurrentTabTag();
 	}
-	
+
 	public static void setCurrentTabAllRinks() {
 		tabHost.setCurrentTab( 3 );
 	}
-	
-// TODO: remove this duplicate function
+
+	// TODO: remove this duplicate function
 	private boolean isFirstLaunch() {
 		SharedPreferences settings = getSharedPreferences( PatinoiresList.PREFS_NAME , MODE_PRIVATE );
-		
+
 		return ( settings.getString( "language" , null ) == null );
 	}
 }

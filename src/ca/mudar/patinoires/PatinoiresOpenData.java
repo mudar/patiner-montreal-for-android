@@ -19,7 +19,7 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package ca.mudar.patinoires;
 
@@ -123,7 +123,7 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 						initialValues.put( KEY_RINKS_IS_FLOODED , rink.optString("flooded").toLowerCase().equals( "true" ) );
 						initialValues.put( KEY_RINKS_IS_RESURFACED , rink.optString("resurfaced").toLowerCase().equals( "true" ) );
 
-				        initialValues.put( KEY_RINKS_CONDITION , getConditionIndex( rink.optString("open") , rink.optString("condition") ) );
+						initialValues.put( KEY_RINKS_CONDITION , getConditionIndex( rink.optString("open") , rink.optString("condition") ) );
 						//TODO : remove this
 //						initialValues.put( KEY_RINKS_CONDITION , rand.nextInt(4) );
 						try {
@@ -156,7 +156,7 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 
 		// Do not drop tables on first launch
 		if ( dialog != null ) {
-//			Log.w( TAG , "Deleting old contents. Tables: " + DB_NAME + "." + TABLE_NAME_BOROUGHS + ", " + DB_NAME + "." + TABLE_NAME_PARKS + ", " + DB_NAME + "." + TABLE_NAME_RINKS );
+			//			Log.w( TAG , "Deleting old contents. Tables: " + DB_NAME + "." + TABLE_NAME_BOROUGHS + ", " + DB_NAME + "." + TABLE_NAME_PARKS + ", " + DB_NAME + "." + TABLE_NAME_RINKS );
 			openDb();
 			try {
 				mDb.beginTransaction();
@@ -186,12 +186,12 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 			}
 
 			openDb();
-			
 
-//			Log.i( TAG , "Inserting OpenData rinks. Total: " + totalRinks );
+
+			//			Log.i( TAG , "Inserting OpenData rinks. Total: " + totalRinks );
 			try {
 				mDb.beginTransaction();
-				
+
 				JSONObject rink;
 				JSONObject borough;
 				JSONObject park;
@@ -201,7 +201,7 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 					if ( dialog != null ) {
 						dialog.incrementProgressBy(1);
 					}
-					
+
 					/**
 					 *  Get rink info and clean name and description. English description is translated manually!
 					 */
@@ -305,7 +305,7 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 
 		//TODO fix this
 		return true;
-//		return importResult;
+		//		return importResult;
 	}
 
 
@@ -356,7 +356,7 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 			return 2;
 		}
 		else {
-//			Log.e( TAG , "Rink is open (" + open + "). Condition not found (" + condition + ")." );
+			//			Log.e( TAG , "Rink is open (" + open + "). Condition not found (" + condition + ")." );
 			return CONDITION_CLOSED_INDEX;
 		}
 	}
@@ -394,10 +394,10 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 			queryResult = new String(baf.toByteArray());
 		} catch (MalformedURLException e) {
 			// DEBUG
-//			Log.e(TAG, "MalformedURLException: " + e.toString());
+			//			Log.e(TAG, "MalformedURLException: " + e.toString());
 		} catch (IOException e) {
 			// DEBUG
-//			Log.e(TAG, "IOException: " + e.toString());
+			//			Log.e(TAG, "IOException: " + e.toString());
 		}
 
 		return queryResult;
