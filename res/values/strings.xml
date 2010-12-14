@@ -4,6 +4,7 @@
 	<string name="app_name">Patiner Montréal</string>
 	<string name="app_name_map">Map of Patiner Montréal</string>
 	<string name="app_name_details">Rink information</string>
+	<string name="app_name_search">Patiner Montréal</string>
 	<string name="app_name_manifest">Patiner Montreal</string>
 	<string name="menu_refresh_list">Refresh</string>
 	<string name="menu_refresh_map">Refresh</string>
@@ -24,9 +25,6 @@
 	<string name="context_menu_favorites_remove">Remove from favorites</string>
 	<string name="context_menu_call_rink">Call</string>
 	<string name="context_menu_map_view_rink">View in map</string>
-
-	<string name="dialog_ok">OK</string>
-	<string name="dialog_cancel">Cancel</string>
 
 	<string name="dialog_sort_title">Sort by</string>
 	<string name="dialog_sort_distance">Distance</string>
@@ -85,5 +83,9 @@
     <string name="dialog_updating_result_ok">Updated successfully</string>
     <string name="dialog_updating_result_error">Update has encountered an error. Please try again.</string>
     
+    <string name="dialog_network_connection_title">No connection!</string>
+    <string name="dialog_network_connection_message">You need a network connection to update the rinks information. Please turn on mobile network or Wi-Fi in Settings&#8230;</string>
+
+    <string name="search_hint">Search rinks</string>
 
 </resources>

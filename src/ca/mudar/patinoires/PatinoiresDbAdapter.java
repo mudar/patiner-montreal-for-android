@@ -29,7 +29,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-//import android.util.Log;
 
 public class PatinoiresDbAdapter {
 
@@ -290,14 +289,16 @@ public class PatinoiresDbAdapter {
 		}
 
 		// Build the tab filter string
-		if ( tabFilter.equals( "favorites" ) ) {
-			sqlTabFilter = " AND ( " + KEY_RINKS_IS_FAVORITE + " = 1 ) " ;
-		}
-		else if ( tabFilter.equals( "skating" ) ) {
-			sqlTabFilter = " AND ( " + KEY_RINKS_KIND_ID + " = " + OPEN_DATA_INDEX_PP + " OR " + KEY_RINKS_KIND_ID + " = " + OPEN_DATA_INDEX_PPL + ") " ;
-		}
-		else if ( tabFilter.equals( "hockey" ) ) {
-			sqlTabFilter = " AND ( " + KEY_RINKS_KIND_ID + " = " + OPEN_DATA_INDEX_PSE + " ) " ;
+		if ( tabFilter != null ) {
+			if ( tabFilter.equals( "favorites" ) ) {
+				sqlTabFilter = " AND ( " + KEY_RINKS_IS_FAVORITE + " = 1 ) " ;
+			}
+			else if ( tabFilter.equals( "skating" ) ) {
+				sqlTabFilter = " AND ( " + KEY_RINKS_KIND_ID + " = " + OPEN_DATA_INDEX_PP + " OR " + KEY_RINKS_KIND_ID + " = " + OPEN_DATA_INDEX_PPL + ") " ;
+			}
+			else if ( tabFilter.equals( "hockey" ) ) {
+				sqlTabFilter = " AND ( " + KEY_RINKS_KIND_ID + " = " + OPEN_DATA_INDEX_PSE + " ) " ;
+			}			
 		}
 
 		Cursor mCursor = mDb.rawQuery( "SELECT b.* , p.* , r.* , ( f._id IS NOT NULL ) AS " + KEY_RINKS_IS_FAVORITE

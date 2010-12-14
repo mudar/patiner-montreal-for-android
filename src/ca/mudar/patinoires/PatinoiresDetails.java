@@ -27,15 +27,18 @@ import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.LauncherActivity.ListItem;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateUtils;
-//import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,7 +55,7 @@ public class PatinoiresDetails extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mDbHelper = new PatinoiresOpenData( this );
+		mDbHelper = PatinerMontreal.getmDbHelper();
 
 		LayoutInflater mInflater = LayoutInflater.from( this );
 		View view = mInflater.inflate( R.layout.rinks_details , null , false );
@@ -269,8 +272,10 @@ public class PatinoiresDetails extends Activity {
 		);
 
 		// Close here to avoid problems!
+// TODO: verify need to close cursor
+//		cursor.close();
 		mDbHelper.closeDb();	
-		cursor.close();
+		
 
 
 		/**
@@ -295,23 +300,29 @@ public class PatinoiresDetails extends Activity {
 			public void onClick(View v) {
 
 				Context context = v.getContext();
-				mDbHelper.openDb();
-				final ProgressDialog progressDialog = ProgressDialog.show( context  , null ,  context.getResources().getText( R.string.dialog_updating_conditions ) , true , true);
+				if ( isConnected() == false ) {
+					AlertDialog.Builder builder = new AlertDialog.Builder( context );
+					builder.setTitle( R.string.dialog_network_connection_title  )
+					.setMessage( R.string.dialog_network_connection_message  )
+					.setPositiveButton( android.R.string.ok , null )
+					.create()
+					.show();
+				}
+				else {
+					mDbHelper.openDb();
+					final ProgressDialog progressDialog = ProgressDialog.show( context  , null ,  context.getResources().getText( R.string.dialog_updating_conditions ) , true , true);
 
-				new Thread(new Runnable(){
-					public void run(){
+					new Thread(new Runnable(){
+						public void run(){
 
-						mDbHelper.openDataUpdateConditions();
+							mDbHelper.openDataUpdateConditions();
 
-						progressDialog.dismiss();
-					}
-				} ).start();
-				mDbHelper.closeDb();
-
-				//    			mDbHelper.openDataUpdateConditions( false );
+							progressDialog.dismiss();
+						}
+					} ).start();
+					mDbHelper.closeDb();
+				}
 			}
-
-
 		});
 
 		( (ImageButton) view.findViewById(R.id.l_rink_mapmode) ).setOnClickListener(new OnClickListener() {
@@ -353,6 +364,16 @@ public class PatinoiresDetails extends Activity {
 		super.onPause();
 	}
 	 */
-
+// TODO: remove this duplicate function!
+	public boolean isConnected() {
+		ConnectivityManager conMan = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = conMan.getActiveNetworkInfo();
+		if ( networkInfo == null ) { 
+			return false; 
+		}
+		else {
+			return networkInfo.isConnected(); 
+		}
+	}
 
 }

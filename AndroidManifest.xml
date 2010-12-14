@@ -1,41 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="ca.mudar.patinoires"
-      android:versionName="0.2.1" android:versionCode="3">
-<!--       android:installLocation="auto"-->
-    <application android:label="@string/app_name_manifest" 
-        android:theme="@android:style/Theme.Light"
-        android:icon="@drawable/ic_launcher_patinoires"
-        android:debuggable="false" >
-        <activity android:name=".PatinerMontreal"
-            android:configChanges="locale"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".PatinoiresList"
-            android:label="@string/app_name"
-            android:configChanges="locale|orientation" >
-        </activity>
-        <activity android:name=".PatinoiresGMaps"
-            android:configChanges="locale"
-            android:label="@string/app_name_map"></activity>
-        <activity android:name=".PatinoiresDetails"
-            android:configChanges="locale"
-            android:label="@string/app_name_details"></activity>
+	package="ca.mudar.patinoires" android:versionName="0.2.2"
+	android:versionCode="4">
+	<!--       android:installLocation="auto"-->
+	<application android:label="@string/app_name_manifest"
+		android:theme="@android:style/Theme.Light" android:icon="@drawable/ic_launcher_patinoires"
+		android:debuggable="false">
+		<activity android:name=".PatinerMontreal"
+			android:configChanges="locale" android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".PatinoiresList" android:label="@string/app_name"
+			android:configChanges="locale|orientation">
+		</activity>
+		<activity android:name=".PatinoiresGMaps"
+			android:configChanges="locale" android:label="@string/app_name_map"></activity>
+		<activity android:name=".PatinoiresDetails"
+			android:configChanges="locale" android:label="@string/app_name_details"></activity>
 
-        <uses-library android:name="com.google.android.maps" />
-    </application>
-    <uses-sdk android:minSdkVersion="4" />
+		<activity android:name=".PatinoiresSearchable">
+			<intent-filter>
+				<action android:name="android.intent.action.SEARCH" />
+			</intent-filter>
+			<meta-data android:name="android.app.searchable"
+				android:resource="@xml/searchable" />
+		</activity>
+		<meta-data android:name="android.app.default_searchable"
+			android:value=".PatinoiresSearchable" />
 
-    <supports-screens android:anyDensity="true" />
+		<uses-library android:name="com.google.android.maps" />
+	</application>
+	<uses-sdk android:minSdkVersion="4" />
 
+	<supports-screens android:anyDensity="true" />
 
-
-    <uses-permission android:name="android.permission.CALL_PHONE" /> 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.CALL_PHONE" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest> 

@@ -23,16 +23,24 @@
 
 package ca.mudar.patinoires;
 
+import java.util.Locale;
+
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TabHost;
 
 public class PatinerMontreal extends TabActivity {
 	private static final String TAG = "PatinerMontreal";
+	
+	public static final String PREFS_NAME = "PatinoiresPrefsFile";
 
+	private static PatinoiresOpenData mDbHelper;
+	
 	public static final String TAB_FAVORITES = "tab_favorites";
 	public static final String TAB_SKATING   = "tab_skating";
 	public static final String TAB_HOCKEY    = "tab_hockey";
@@ -43,10 +51,14 @@ public class PatinerMontreal extends TabActivity {
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.main);
+		mDbHelper = new PatinoiresOpenData(this);
+		
+		setInterfaceLanguage();		
 
+		setContentView(R.layout.main);
 		Resources res = getResources();
 		tabHost = getTabHost();
 		TabHost.TabSpec spec;
@@ -74,11 +86,21 @@ public class PatinerMontreal extends TabActivity {
 	public static void setCurrentTabAllRinks() {
 		tabHost.setCurrentTab( 3 );
 	}
+	
+	public static PatinoiresOpenData getmDbHelper() {
+		return mDbHelper;
+	}
+	
+	private void setInterfaceLanguage() {
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE );
+		
+		String lg = settings.getString( "language" , Locale.getDefault().getLanguage() );
 
-	// TODO: remove this duplicate function
-	private boolean isFirstLaunch() {
-		SharedPreferences settings = getSharedPreferences( PatinoiresList.PREFS_NAME , MODE_PRIVATE );
+		Locale locale = new Locale( lg );
 
-		return ( settings.getString( "language" , null ) == null );
+		Configuration config = getBaseContext().getResources().getConfiguration();
+		config.locale = locale;
+		Locale.setDefault( locale );
+		getBaseContext().getResources().updateConfiguration( config , getBaseContext().getResources().getDisplayMetrics() );
 	}
 }

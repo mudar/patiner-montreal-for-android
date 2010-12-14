@@ -4,6 +4,7 @@
     <string name="app_name">Patiner Montréal</string>
     <string name="app_name_map">Carte de Patiner Montréal</string>
     <string name="app_name_details">Informations de la patinoire</string>
+    <string name="app_name_search">Patiner Montréal</string>
     <string name="app_name_manifest">Patiner Montreal</string>
     <string name="menu_refresh_list">Rafraîchir</string>
     <string name="menu_refresh_map">Rafraîchir</string>
@@ -25,9 +26,6 @@
     <string name="context_menu_call_rink">Appeler</string>
     <string name="context_menu_map_view_rink">Afficher dans la carte</string>
         
-    <string name="dialog_ok">OK</string>
-    <string name="dialog_cancel">Annuler</string>
-    
     <string name="dialog_sort_title">Trier par</string>
     <string name="dialog_sort_distance">Distance</string>
     <string name="dialog_sort_rink">Patinoire</string>
@@ -61,7 +59,7 @@
 		informations pour les rendre accessibles dans votre téléphone. Profitez
 		bien de l\'hiver!</string>
 
-    <string name="dialog_about_credits">Application android réalisée par <a href="http://www.mudar.ca/">Mudar Noufal</a>. Le code source code est publié sous la licence GPLv3 de la Free Software Foundation. Un grand merci à <a href="http://www.slashpoundbang.com/">James McKinney</a> (API des données), Jonathan Brun et Daniel Mireault.</string>
+    <string name="dialog_about_credits">Application android réalisée par <a href="http://www.mudar.ca/">Mudar Noufal</a>. Le code source est publié sous la licence GPLv3 de la Free Software Foundation. Un grand merci à <a href="http://www.slashpoundbang.com/">James McKinney</a> (API des données), Jonathan Brun et Daniel Mireault.</string>
 
     <string name="dialog_links_title">Liens utiles</string>
     <string name="dialog_links_patiner_mtl"><a href="http://www.patinermontreal.ca/">patinermontreal.ca</a></string>
@@ -85,5 +83,8 @@
     <string name="dialog_updating_all_rinks">Mise à jour des patinoires et des conditions. Veuillez patienter&#8230;</string>
     <string name="dialog_updating_result_ok">Mise à jour réussie</string>
     <string name="dialog_updating_result_error">La mise à jour Le serveur a rencontré une erreur. Veuillez réessayer.</string>    
+
+    <string name="dialog_network_connection_title">Pas de connexion!</string>
+    <string name="dialog_network_connection_message">Une connexion réseau est nécessaire pour la mise à jour des informations des patinoires. Veuillez activer votre connexion au réseau mobile ou Wi-Fi&#8230;</string>
 
 </resources>

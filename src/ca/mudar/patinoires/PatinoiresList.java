@@ -28,16 +28,20 @@ import java.util.Locale;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -70,7 +74,7 @@ public class PatinoiresList extends ListActivity {
 
 		setContentView(R.layout.rinks_list);
 
-		mDbHelper = new PatinoiresOpenData(this);
+		mDbHelper = PatinerMontreal.getmDbHelper();
 
 		currentTab = PatinerMontreal.getCurrentTabTag();
 
@@ -103,7 +107,7 @@ public class PatinoiresList extends ListActivity {
 		SharedPreferences settings = getSharedPreferences( PREFS_NAME , MODE_PRIVATE );
 
 		mDbHelper.setSortList( settings.getInt( "sort" , mDbHelper.getSortList() ) );
-		setInterfaceLanguage( settings.getString("language", Locale.getDefault().getLanguage() ) );
+		interfaceLanguage = settings.getString("language", Locale.getDefault().getLanguage() );
 
 		boolean[] defaultConditions = mDbHelper.getConditions();
 
@@ -138,16 +142,9 @@ public class PatinoiresList extends ListActivity {
 				PatinoiresDbAdapter.KEY_BOROUGHS_REMARKS 
 
 		};
-		int[] to = new int[] { R.id.l_rink_name , R.id.l_rink_desc ,  
-				//				R.id.l_rink_kind_id , 
-				R.id.l_borough_name ,
-				R.id.l_borough_remarks , 
-				//				R.id.l_rink_is_favorite 
-		};
+		int[] to = new int[] { R.id.l_rink_name , R.id.l_rink_desc , R.id.l_borough_name , R.id.l_borough_remarks };
 
 		RinksListCursorAdapter rinks = new RinksListCursorAdapter(this, R.layout.rinks_list_item , cursor, from, to, mDbHelper.isSortOnBorough() );
-		//		SimpleCursorAdapter rinks = new SimpleCursorAdapter(this, R.layout.rinks_list_item , c, from, to);
-
 		setListAdapter( rinks );
 
 		mDbHelper.closeDb();
@@ -252,14 +249,14 @@ public class PatinoiresList extends ListActivity {
 			}
 		} );
 
-		builder.setPositiveButton( R.string.dialog_ok , new DialogInterface.OnClickListener() {
+		builder.setPositiveButton( android.R.string.ok , new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 				setConditions( tempConditions );
 
 				fillData();
 			}
 		} );
-		builder.setNegativeButton( R.string.dialog_cancel , new DialogInterface.OnClickListener() {
+		builder.setNegativeButton( android.R.string.cancel , new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {}
 		} );
 
@@ -308,14 +305,14 @@ public class PatinoiresList extends ListActivity {
 
 
 	private void setInterfaceLanguage( String lg ) {
-		//		Log.w(TAG, "Switch interface language to " + lg);
-
 		SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE ).edit();
 		editor.putString( "language" , lg ).commit();
+
+// TODO: fix complete language switch, with or without restart
 		interfaceLanguage = lg;
 
 		Locale locale = new Locale( lg );
-		//		Log.w(TAG, "New locale is " + locale.toString() );
+//		Log.w(TAG, "New locale is " + locale.toString() );
 		Configuration config = getBaseContext().getResources().getConfiguration();
 		config.locale = locale;
 		Locale.setDefault( locale );
@@ -373,27 +370,37 @@ public class PatinoiresList extends ListActivity {
 	 * Starts a new thread in the background 
 	 */
 	public void dialogUpdate() {
-		//		mDbHelper.openDataUpdateConditions();
-		mDbHelper.openDb();
-		int totalRinks = mDbHelper.countAllRinks();
-		mDbHelper.closeDb();
-
-		SyncOpenDataTask syncOpenDataTask = new SyncOpenDataTask();
-		if ( isDailySyncRequired() || totalRinks == 0 ) {
-			dialog = new ProgressDialog(this);
-			dialog.setCancelable(true);
-			dialog.setMessage( getResources().getText( R.string.dialog_updating_all_rinks ) );
-			dialog.setProgressStyle( ProgressDialog.STYLE_HORIZONTAL );
-			dialog.setProgress( 0 );
-			dialog.setMax( totalRinks  );
-			dialog.show();
-
-			syncOpenDataTask.execute( "openDataSyncAll" );
+		
+		if ( isConnected() == false ) {
+			AlertDialog.Builder builder = new AlertDialog.Builder( this );
+			builder.setTitle( R.string.dialog_network_connection_title  )
+			.setMessage( R.string.dialog_network_connection_message  )
+			.setPositiveButton( android.R.string.ok , null )
+			.create()
+			.show();
 		}
 		else {
-			dialog = ProgressDialog.show( this , null ,  getResources().getText( R.string.dialog_updating_conditions ) , true , true);
-			syncOpenDataTask.execute( "openDataUpdateConditions" );
-		}
+			mDbHelper.openDb();
+			int totalRinks = mDbHelper.countAllRinks();
+			mDbHelper.closeDb();
+
+			SyncOpenDataTask syncOpenDataTask = new SyncOpenDataTask();
+			if ( isDailySyncRequired() || totalRinks == 0 ) {
+				dialog = new ProgressDialog(this);
+				dialog.setCancelable(true);
+				dialog.setMessage( getResources().getText( R.string.dialog_updating_all_rinks ) );
+				dialog.setProgressStyle( ProgressDialog.STYLE_HORIZONTAL );
+				dialog.setProgress( 0 );
+				dialog.setMax( totalRinks  );
+				dialog.show();
+
+				syncOpenDataTask.execute( "openDataSyncAll" );
+			}
+			else {
+				dialog = ProgressDialog.show( this , null ,  getResources().getText( R.string.dialog_updating_conditions ) , true , true);
+				syncOpenDataTask.execute( "openDataUpdateConditions" );
+			}
+		} 
 	}
 
 
@@ -497,12 +504,24 @@ public class PatinoiresList extends ListActivity {
 
 
 	protected void onResume() {
+//		getListView().invalidateViews();
+		
+		super.onResume();
 		currentTab = PatinerMontreal.getCurrentTabTag();
 		loadPreferences();
 		fillData();
-		super.onResume();
 	}
 
+	public boolean isConnected() {
+		ConnectivityManager conMan = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = conMan.getActiveNetworkInfo();
+		if ( networkInfo == null ) { 
+			return false; 
+		}
+		else {
+			return networkInfo.isConnected(); 
+		}
+	}
 
 	public class SyncOpenDataTask extends AsyncTask<String, Void , Boolean>
 	{
