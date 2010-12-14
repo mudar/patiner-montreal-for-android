@@ -41,12 +41,10 @@ public class PatinoiresSearchable extends ListActivity {
         Intent intent = getIntent();
 
         setContentView(R.layout.rinks_list);
-        
-//        mTextView = (TextView) findViewById(R.id.textField);
-//        mList = (ListView) findViewById(R.id.list);
+
 
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-Log.w( TAG , "word found = " + intent.getDataString());
+Log.w( TAG , "rink found = " + intent.getDataString());
 
 //long rinkId = intent.getData();
 			long rinkId = 1;
@@ -56,11 +54,13 @@ Log.w( TAG , "word found = " + intent.getDataString());
  
         } 
         else if ( Intent.ACTION_SEARCH.equals( intent.getAction() ) ) {
+            handleIntent(getIntent());
+
+        	/*
         	String query = intent.getStringExtra( SearchManager.QUERY );
 
-//        	if ( mDbHelper== null ) {mDbHelper.openDb();}
-        	//            mTextView.setText(getString(R.string.search_results, query));
         	fillData( query );
+        	*/
         }
 
 		getListView().setOnItemClickListener(new OnItemClickListener() {
@@ -71,6 +71,19 @@ Log.w( TAG , "word found = " + intent.getDataString());
         Log.d( TAG , intent.toString());
         if (intent.getExtras() != null) {
             Log.d( TAG , intent.getExtras().keySet().toString());
+        }
+    }
+    
+    @Override
+    protected void onNewIntent(Intent intent) {
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+          String query = intent.getStringExtra(SearchManager.QUERY);
+          fillData( query );
         }
     }
     
