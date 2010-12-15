@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="hello">Hello World, Patinoires!</string>
     <string name="app_name">Patiner Montréal</string>
     <string name="app_name_map">Carte de Patiner Montréal</string>
@@ -86,5 +86,8 @@
 
     <string name="dialog_network_connection_title">Pas de connexion!</string>
     <string name="dialog_network_connection_message">Une connexion réseau est nécessaire pour la mise à jour des informations des patinoires. Veuillez activer votre connexion au réseau mobile ou Wi-Fi&#8230;</string>
+
+    <string name="search_hint">Rechercher les patinoires</string>
+    <string name="search_results">Résultats pour &#171;&#160;<xliff:g id="string">%s</xliff:g>&#160;&#187;</string>
 
 </resources>

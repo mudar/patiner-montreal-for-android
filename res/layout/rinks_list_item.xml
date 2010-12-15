@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="wrap_content">
+	android:layout_width="fill_parent" android:layout_height="wrap_content"
+	android:paddingTop="5dp" android:paddingBottom="5dp">
 
 	<TextView android:id="@+id/l_borough_name"
 		android:layout_width="fill_parent" android:layout_height="?android:attr/listPreferredItemHeight"
@@ -23,12 +24,7 @@
 		android:layout_width="fill_parent" android:layout_height="1px"
 		android:layout_below="@+id/l_borough_remarks" android:visibility="gone"
 		android:background="#A6A6A6" />
-<!--
-	<TextView android:id="@+id/l_rink_condition"
-		android:layout_width="6dp" android:layout_height="?android:attr/listPreferredItemHeight"
-		android:layout_below="@+id/l_borough_separator"
-		android:layout_alignParentBottom="true" />
--->
+
 	<ImageView android:id="@+id/l_rink_kind_id"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:layout_below="@+id/l_borough_separator"
