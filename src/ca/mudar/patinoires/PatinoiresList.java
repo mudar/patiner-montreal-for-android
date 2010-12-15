@@ -41,7 +41,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -79,7 +78,7 @@ public class PatinoiresList extends ListActivity {
 		currentTab = PatinerMontreal.getCurrentTabTag();
 
 		if ( isFirstLaunch() ) {
-			new SyncOpenDataTask().execute( "openDataUpdateFirstLaunch" );
+			dialogUpdate();
 		}
 
 		loadPreferences();
@@ -95,13 +94,25 @@ public class PatinoiresList extends ListActivity {
 
 	}
 
-	// TODO: remove this duplicate function
+	
+	/**
+	 * Verify is the first launch of the application, to import remote data
+	 * @return boolean
+	 */
 	private boolean isFirstLaunch() {
 		SharedPreferences settings = getSharedPreferences( PatinoiresList.PREFS_NAME , MODE_PRIVATE );
 
-		return ( settings.getString( "language" , null ) == null );
+		if ( settings.getString( "language" , null ) == null ) {
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putString( "language" , Locale.getDefault().getLanguage() ).commit();
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
+	
 	private void loadPreferences() {
 
 		SharedPreferences settings = getSharedPreferences( PREFS_NAME , MODE_PRIVATE );
