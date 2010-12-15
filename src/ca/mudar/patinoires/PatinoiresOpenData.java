@@ -157,6 +157,7 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 		// Do not drop tables on first launch
 		if ( dialog != null ) {
 			//			Log.w( TAG , "Deleting old contents. Tables: " + DB_NAME + "." + TABLE_NAME_BOROUGHS + ", " + DB_NAME + "." + TABLE_NAME_PARKS + ", " + DB_NAME + "." + TABLE_NAME_RINKS );
+			dialog.incrementProgressBy( 10 );
 			openDb();
 			try {
 				mDb.beginTransaction();
@@ -169,6 +170,7 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 				mDb.endTransaction();
 			}
 			closeDb();
+			dialog.incrementProgressBy( 10 );
 		}
 
 		String queryResult = jsonImportRemote( URL_JSON_INITIAL_IMPORT );
@@ -182,6 +184,7 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 			String[] splitName;
 			final int totalRinks = rinks.length();
 			if ( dialog != null ) {
+				dialog.setProgress( 0 );
 				dialog.setMax(totalRinks);
 			}
 

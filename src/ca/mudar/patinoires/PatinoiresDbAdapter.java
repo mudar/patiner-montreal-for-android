@@ -23,12 +23,16 @@
 
 package ca.mudar.patinoires;
 
+import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.google.android.maps.GeoPoint;
 
 public class PatinoiresDbAdapter {
 
@@ -59,7 +63,7 @@ public class PatinoiresDbAdapter {
 	public static final String KEY_PARKS_PHONE      = "phone";
 	public static final String KEY_PARKS_IS_CHALET  = "is_chalet";
 	public static final String KEY_PARKS_IS_CARAVAN = "is_caravan";
-
+	
 	// rinks table structure
 	public static final String KEY_RINKS_PARK_ID       = "park_id";
 	public static final String KEY_RINKS_KIND_ID       = "kind_id";
@@ -98,6 +102,33 @@ public class PatinoiresDbAdapter {
 	protected static final int CONDITION_BAD_INDEX       = 2;	
 	protected static final int CONDITION_CLOSED_INDEX    = 3;	
 
+	
+	/**
+	 * Class used for the ListArray sent to the Map
+	 */
+    public static class MapRink {
+        public final String rink;
+        public final String descriptionFr;
+        public final String descriptionEn;
+        public final int condition;
+        public final int kindId;
+        public final boolean isFavorite;
+        public final GeoPoint geoPoint;
+
+        public MapRink( String rink , String descriptionFr , String descriptionEn , int condition ,int kindId , boolean isFavorite , String geoLat , String geoLng ) {
+            this.rink = rink;
+            this.descriptionFr = descriptionFr;
+            this.descriptionEn = descriptionEn;
+            this.condition = condition;
+            this.kindId = kindId;
+            this.isFavorite = isFavorite;
+
+            double lat = Double.parseDouble( geoLat );
+			double lng = Double.parseDouble( geoLng );
+			this.geoPoint = new GeoPoint( (int) (lat * 1E6) , (int) (lng * 1E6) ); ;
+        }
+    }
+	
 
 	protected static class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -259,6 +290,31 @@ public class PatinoiresDbAdapter {
 		return searchRinks( "" , "hockey" );
 	}
 
+	public ArrayList<MapRink> fetchRinksForMap( String searchString , String tabFilter ) {
+
+		Cursor c = searchRinks( searchString , tabFilter );
+
+		MapRink mapRink;
+		ArrayList<MapRink> rinksArrayList = new ArrayList<MapRink>();
+		for( c.moveToFirst(); c.moveToNext(); c.isAfterLast() ) {
+			// The Cursor is now set to the right position
+			mapRink = new MapRink(
+					c.getString( c.getColumnIndex( KEY_RINKS_NAME ) ) ,
+					c.getString( c.getColumnIndex( KEY_RINKS_DESC_FR ) ) ,
+					c.getString( c.getColumnIndex( KEY_RINKS_DESC_EN ) ) ,
+					c.getInt( c.getColumnIndex( KEY_RINKS_CONDITION ) ) ,
+					c.getInt( c.getColumnIndex( KEY_RINKS_KIND_ID ) ) ,
+					c.getInt( c.getColumnIndex( KEY_RINKS_IS_FAVORITE ) ) == 1 ? true : false ,
+							c.getString( c.getColumnIndex( KEY_PARKS_GEO_LAT ) ) ,
+							c.getString( c.getColumnIndex( KEY_PARKS_GEO_LNG ) )
+			); 
+			rinksArrayList.add( mapRink );
+		}
+		c.close();
+
+		return rinksArrayList;
+	}
+
 	/**
 	 * @return Cursor over all rinks
 	 * @throws SQLException if rink could not be found/retrieved
@@ -285,7 +341,9 @@ public class PatinoiresDbAdapter {
 		// Build the search string
 		searchString = searchString.trim();
 		if ( searchString.length() > 0 ) {
-			sqlSearchFilter = " AND ( " + KEY_PARKS_NAME + " LIKE '%" + searchString + "%' ) " ;
+			sqlSearchFilter = " AND ( " + KEY_PARKS_NAME + " LIKE '%" + searchString + "%' " +
+			" OR " + KEY_RINKS_NAME + " LIKE '%" + searchString + "%' " +
+			" OR " + KEY_PARKS_ADDRESS + " LIKE '%" + searchString + "%' ) " ;
 		}
 
 		// Build the tab filter string
