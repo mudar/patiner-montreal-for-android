@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="wrap_content"
-	android:paddingTop="5dp" android:paddingBottom="5dp">
+	android:layout_width="fill_parent" android:layout_height="wrap_content" >
 
 	<TextView android:id="@+id/l_borough_name"
 		android:layout_width="fill_parent" android:layout_height="?android:attr/listPreferredItemHeight"
@@ -19,7 +18,6 @@
 		android:visibility="gone" 
 		android:layout_below="@+id/l_borough_name" android:background="#FFFFFF" />
 
-
 	<TextView android:id="@+id/l_borough_separator"
 		android:layout_width="fill_parent" android:layout_height="1px"
 		android:layout_below="@+id/l_borough_remarks" android:visibility="gone"
@@ -35,7 +33,8 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
 		android:layout_toRightOf="@+id/l_rink_kind_id"
 		android:layout_toLeftOf="@+id/l_rink_is_favorite"
-		android:layout_below="@+id/l_borough_separator" android:singleLine="true" />
+		android:layout_below="@+id/l_borough_separator" android:singleLine="true"
+		android:layout_marginTop="5dp" />
 
 	<TextView android:id="@+id/l_rink_desc" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" 
@@ -43,6 +42,7 @@
         android:textColor="?android:attr/textColorSecondary"
 		android:layout_toRightOf="@+id/l_rink_kind_id"
 		android:layout_toLeftOf="@+id/l_rink_is_favorite"
-		android:layout_below="@+id/l_rink_name" android:singleLine="true" />
+		android:layout_below="@+id/l_rink_name" android:singleLine="true" 
+		android:layout_marginBottom="5dp"/>
 
 </RelativeLayout>

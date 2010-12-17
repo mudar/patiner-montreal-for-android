@@ -113,6 +113,7 @@ public class PatinoiresGMaps extends MapActivity {
 			} );
 		}
 		else {
+			mapController.setZoom( DEFAULT_ZOOM - 3 );
 			// Display city centre
 			String coordinates[] = { "45.5", "-73.666667" };
 			double lat = Double.parseDouble(coordinates[0]);

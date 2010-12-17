@@ -177,10 +177,13 @@ public class PatinoiresDetails extends Activity {
 		String surface;
 		if ( conditionIndex == PatinoiresDbAdapter.CONDITION_CLOSED_INDEX ) {
 			// Hidden, since rink is closed
-			view.findViewById(R.id.l_rink_surface).setVisibility( View.GONE );
+			//TODO fix the invisible/gone/height issue with 1.5
+			view.findViewById(R.id.l_rink_surface).setVisibility( View.INVISIBLE );
 			view.findViewById(R.id.l_rink_is_cleared).setVisibility( View.GONE );
 			view.findViewById(R.id.l_rink_is_flooded).setVisibility( View.GONE );
 			view.findViewById(R.id.l_rink_is_resurfaced).setVisibility( View.GONE );
+			
+			((TextView) view.findViewById(R.id.l_rink_surface) ).setHeight( 0 );
 		} 
 		else {
 			// Display the on/off icons. Set text to the best available surface service 
@@ -220,8 +223,10 @@ public class PatinoiresDetails extends Activity {
 		);
 		final String phone = cursor.getString( cursor.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_PHONE ) );
 		if ( phone == null ) {
-			view.findViewById(R.id.l_park_phone).setVisibility( View.GONE );
+			view.findViewById(R.id.l_park_phone).setVisibility( View.INVISIBLE );
 			view.findViewById(R.id.l_rink_call).setVisibility( View.GONE );
+			
+			( ( TextView ) view.findViewById(R.id.l_park_phone) ).setHeight( 0 );
 		}
 		else {
 			( (TextView) view.findViewById(R.id.l_park_phone) ).append( phone );
@@ -249,7 +254,8 @@ public class PatinoiresDetails extends Activity {
 		);
 		String remarks = cursor.getString( cursor.getColumnIndex( PatinoiresDbAdapter.KEY_BOROUGHS_REMARKS ) );
 		if ( ( remarks == null ) || ( remarks.trim().length() == 0 ) ) {
-			( (TextView) view.findViewById(R.id.l_borough_remarks) ).setVisibility( View.GONE );	
+			( (TextView) view.findViewById(R.id.l_borough_remarks) ).setVisibility( View.INVISIBLE );
+			( (TextView) view.findViewById(R.id.l_borough_remarks) ).setHeight( 0 );
 		}
 		else {
 			( (TextView) view.findViewById(R.id.l_borough_remarks) ).setText( remarks );	    	

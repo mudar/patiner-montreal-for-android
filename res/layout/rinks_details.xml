@@ -123,14 +123,13 @@
             android:text="@string/rink_details_surface"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary"
-            android:layout_below="@+id/l_rink_condition" 
-            android:layout_above="@+id/l_park_name" />
+            android:layout_below="@+id/l_rink_condition" />
 
         <ImageButton android:id="@+id/l_rink_call" android:src="@android:drawable/sym_action_call"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_marginTop="18dp" android:layout_alignParentRight="true"
             android:layout_marginLeft="6dp"
-            android:layout_below="@+id/l_rink_is_cleared"
+            android:layout_below="@+id/l_rink_surface"
             android:linksClickable="true"
             android:autoLink="phone"
             android:focusable="true" />
@@ -142,7 +141,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
 			android:text="@string/rink_details_park_name"
 			android:layout_toLeftOf="@+id/l_rink_call"
-			android:layout_below="@+id/l_rink_is_cleared" />
+			android:layout_below="@+id/l_rink_surface" />
 
 		<TextView android:id="@+id/l_park_address"
 			android:layout_width="fill_parent"

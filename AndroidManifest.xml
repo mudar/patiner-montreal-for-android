@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="ca.mudar.patinoires" android:versionName="0.3"
-	android:versionCode="4">
-	<!--       android:installLocation="auto"-->
+	package="ca.mudar.patinoires" android:versionName="0.3.3"
+	android:installLocation="auto" android:versionCode="7">
 	<application android:label="@string/app_name_manifest"
 		android:theme="@android:style/Theme.Light" android:icon="@drawable/ic_launcher_patinoires"
 		android:debuggable="false">
@@ -20,7 +19,6 @@
 			android:configChanges="locale" android:label="@string/app_name_map"></activity>
 		<activity android:name=".PatinoiresDetails"
 			android:configChanges="locale" android:label="@string/app_name_details"></activity>
-
 		<activity android:name=".PatinoiresSearchable"
 			android:launchMode="singleTop">
 			<intent-filter>
@@ -34,7 +32,7 @@
 
 		<uses-library android:name="com.google.android.maps" />
 	</application>
-	<uses-sdk android:minSdkVersion="4" />
+	<uses-sdk android:minSdkVersion="3" />
 
 	<supports-screens android:anyDensity="true" />
 
@@ -42,5 +40,4 @@
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.CALL_PHONE" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
 </manifest> 

@@ -43,10 +43,9 @@ import android.widget.TextView;
 public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filterable {
 	protected static final String TAG = "RinksListCursorAdapter";
 
-	private int layout;
 	private boolean showBorough;
-
 	private int mColFieldBorough;
+//	private int mColFieldBoroughRemarks;
 	private int mColFieldCondition;
 	private int mColFieldKindId;
 
@@ -54,12 +53,13 @@ public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filte
 	public RinksListCursorAdapter (Context context, int layout, Cursor cursor , String[] from, int[] to , boolean showBorough ) {
 		super( context , layout , cursor , from , to );
 
-		this.layout = layout;
 		this.showBorough = showBorough;
 
-		mColFieldBorough   = cursor.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_BOROUGH_ID );
-		mColFieldCondition = cursor.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_CONDITION );
-		mColFieldKindId    = cursor.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_KIND_ID);
+		mColFieldBorough        = cursor.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_BOROUGH_ID );
+//		mColFieldBoroughRemarks = cursor.getColumnIndex( PatinoiresDbAdapter.KEY_BOROUGHS_REMARKS );
+		mColFieldCondition      = cursor.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_CONDITION );
+		mColFieldKindId         = cursor.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_KIND_ID);
+		
 	}
 
 	public static int getConditionColor( int condition ) {
@@ -95,62 +95,12 @@ public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filte
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 
-		final LayoutInflater inflater = LayoutInflater.from(context);
-		View view = inflater.inflate(layout, parent, false);
-
-		int position = cursor.getPosition();
-		if ( showBorough && isNewBorough( cursor , position ) ) {
-			TextView textViewBorough = (TextView) view.findViewById( R.id.l_borough_name );
-			textViewBorough.setVisibility( View.VISIBLE );
-
-			TextView textViewRemarks = (TextView) view.findViewById( R.id.l_borough_remarks );
-			String remarks = (String) textViewRemarks.getText();
-			if ( remarks.trim().length() > 0 ) {
-				textViewRemarks.setVisibility( View.VISIBLE );				
-			}
-			else {
-
-			}
-
-			TextView textViewSeparator = (TextView) view.findViewById( R.id.l_borough_separator );
-			textViewSeparator.setVisibility( View.VISIBLE );
-		}
-
-		int conditionIndex = cursor.getInt( mColFieldCondition );
-		int imageResource;
-		if ( cursor.getInt( mColFieldKindId ) == PatinoiresDbAdapter.OPEN_DATA_INDEX_PSE ) {
-			switch ( conditionIndex ) {
-			case 0  : imageResource =  R.drawable.ic_rink_hockey_0; break;
-			case 1  : imageResource =  R.drawable.ic_rink_hockey_1; break;
-			case 2  : imageResource =  R.drawable.ic_rink_hockey_2; break;
-			default : imageResource =  R.drawable.ic_rink_hockey_3; break;
-			}
-		}
-		else {
-			switch ( conditionIndex ) {
-			case 0  : imageResource =  R.drawable.ic_rink_skating_0; break;
-			case 1  : imageResource =  R.drawable.ic_rink_skating_1; break;
-			case 2  : imageResource =  R.drawable.ic_rink_skating_2; break;
-			default : imageResource =  R.drawable.ic_rink_skating_3; break;
-			}
-		}
-		( (ImageView) view.findViewById( R.id.l_rink_kind_id ) ).setImageResource( imageResource );
-		/*
-		ImageView imageView = (ImageView) view.findViewById( R.id.l_rink_kind_id );
-		int kindId = cursor.getInt( mColFieldKindId );
-		imageView.setImageResource( kindId == PatinoiresDbAdapter.OPEN_DATA_INDEX_PSE ? R.drawable.hockey : R.drawable.skating );
-		 */    
-		return view;
+		return super.newView(context, cursor, parent);
 	}
 
 
 	@Override
 	public void bindView( View view , Context context , Cursor cursor ) {
-		super.bindView(view, context, cursor);
-		/*
-		TextView textView = (TextView) view.findViewById( R.id.l_rink_condition );
-		textView.setBackgroundColor( getConditionColor( cursor.getInt( mColFieldCondition ) ) );
-		 */
 		int visibility;
 		int position = cursor.getPosition();
 		if ( showBorough && isNewBorough( cursor , position ) ) {
@@ -164,11 +114,17 @@ public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filte
 		textViewBorough.setVisibility( visibility );
 
 		TextView textViewRemarks = (TextView) view.findViewById( R.id.l_borough_remarks );
-		String remarks = (String) textViewRemarks.getText();
-		if ( remarks.trim().length() > 0 ) {
+		textViewRemarks.setVisibility( visibility );
+		//TODO fix the layout_alignWithParentIfMissing issue on 1.5
+		/*
+		String boroughRemarks = cursor.getString( mColFieldBoroughRemarks );
+		if ( boroughRemarks.trim().length() > 0 ) {
 			textViewRemarks.setVisibility( visibility );				
 		}
-
+		else {
+			textViewRemarks.setVisibility( View.GONE );
+		}
+		 */
 		TextView textViewSeparator = (TextView) view.findViewById( R.id.l_borough_separator );
 		textViewSeparator.setVisibility( visibility );
 
@@ -190,7 +146,9 @@ public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filte
 			default : imageResource =  R.drawable.ic_rink_skating_3; break;
 			}
 		}
-		( (ImageView) view.findViewById( R.id.l_rink_kind_id ) ).setImageResource( imageResource );
+		( (ImageView) view.findViewById( R.id.l_rink_kind_id ) ).setImageDrawable( context.getResources().getDrawable(imageResource) );
+		
+		super.bindView(view, context, cursor);
 	}
 
 	/*
