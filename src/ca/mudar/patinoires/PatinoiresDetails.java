@@ -77,16 +77,16 @@ public class PatinoiresDetails extends Activity {
 
 		switch( condition ) {
 		case PatinoiresDbAdapter.CONDITION_EXCELLENT_INDEX : 
-			conditionIndex = R.string.dialog_condition_excellent;
+			conditionIndex = R.string.prefs_condition_excellent;
 			break;
 		case PatinoiresDbAdapter.CONDITION_GOOD_INDEX : 
-			conditionIndex = R.string.dialog_condition_good;
+			conditionIndex = R.string.prefs_condition_good;
 			break;
 		case PatinoiresDbAdapter.CONDITION_BAD_INDEX : 
-			conditionIndex = R.string.dialog_condition_bad;
+			conditionIndex = R.string.prefs_condition_bad;
 			break;
 		default : 
-			conditionIndex = R.string.dialog_condition_closed;
+			conditionIndex = R.string.prefs_condition_closed;
 			break;
 		}
 

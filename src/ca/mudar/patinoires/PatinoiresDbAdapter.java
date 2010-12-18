@@ -31,6 +31,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+//import android.location.Location;
 
 import com.google.android.maps.GeoPoint;
 
@@ -54,15 +55,16 @@ public class PatinoiresDbAdapter {
 	public static final String KEY_BOROUGHS_UPDATED_AT = "updated_at";
 
 	// parks table structure
-	public static final String KEY_PARKS_BOROUGH_ID = "borough_id";
-	public static final String KEY_PARKS_NAME       = "park";
-	public static final String KEY_PARKS_GEO_ID     = "geo_id";
-	public static final String KEY_PARKS_GEO_LAT    = "geo_lat";
-	public static final String KEY_PARKS_GEO_LNG    = "geo_lng";
-	public static final String KEY_PARKS_ADDRESS    = "address";
-	public static final String KEY_PARKS_PHONE      = "phone";
-	public static final String KEY_PARKS_IS_CHALET  = "is_chalet";
-	public static final String KEY_PARKS_IS_CARAVAN = "is_caravan";
+	public static final String KEY_PARKS_BOROUGH_ID   = "borough_id";
+	public static final String KEY_PARKS_NAME         = "park";
+	public static final String KEY_PARKS_GEO_ID       = "geo_id";
+	public static final String KEY_PARKS_GEO_LAT      = "geo_lat";
+	public static final String KEY_PARKS_GEO_LNG      = "geo_lng";
+	public static final String KEY_PARKS_GEO_DISTANCE = "geo_distance";
+	public static final String KEY_PARKS_ADDRESS      = "address";
+	public static final String KEY_PARKS_PHONE        = "phone";
+	public static final String KEY_PARKS_IS_CHALET    = "is_chalet";
+	public static final String KEY_PARKS_IS_CARAVAN   = "is_caravan";
 	
 	// rinks table structure
 	public static final String KEY_RINKS_PARK_ID       = "park_id";
@@ -92,11 +94,13 @@ public class PatinoiresDbAdapter {
 	protected boolean showGood = true;
 	protected boolean showBad = true;
 	protected boolean showClosed = true;
-
-	protected int sortOrder = 0;
-	protected String[] sortOrderValues = { "distance" , "rink" , "park" , "borough" };
-	//    protected String[] conditionValues = { "excellent" , "good" , "bad" , "closed" };
-
+	
+	public static final int SORT_DISTANCE_INDEX = 0;	// Based on the order in the line above.
+	public static final int SORT_RINK_INDEX     = 1;	
+	public static final int SORT_PARK_INDEX     = 2;	
+	public static final int SORT_BOROUGH_INDEX  = 3;
+	protected int sortOrder = SORT_DISTANCE_INDEX;
+	
 	protected static final int CONDITION_EXCELLENT_INDEX = 0;	// Based on the order in the line above.
 	protected static final int CONDITION_GOOD_INDEX      = 1;	
 	protected static final int CONDITION_BAD_INDEX       = 2;	
@@ -243,7 +247,7 @@ public class PatinoiresDbAdapter {
 		return sortOrder;
 	}
 	public boolean isSortOnBorough() {
-		return sortOrderValues[ sortOrder ].equals( "borough" ); 
+		return sortOrder == SORT_BOROUGH_INDEX; 
 	}
 
 	public int countAllRinks() {
@@ -263,6 +267,23 @@ public class PatinoiresDbAdapter {
 		return searchRinks( "" , "" );
 	}
 
+	
+	public boolean hasFavorites() {
+		boolean hasFavorites = false;
+		openDb();
+		try {
+			Cursor mCursor = fetchRinksFavorites();
+			if ( ( mCursor != null ) && ( mCursor.getCount() > 0 ) ) {
+				hasFavorites = true;
+			}
+			mCursor.close();			
+		}
+		catch ( SQLException e ) {}
+		closeDb();
+		
+		return hasFavorites;
+	}
+	
 	/**
 	 * @return Cursor over all rinks
 	 * @throws SQLException if rink could not be found/retrieved
@@ -296,19 +317,21 @@ public class PatinoiresDbAdapter {
 
 		MapRink mapRink;
 		ArrayList<MapRink> rinksArrayList = new ArrayList<MapRink>();
-		for( c.moveToFirst(); c.moveToNext(); c.isAfterLast() ) {
-			// The Cursor is now set to the right position
+
+		c.moveToFirst(); 
+		while( c.isAfterLast() == false) {
 			mapRink = new MapRink(
 					c.getString( c.getColumnIndex( KEY_RINKS_NAME ) ) ,
 					c.getString( c.getColumnIndex( KEY_RINKS_DESC_FR ) ) ,
 					c.getString( c.getColumnIndex( KEY_RINKS_DESC_EN ) ) ,
 					c.getInt( c.getColumnIndex( KEY_RINKS_CONDITION ) ) ,
 					c.getInt( c.getColumnIndex( KEY_RINKS_KIND_ID ) ) ,
-					c.getInt( c.getColumnIndex( KEY_RINKS_IS_FAVORITE ) ) == 1 ? true : false ,
-							c.getString( c.getColumnIndex( KEY_PARKS_GEO_LAT ) ) ,
-							c.getString( c.getColumnIndex( KEY_PARKS_GEO_LNG ) )
+					( c.getInt( c.getColumnIndex( KEY_RINKS_IS_FAVORITE ) ) == 1 ? true : false ),
+					c.getString( c.getColumnIndex( KEY_PARKS_GEO_LAT ) ) ,
+					c.getString( c.getColumnIndex( KEY_PARKS_GEO_LNG ) )
 			); 
 			rinksArrayList.add( mapRink );
+			c.moveToNext(); 
 		}
 		c.close();
 
@@ -321,7 +344,7 @@ public class PatinoiresDbAdapter {
 	 */
 	public Cursor searchRinks( String searchString , String tabFilter ) throws SQLException {
 
-		String sqlOrder;
+		String sqlOrder = KEY_RINKS_NAME;
 		String sqlConditionsFilter = "";
 		String sqlSearchFilter = "";
 		String sqlTabFilter = "";
@@ -329,8 +352,17 @@ public class PatinoiresDbAdapter {
 		// Get the list order
 		int sqlOrderIndex = getSortList();
 		// TODO : calculate distance for each rink
-		if ( sqlOrderIndex == 0 ) { sqlOrderIndex++; }
-		sqlOrder = sortOrderValues[sqlOrderIndex];
+
+		switch ( sqlOrderIndex ) {
+			case SORT_DISTANCE_INDEX: sqlOrder = KEY_PARKS_GEO_DISTANCE + " , " +sqlOrder; break;
+			case SORT_PARK_INDEX: sqlOrder = KEY_PARKS_NAME + " , " +sqlOrder; break;	
+			case SORT_BOROUGH_INDEX: sqlOrder = KEY_BOROUGHS_NAME  + " , " +sqlOrder; break;
+			case SORT_RINK_INDEX: 
+			default:
+//				sqlOrder = KEY_RINKS_NAME; 
+				break;
+		}
+		
 
 		// Get the filters for the rink conditions
 		boolean[] conditions = getConditions();
@@ -359,7 +391,7 @@ public class PatinoiresDbAdapter {
 			}			
 		}
 
-		Cursor mCursor = mDb.rawQuery( "SELECT b.* , p.* , r.* , ( f._id IS NOT NULL ) AS " + KEY_RINKS_IS_FAVORITE
+		Cursor mCursor = mDb.rawQuery( "SELECT b.* , p.* , r.* , ( f._id IS NOT NULL ) AS " + KEY_RINKS_IS_FAVORITE + " , 0 AS " + KEY_PARKS_GEO_DISTANCE
 				+ " FROM " + TABLE_NAME_BOROUGHS + " AS b "
 				+ " JOIN " + TABLE_NAME_PARKS + " AS p ON p.borough_id = b._id "
 				+ " JOIN " + TABLE_NAME_RINKS + " AS r ON r.park_id = p._id " 
@@ -367,7 +399,7 @@ public class PatinoiresDbAdapter {
 				+ " WHERE ( 0 " + sqlConditionsFilter + " ) " + sqlSearchFilter + sqlTabFilter 
 				+ " ORDER BY " + sqlOrder , 
 				null );
-
+		
 		return mCursor;
 	}
 

@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
-	
+
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="fill_parent" android:layout_height="fill_parent"
 		android:orientation="vertical" android:padding="12dip">
 
 		<TextView android:id="@+id/links_patiner_mtl"
 			android:layout_width="fill_parent" android:layout_height="?android:attr/listPreferredItemHeight"
-			android:textColor="#FFFFFF" android:gravity="center_vertical"
-			android:textColorLink="#FFCC00" android:linksClickable="true"
-			android:text="@string/dialog_links_patiner_mtl" />
+			android:gravity="center_vertical" android:textColorLink="#003399"
+			android:linksClickable="true" android:text="@string/dialog_links_patiner_mtl" />
 
 		<TextView android:id="@+id/links_conditions_pdf"
 			android:layout_width="fill_parent" android:layout_height="?android:attr/listPreferredItemHeight"
-			android:textColor="#FFFFFF" android:gravity="center_vertical"
-			android:textColorLink="#FFCC00" android:linksClickable="true"
-			android:text="@string/dialog_links_conditions_pdf" />
+			android:gravity="center_vertical" android:textColorLink="#003399"
+			android:linksClickable="true" android:text="@string/dialog_links_conditions_pdf" />
 
 		<TextView android:id="@+id/links_rinks_contact"
 			android:layout_width="fill_parent" android:layout_height="?android:attr/listPreferredItemHeight"
-			android:textColor="#FFFFFF" android:gravity="center_vertical"
-			android:textColorLink="#FFCC00" android:linksClickable="true"
-			android:text="@string/dialog_links_rinks_contact" />
+			android:gravity="center_vertical" android:textColorLink="#003399"
+			android:linksClickable="true" android:text="@string/dialog_links_rinks_contact" />
 	</LinearLayout>
 </ScrollView>

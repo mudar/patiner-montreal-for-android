@@ -5,16 +5,19 @@
 	<string name="app_name_map">Map of Patiner Montréal</string>
 	<string name="app_name_details">Rink information</string>
 	<string name="app_name_search">Patiner Montréal</string>
+	<string name="app_name_preferences">Patiner Montréal</string>
 	<string name="app_name_manifest">Patiner Montreal</string>
 	<string name="menu_refresh_list">Refresh</string>
 	<string name="menu_refresh_map">Refresh</string>
 	<string name="menu_refresh_rink">Refresh</string>
-	<string name="menu_select_conditions">Conditions</string>
 	<string name="menu_view_map">Map</string>
-	<string name="menu_sort">Sort</string>
-	<string name="menu_links">Links</string>
-	<string name="menu_about">About</string>
-	<string name="menu_language">Language</string>
+	<string name="menu_search">Search</string>
+	<string name="menu_preferences">Settings</string>
+    <string name="menu_select_conditions">Conditions</string>
+<!--	<string name="menu_sort">Sort</string>-->
+<!--	<string name="menu_links">Links</string>-->
+<!--	<string name="menu_about">About</string>-->
+<!--	<string name="menu_language">Language</string>-->
 	<string name="menu_share_map">Share</string>
 	<string name="menu_favorites_add">Add to favorites</string>
 	<string name="menu_favorites_remove">Remove from favorites</string>
@@ -25,22 +28,6 @@
 	<string name="context_menu_favorites_remove">Remove from favorites</string>
 	<string name="context_menu_call_rink">Call</string>
 	<string name="context_menu_map_view_rink">View in map</string>
-
-	<string name="dialog_sort_title">Sort by</string>
-	<string name="dialog_sort_distance">Distance</string>
-	<string name="dialog_sort_rink">Rink</string>
-	<string name="dialog_sort_park">Park</string>
-	<string name="dialog_sort_borough">Borough</string>
-
-	<string name="dialog_language_title">Interface language</string>
-	<string name="dialog_language_french">Français</string>
-	<string name="dialog_language_english">English</string>
-
-	<string name="dialog_condition_title">Rink condition</string>
-	<string name="dialog_condition_excellent">Excellent</string>
-	<string name="dialog_condition_good">Good</string>
-	<string name="dialog_condition_bad">Bad</string>
-	<string name="dialog_condition_closed">Closed</string>
 
 	<string name="list_no_rinks">Empty list...</string>
 
@@ -88,5 +75,34 @@
 
     <string name="search_hint">Search rinks</string>
     <string name="search_results">Results for \'<xliff:g id="string">%s</xliff:g>\'</string>
+
+    <string name="prefs_category_display">Display Settings</string>
+
+    <string name="prefs_category_conditions">Rink Conditions</string>
+    <string name="prefs_condition_title">Conditions</string>
+    <string name="prefs_condition_summary">Display or hide rinks based on conditions</string>
+    <string name="prefs_condition_dialog_title">Rink Condition</string>
+    <string name="prefs_condition_excellent">Excellent</string>
+    <string name="prefs_condition_good">Good</string>
+    <string name="prefs_condition_bad">Bad</string>
+    <string name="prefs_condition_closed">Closed</string>
+    
+    <string name="prefs_sort_title">Sort Order</string>
+    <string name="prefs_sort_summary">Set the rinks list order</string>
+    <string name="prefs_sort_dialog_title">Sort by</string>
+    <string name="prefs_sort_distance">Distance</string>
+    <string name="prefs_sort_rink">Rink</string>
+    <string name="prefs_sort_park">Park</string>
+    <string name="prefs_sort_borough">Borough</string>
+
+    <string name="prefs_language_title">Language</string>
+    <string name="prefs_language_summary">Change the interface language</string>
+    <string name="prefs_language_dialog_title">Set language</string>
+    <string name="prefs_language_french">Français</string>
+    <string name="prefs_language_english">English</string>
+
+    <string name="prefs_category_credits">Credits</string>
+    <string name="prefs_credits_about">About</string>
+    <string name="prefs_credits_links">Useful links</string>
 
 </resources>

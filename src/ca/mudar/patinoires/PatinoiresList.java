@@ -29,7 +29,6 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -41,9 +40,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,6 +64,7 @@ public class PatinoiresList extends ListActivity {
 	private static String currentTab;
 	private ProgressDialog dialog;
 	private Cursor cursor;
+	private int currentPosition = 0;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -81,9 +81,9 @@ public class PatinoiresList extends ListActivity {
 			dialogUpdate();
 		}
 
+		//TODO Verify real need for this, seems managed by onResume
 		loadPreferences();
-
-		fillData();
+//		fillData();
 
 		registerForContextMenu( getListView() );
 
@@ -91,6 +91,10 @@ public class PatinoiresList extends ListActivity {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				displayRinksDetails( arg3 );
 			} } );
+		
+		if ( ( PatinerMontreal.getCurrentTabTag() == PatinerMontreal.TAB_FAVORITES ) && !mDbHelper.hasFavorites() ) {
+			PatinerMontreal.setCurrentTabAllRinks();
+		}
 
 	}
 
@@ -102,9 +106,9 @@ public class PatinoiresList extends ListActivity {
 	private boolean isFirstLaunch() {
 		SharedPreferences settings = getSharedPreferences( PatinoiresList.PREFS_NAME , MODE_PRIVATE );
 
-		if ( settings.getString( "language" , null ) == null ) {
+		if ( settings.getString( "prefs_language" , null ) == null ) {
 			SharedPreferences.Editor editor = settings.edit();
-			editor.putString( "language" , Locale.getDefault().getLanguage() ).commit();
+			editor.putString( "prefs_language" , Locale.getDefault().getLanguage() ).commit();
 			return true;
 		}
 		else {
@@ -113,19 +117,19 @@ public class PatinoiresList extends ListActivity {
 	}
 
 	
-	private void loadPreferences() {
+	public void loadPreferences() {
 
 		SharedPreferences settings = getSharedPreferences( PREFS_NAME , MODE_PRIVATE );
 
-		mDbHelper.setSortList( settings.getInt( "sort" , mDbHelper.getSortList() ) );
-		interfaceLanguage = settings.getString("language", Locale.getDefault().getLanguage() );
+		mDbHelper.setSortList( Integer.parseInt( settings.getString( "prefs_sort" , Integer.toString( mDbHelper.getSortList() ) ) ) );
+		interfaceLanguage = settings.getString( "prefs_language", Locale.getDefault().getLanguage() );
 
 		boolean[] defaultConditions = mDbHelper.getConditions();
-
-		mDbHelper.setShowExcellent( settings.getBoolean( "showExcellent" , defaultConditions[0] ) );
-		mDbHelper.setShowGood( settings.getBoolean( "showGood" , defaultConditions[1] ) );
-		mDbHelper.setShowBad( settings.getBoolean( "showBad" , defaultConditions[2] ) );
-		mDbHelper.setShowClosed( settings.getBoolean( "showClosed" , defaultConditions[3] ) );
+		
+		mDbHelper.setShowExcellent( settings.getBoolean( "prefs_show_excellent" , defaultConditions[0] ) );
+		mDbHelper.setShowGood( settings.getBoolean( "prefs_show_good" , defaultConditions[1] ) );
+		mDbHelper.setShowBad( settings.getBoolean( "prefs_show_bad" , defaultConditions[2] ) );
+		mDbHelper.setShowClosed( settings.getBoolean( "prefs_show_closed" , defaultConditions[3] ) );
 	}
 
 	private void fillData() {
@@ -143,21 +147,27 @@ public class PatinoiresList extends ListActivity {
 		else {
 			cursor = mDbHelper.fetchRinksAll();
 		}
+
 		startManagingCursor( cursor );
-
-		String[] from = new String[] { 
-				PatinoiresDbAdapter.KEY_RINKS_NAME, 
+		
+		String[] from = new String[] { PatinoiresDbAdapter.KEY_RINKS_NAME, 
 				( interfaceLanguage.equals( "fr" ) ? PatinoiresDbAdapter.KEY_RINKS_DESC_FR : PatinoiresDbAdapter.KEY_RINKS_DESC_EN ) ,
-				//				PatinoiresDbAdapter.KEY_RINKS_IS_FAVORITE ,
-				PatinoiresDbAdapter.KEY_BOROUGHS_NAME ,
-				PatinoiresDbAdapter.KEY_BOROUGHS_REMARKS 
-
-		};
-		int[] to = new int[] { R.id.l_rink_name , R.id.l_rink_desc , R.id.l_borough_name , R.id.l_borough_remarks };
+//				PatinoiresDbAdapter.KEY_PARKS_GEO_DISTANCE  ,
+				PatinoiresDbAdapter.KEY_BOROUGHS_NAME , 
+				PatinoiresDbAdapter.KEY_BOROUGHS_REMARKS };
+		int[] to = new int[] { 
+				R.id.l_rink_name , 
+				R.id.l_rink_desc ,
+//				R.id.l_park_geo_distance , 
+				R.id.l_borough_name , 
+				R.id.l_borough_remarks };
 
 		RinksListCursorAdapter rinks = new RinksListCursorAdapter(this, R.layout.rinks_list_item , cursor, from, to, mDbHelper.isSortOnBorough() );
+		
 		setListAdapter( rinks );
 
+		getListView().setSelection(currentPosition);
+		
 		mDbHelper.closeDb();
 	}
 
@@ -167,6 +177,17 @@ public class PatinoiresList extends ListActivity {
 		startActivity( intent );
 	}
 
+	
+	public void displayPreferences() {
+		Intent intent = new Intent( this, PatinoiresPreferences.class );
+		startActivity( intent );
+	}
+	
+	
+	public void displaySearch() {
+		onSearchRequested();
+	}
+	
 
 	public void displayRinksDetails( long rinkId ) {
 		Intent intent = new Intent( this, PatinoiresDetails.class );
@@ -203,121 +224,10 @@ public class PatinoiresList extends ListActivity {
 		.show();
 	}
 
-
-	public void dialogSort() {
-
-		Resources res = getResources();
-
-		// TODO: verify this syntax
-		final CharSequence[] items = { 
-				res.getText( R.string.dialog_sort_distance ) , 
-				res.getText( R.string.dialog_sort_rink ) , 
-				res.getText( R.string.dialog_sort_park ) , 
-				res.getText( R.string.dialog_sort_borough ) };
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle( R.string.dialog_sort_title );
-
-		builder.setSingleChoiceItems( items, mDbHelper.getSortList() , new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int item) {
-				setSortOrder( item );
-				Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_SHORT).show();
-				dialog.cancel();
-			}
-		} );
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
-
-	private void setSortOrder( int order ) {
-		SharedPreferences.Editor editor = getSharedPreferences( PREFS_NAME, MODE_PRIVATE ).edit();
-		editor.putInt("sort", order ).commit();
-		mDbHelper.setSortList( order );
-
-		fillData();
-	}
-
-
-	public void dialogConditions() {
-
-		Resources res = getResources();
-		tempConditions = mDbHelper.getConditions();
-
-		// TODO: verify this syntax
-		final CharSequence[] items = { 
-				res.getText( R.string.dialog_condition_excellent ) ,
-				res.getText( R.string.dialog_condition_good ) ,
-				res.getText( R.string.dialog_condition_bad ) ,
-				res.getText( R.string.dialog_condition_closed ) };
-
-		final boolean[] selections =  mDbHelper.getConditions();
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle( R.string.dialog_condition_title );
-		builder.setMultiChoiceItems( items , selections , new DialogInterface.OnMultiChoiceClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton, boolean isChecked) {
-				tempConditions[ whichButton ] = isChecked;
-			}
-		} );
-
-		builder.setPositiveButton( android.R.string.ok , new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				setConditions( tempConditions );
-
-				fillData();
-			}
-		} );
-		builder.setNegativeButton( android.R.string.cancel , new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {}
-		} );
-
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
-
-	private void setConditions( boolean[] conditions ) {
-		SharedPreferences.Editor editor = getSharedPreferences( PREFS_NAME, MODE_PRIVATE ).edit();
-		editor.putBoolean( "showExcellent", conditions[0] );
-		editor.putBoolean( "showGood", conditions[1] );
-		editor.putBoolean( "showBad", conditions[2] );
-		editor.putBoolean( "showClosed", conditions[3] );
-		editor.commit();
-
-		mDbHelper.setShowExcellent( conditions[0] );
-		mDbHelper.setShowGood( conditions[1] );
-		mDbHelper.setShowBad( conditions[2] );
-		mDbHelper.setShowClosed( conditions[3] );
-
-		fillData();
-	}
-
-
-	public void dialogLanguage() {
-		Resources res = getResources();
-
-		// TODO: verify this syntax
-		final CharSequence[] items = { 
-				res.getText( R.string.dialog_language_french ) , 
-				res.getText( R.string.dialog_language_english ) };
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle( R.string.dialog_language_title );
-		builder.setSingleChoiceItems(items, ( interfaceLanguage.equals( "fr" ) ? 0 : 1 ) , new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int item) {
-				setInterfaceLanguage( item == 0 ? "fr" : "en" );
-
-				Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_SHORT).show();
-				dialog.cancel();
-			}
-		});
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
-
-
+/*
 	private void setInterfaceLanguage( String lg ) {
 		SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, MODE_PRIVATE ).edit();
-		editor.putString( "language" , lg ).commit();
+		editor.putString( "prefs_language" , lg ).commit();
 
 // TODO: fix complete language switch, with or without restart
 		interfaceLanguage = lg;
@@ -331,7 +241,8 @@ public class PatinoiresList extends ListActivity {
 
 		fillData();
 	}
-
+*/
+	
 	public String getInterfaceLanguage() {
 		return interfaceLanguage;
 	}
@@ -365,15 +276,6 @@ public class PatinoiresList extends ListActivity {
       super.onConfigurationChanged(newConfig);
     }
 	 */
-
-
-	@Override 
-	public boolean onCreateOptionsMenu(Menu menu) {
-		//		Log.w(TAG, "onCreateOptionsMenu. Language: " +  interfaceLanguage);
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_menu, menu);
-		return true;
-	}
 
 
 	/**
@@ -424,23 +326,14 @@ public class PatinoiresList extends ListActivity {
 			dialogUpdate();
 			fillData();	// This goes here to avoid problem with async threads
 			return true;
-		case R.id.select_conditions:
-			dialogConditions();
-			return true;
 		case R.id.view_map:
 			displayMap();
 			return true;
-		case R.id.options_sort:
-			dialogSort();
+		case R.id.search:
+			displaySearch();
 			return true;
-		case R.id.language:
-			dialogLanguage();
-			return true;
-		case R.id.links:
-			displayInfoDialog( R.layout.links );
-			return true;
-		case R.id.about:
-			displayInfoDialog( R.layout.about );
+		case R.id.preferences:
+			displayPreferences();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -470,7 +363,8 @@ public class PatinoiresList extends ListActivity {
 		if ( phone == null ) {
 			menu.findItem( R.id.call_rink ).setVisible( false );
 		}
-		//		c.close();
+		// TODO: verify if closing this cursor is required
+		// c.close();
 	}
 
 
@@ -491,6 +385,8 @@ public class PatinoiresList extends ListActivity {
 			mDbHelper.updateFavorites( info.id , false );
 			mDbHelper.closeDb();
 			result = true;
+
+			fillData();
 			break;
 		case R.id.call_rink:
 			result = true;
@@ -507,8 +403,6 @@ public class PatinoiresList extends ListActivity {
 			startActivity( intentMap );
 			break;
 		}
-
-		fillData();
 
 		return result;
 	}
@@ -565,11 +459,13 @@ public class PatinoiresList extends ListActivity {
 		}
 	}	
 
-	/*
+	
 	protected void onPause() {
-
+		if ( cursor != null ) {
+			currentPosition = getListView().getFirstVisiblePosition();
+Log.w( TAG , "currentPosition saved = " + currentPosition );
+		}
 		super.onPause();
-		cursor.close();
 	}
-	 */
+
 }

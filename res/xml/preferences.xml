@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory android:title="@string/prefs_category_display" />
+
+	<PreferenceScreen android:key="prefs_conditions"
+		android:title="@string/prefs_condition_title" android:summary="@string/prefs_condition_summary">
+		<PreferenceCategory android:title="@string/prefs_category_conditions" />
+		<CheckBoxPreference android:key="prefs_show_excellent"
+			android:title="@string/prefs_condition_excellent"
+			android:defaultValue="true" />
+		<CheckBoxPreference android:key="prefs_show_good"
+			android:title="@string/prefs_condition_good" android:defaultValue="true" />
+		<CheckBoxPreference android:key="prefs_show_bad"
+			android:title="@string/prefs_condition_bad" android:defaultValue="true" />
+		<CheckBoxPreference android:key="prefs_show_closed"
+			android:title="@string/prefs_condition_closed" android:defaultValue="true" />
+	</PreferenceScreen>
+
+	<ListPreference android:key="prefs_sort" android:title="@string/prefs_sort_title"
+		android:summary="@string/prefs_sort_summary" android:entries="@array/prefs_sort_entries"
+		android:entryValues="@array/prefs_sort_values" android:dialogTitle="@string/prefs_sort_dialog_title"
+		android:defaultValue="0" />
+
+	<ListPreference android:key="prefs_language"
+		android:title="@string/prefs_language_title" android:summary="@string/prefs_language_summary"
+		android:entries="@array/prefs_language_entries" android:entryValues="@array/prefs_language_values"
+		android:dialogTitle="@string/prefs_language_dialog_title"
+		android:defaultValue="0" />
+
+	<PreferenceCategory android:title="@string/prefs_category_credits" />
+
+	<PreferenceScreen android:key="prefs_credits_links"
+		android:title="@string/prefs_credits_links">
+	</PreferenceScreen>
+
+	<PreferenceScreen android:key="prefs_credits_about"
+		android:title="@string/prefs_credits_about">
+	</PreferenceScreen>
+
+</PreferenceScreen>

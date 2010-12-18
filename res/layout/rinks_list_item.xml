@@ -18,9 +18,14 @@
 		android:visibility="gone" 
 		android:layout_below="@+id/l_borough_name" android:background="#FFFFFF" />
 
+    <TextView android:id="@+id/l_borough_padding"
+        android:layout_width="fill_parent" android:layout_height="24dp"
+        android:layout_below="@+id/l_borough_remarks" android:visibility="gone"
+        android:background="#FFFFFF" />
+
 	<TextView android:id="@+id/l_borough_separator"
 		android:layout_width="fill_parent" android:layout_height="1px"
-		android:layout_below="@+id/l_borough_remarks" android:visibility="gone"
+		android:layout_below="@+id/l_borough_padding" android:visibility="gone"
 		android:background="#A6A6A6" />
 
 	<ImageView android:id="@+id/l_rink_kind_id"
@@ -33,16 +38,26 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
 		android:layout_toRightOf="@+id/l_rink_kind_id"
 		android:layout_toLeftOf="@+id/l_rink_is_favorite"
-		android:layout_below="@+id/l_borough_separator" android:singleLine="true"
-		android:layout_marginTop="5dp" />
+		android:layout_below="@+id/l_borough_separator" android:singleLine="true" />
 
-	<TextView android:id="@+id/l_rink_desc" android:layout_width="fill_parent"
+	<TextView android:id="@+id/l_park_geo_distance" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" 
         android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="?android:attr/textColorTertiary"
+		android:layout_toRightOf="@+id/l_rink_desc"
+		android:layout_alignParentRight="true"
+		android:layout_marginRight="6dp"
+		android:layout_marginLeft="6dp"
+		android:gravity="right"		
+android:visibility="gone"
+		android:layout_below="@+id/l_rink_name" android:singleLine="true" />
+		
+    <TextView android:id="@+id/l_rink_desc" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="?android:attr/textColorSecondary"
-		android:layout_toRightOf="@+id/l_rink_kind_id"
-		android:layout_toLeftOf="@+id/l_rink_is_favorite"
-		android:layout_below="@+id/l_rink_name" android:singleLine="true" 
-		android:layout_marginBottom="5dp"/>
+        android:layout_toRightOf="@+id/l_rink_kind_id"
+        android:layout_toLeftOf="@+id/l_rink_is_favorite"
+        android:layout_below="@+id/l_rink_name" android:singleLine="true" />
 
 </RelativeLayout>

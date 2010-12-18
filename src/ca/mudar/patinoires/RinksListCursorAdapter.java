@@ -26,7 +26,8 @@ package ca.mudar.patinoires;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.view.LayoutInflater;
+import android.location.Location;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filterable;
@@ -48,6 +49,7 @@ public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filte
 //	private int mColFieldBoroughRemarks;
 	private int mColFieldCondition;
 	private int mColFieldKindId;
+	private int mColFieldGeoDistance;
 
 
 	public RinksListCursorAdapter (Context context, int layout, Cursor cursor , String[] from, int[] to , boolean showBorough ) {
@@ -58,8 +60,8 @@ public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filte
 		mColFieldBorough        = cursor.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_BOROUGH_ID );
 //		mColFieldBoroughRemarks = cursor.getColumnIndex( PatinoiresDbAdapter.KEY_BOROUGHS_REMARKS );
 		mColFieldCondition      = cursor.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_CONDITION );
-		mColFieldKindId         = cursor.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_KIND_ID);
-		
+		mColFieldKindId         = cursor.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_KIND_ID );
+		mColFieldGeoDistance    = cursor.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_GEO_DISTANCE );
 	}
 
 	public static int getConditionColor( int condition ) {
@@ -109,7 +111,7 @@ public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filte
 		else {
 			visibility = View.GONE;
 		}
-
+	
 		TextView textViewBorough = (TextView) view.findViewById( R.id.l_borough_name );
 		textViewBorough.setVisibility( visibility );
 
@@ -125,6 +127,8 @@ public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filte
 			textViewRemarks.setVisibility( View.GONE );
 		}
 		 */
+		TextView textViewPadding = (TextView) view.findViewById( R.id.l_borough_padding );
+		textViewPadding.setVisibility( visibility );
 		TextView textViewSeparator = (TextView) view.findViewById( R.id.l_borough_separator );
 		textViewSeparator.setVisibility( visibility );
 
@@ -147,9 +151,32 @@ public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filte
 			}
 		}
 		( (ImageView) view.findViewById( R.id.l_rink_kind_id ) ).setImageDrawable( context.getResources().getDrawable(imageResource) );
+
+//		( (TextView) view.findViewById( R.id.l_park_geo_distance ) ).setText( getDistance( cursor ) + "m"  );
 		
 		super.bindView(view, context, cursor);
 	}
+	/*
+	private CharSequence getDistance( Cursor c ) {
+		String coordinates[] = { "45.5", "-73.666667" };
+		double lat_1 = Double.parseDouble(coordinates[0]);
+		double lng_1 = Double.parseDouble(coordinates[1]);
+		
+		double lat_2;
+		double lng_2;
+		float[] results = new float[3];
+Log.w( TAG , "calculate distances...");
+
+			lat_2 = Double.parseDouble( c.getString( c.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_GEO_LAT ) ) );
+			lng_2 = Double.parseDouble( c.getString( c.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_GEO_LNG ) ) );
+
+			Location.distanceBetween(lat_1, lng_1, lat_2, lng_2, results);
+Log.w( TAG , "distanceBetween results = " + results[0] );
+
+CharSequence distance = String.valueOf( (int) results[0] );
+		return distance;
+	}
+	*/
 
 	/*
     @Override

@@ -31,7 +31,9 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
+//import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.widget.TabHost;
 
 public class PatinerMontreal extends TabActivity {
@@ -45,9 +47,13 @@ public class PatinerMontreal extends TabActivity {
 	public static final String TAB_SKATING   = "tab_skating";
 	public static final String TAB_HOCKEY    = "tab_hockey";
 	public static final String TAB_ALL       = "tab_all";
+	
+	public static final int TAB_INDEX_FAVORITES = 0;
+	public static final int TAB_INDEX_ALL       = 3;
 
 	private static TabHost tabHost; 
 
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -56,7 +62,7 @@ public class PatinerMontreal extends TabActivity {
 
 		mDbHelper = new PatinoiresOpenData(this);
 		
-		setInterfaceLanguage();		
+		setInterfaceLanguage();
 
 		setContentView(R.layout.main);
 		Resources res = getResources();
@@ -75,8 +81,8 @@ public class PatinerMontreal extends TabActivity {
 
 		spec = tabHost.newTabSpec( TAB_ALL ).setIndicator( res.getText( R.string.tab_all ) ).setContent(intent);
 		tabHost.addTab(spec);
-
-		tabHost.setCurrentTab( 0 );
+		
+		tabHost.setCurrentTab( mDbHelper.hasFavorites() ? TAB_INDEX_FAVORITES : TAB_INDEX_ALL );
 	}
 
 	public static String getCurrentTabTag() {
@@ -84,9 +90,9 @@ public class PatinerMontreal extends TabActivity {
 	}
 
 	public static void setCurrentTabAllRinks() {
-		tabHost.setCurrentTab( 3 );
+		tabHost.setCurrentTab( TAB_INDEX_ALL );
 	}
-	
+
 	public static PatinoiresOpenData getmDbHelper() {
 		return mDbHelper;
 	}
@@ -94,13 +100,21 @@ public class PatinerMontreal extends TabActivity {
 	private void setInterfaceLanguage() {
 		SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE );
 		
-		String lg = settings.getString( "language" , Locale.getDefault().getLanguage() );
-
+		String lg = settings.getString( "prefs_language" , Locale.getDefault().getLanguage() );
 		Locale locale = new Locale( lg );
 
 		Configuration config = getBaseContext().getResources().getConfiguration();
 		config.locale = locale;
 		Locale.setDefault( locale );
 		getBaseContext().getResources().updateConfiguration( config , getBaseContext().getResources().getDisplayMetrics() );
+	}
+	
+	
+	@Override 
+	public boolean onCreateOptionsMenu(Menu menu) {
+
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_menu, menu);
+		return true;
 	}
 }

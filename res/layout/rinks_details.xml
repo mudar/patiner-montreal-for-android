@@ -14,7 +14,6 @@
         android:background="#FFFFFF"
         android:layout_alignParentBottom="true" >
 
-<!--android:background="@android:drawable/title_bar"-->
         <ImageButton android:id="@+id/l_rink_refresh" 
             android:src="@drawable/ic_btn_refresh"
             android:layout_width="fill_parent" 

@@ -5,16 +5,19 @@
     <string name="app_name_map">Carte de Patiner Montréal</string>
     <string name="app_name_details">Informations de la patinoire</string>
     <string name="app_name_search">Patiner Montréal</string>
+    <string name="app_name_preferences">Paramètres de Patiner Montréal</string>
     <string name="app_name_manifest">Patiner Montreal</string>
     <string name="menu_refresh_list">Rafraîchir</string>
     <string name="menu_refresh_map">Rafraîchir</string>
     <string name="menu_refresh_rink">Rafraîchir</string>
-    <string name="menu_select_conditions">Conditions</string>
     <string name="menu_view_map">Carte</string>
-    <string name="menu_sort">Trier</string>
-    <string name="menu_links">Liens</string>
-    <string name="menu_about">À propos</string>
-    <string name="menu_language">Langue</string>
+    <string name="menu_search">Rechercher</string>
+    <string name="menu_preferences">Paramètres</string>
+    <string name="menu_select_conditions">Conditions</string>
+<!--    <string name="menu_sort">Trier</string>-->
+<!--    <string name="menu_links">Liens</string>-->
+<!--    <string name="menu_about">À propos</string>-->
+<!--    <string name="menu_language">Langue</string>-->
     <string name="menu_share_map">Partager</string>
     <string name="menu_favorites_add">Ajouter aux favoris</string>
     <string name="menu_favorites_remove">Supprimer des favrois</string>
@@ -25,22 +28,6 @@
     <string name="context_menu_favorites_remove">Supprimer des favoris</string>
     <string name="context_menu_call_rink">Appeler</string>
     <string name="context_menu_map_view_rink">Afficher dans la carte</string>
-        
-    <string name="dialog_sort_title">Trier par</string>
-    <string name="dialog_sort_distance">Distance</string>
-    <string name="dialog_sort_rink">Patinoire</string>
-    <string name="dialog_sort_park">Parc</string>
-    <string name="dialog_sort_borough">Arrondissement</string>
-
-    <string name="dialog_language_title">Langue de l\'interface</string>
-    <string name="dialog_language_french">Français</string>
-    <string name="dialog_language_english">English</string>
-    
-    <string name="dialog_condition_title">Condition de la patinoire</string>
-    <string name="dialog_condition_excellent">Excellente</string>
-    <string name="dialog_condition_good">Bonne</string>
-    <string name="dialog_condition_bad">Mauvaise</string>
-    <string name="dialog_condition_closed">Fermée</string>
 
     <string name="list_no_rinks">Liste vide...</string>
 
@@ -49,7 +36,7 @@
     <string name="tab_hockey">Hockey</string>
     <string name="tab_all">Tous</string>
     
-    <string name="dialog_about_title">À propos de Patiner Montréal</string>
+    <string name="dialog_about_title">Patiner Montréal</string>
 	<string name="logo_open_data">@drawable/logo_open_data_fr</string>
 	<string name="dialog_about_intro">Patiner Montréal pour Android est un projet libre
 		pour la promotion des données ouvertes à Montréal. La ville publie
@@ -89,5 +76,34 @@
 
     <string name="search_hint">Rechercher les patinoires</string>
     <string name="search_results">Résultats pour &#171;&#160;<xliff:g id="string">%s</xliff:g>&#160;&#187;</string>
+    
+    <string name="prefs_category_display">Paramètres de l\'affichage</string>
 
+    <string name="prefs_category_conditions">Condition de la patinoire</string>
+    <string name="prefs_condition_title">Condition</string>
+    <string name="prefs_condition_summary">Afficher ou cacher les patinoires selon l\'état de la glace</string>
+    <string name="prefs_condition_dialog_title">Rink Condition</string>
+    <string name="prefs_condition_excellent">Excellente</string>
+    <string name="prefs_condition_good">Bonne</string>
+    <string name="prefs_condition_bad">Mauvaise</string>
+    <string name="prefs_condition_closed">Fermée</string>
+    
+    <string name="prefs_sort_title">Ordre d\'affichage</string>
+    <string name="prefs_sort_summary">Modifier l\'ordre d\'affichage des patinoires</string>
+    <string name="prefs_sort_dialog_title">Trier par</string>
+    <string name="prefs_sort_distance">Distance</string>
+    <string name="prefs_sort_rink">Patinoire</string>
+    <string name="prefs_sort_park">Parc</string>
+    <string name="prefs_sort_borough">Arrondissement</string>
+
+    <string name="prefs_language_title">Langue</string>
+    <string name="prefs_language_summary">Modifier la langue de l\'interface</string>
+    <string name="prefs_language_dialog_title">Langue</string>
+    <string name="prefs_language_french">Français</string>
+    <string name="prefs_language_english">English</string>
+
+    <string name="prefs_category_credits">Crédits</string>
+    <string name="prefs_credits_about">À propos</string>
+    <string name="prefs_credits_links">Liens utiles</string>
+    
 </resources>
