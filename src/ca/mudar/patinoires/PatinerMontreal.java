@@ -70,16 +70,16 @@ public class PatinerMontreal extends TabActivity {
 		TabHost.TabSpec spec;
 
 		Intent intent = new Intent().setClass(this, PatinoiresList.class);
-		spec = tabHost.newTabSpec( TAB_FAVORITES ).setIndicator( res.getText( R.string.tab_favorites ) ).setContent(intent);
+		spec = tabHost.newTabSpec( TAB_FAVORITES ).setIndicator( res.getText( R.string.tab_favorites ) , res.getDrawable( R.drawable.ic_tab_favorites ) ).setContent(intent);
 		tabHost.addTab(spec);
 
-		spec = tabHost.newTabSpec( TAB_SKATING ).setIndicator( res.getText( R.string.tab_skating ) ).setContent(intent);
+		spec = tabHost.newTabSpec( TAB_SKATING ).setIndicator( res.getText( R.string.tab_skating ) , res.getDrawable( R.drawable.ic_tab_skating ) ).setContent(intent);
 		tabHost.addTab(spec);
 
-		spec = tabHost.newTabSpec( TAB_HOCKEY ).setIndicator( res.getText( R.string.tab_hockey ) ).setContent(intent);
+		spec = tabHost.newTabSpec( TAB_HOCKEY ).setIndicator( res.getText( R.string.tab_hockey ) , res.getDrawable( R.drawable.ic_tab_hockey ) ).setContent(intent);
 		tabHost.addTab(spec);
 
-		spec = tabHost.newTabSpec( TAB_ALL ).setIndicator( res.getText( R.string.tab_all ) ).setContent(intent);
+		spec = tabHost.newTabSpec( TAB_ALL ).setIndicator( res.getText( R.string.tab_all ) , res.getDrawable( R.drawable.ic_tab_all ) ).setContent(intent);
 		tabHost.addTab(spec);
 		
 		tabHost.setCurrentTab( mDbHelper.hasFavorites() ? TAB_INDEX_FAVORITES : TAB_INDEX_ALL );
@@ -95,6 +95,11 @@ public class PatinerMontreal extends TabActivity {
 
 	public static PatinoiresOpenData getmDbHelper() {
 		return mDbHelper;
+	}
+	
+	final public String getInterfaceLanguage() {
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, MODE_PRIVATE );
+		return settings.getString( "prefs_language" , Locale.getDefault().getLanguage() );
 	}
 	
 	private void setInterfaceLanguage() {

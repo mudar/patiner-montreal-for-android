@@ -40,6 +40,7 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.SQLException;
+//import android.util.Log;
 
 public class PatinoiresOpenData extends PatinoiresDbAdapter {
 
@@ -157,20 +158,9 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 		// Do not drop tables on first launch
 		if ( dialog != null ) {
 			//			Log.w( TAG , "Deleting old contents. Tables: " + DB_NAME + "." + TABLE_NAME_BOROUGHS + ", " + DB_NAME + "." + TABLE_NAME_PARKS + ", " + DB_NAME + "." + TABLE_NAME_RINKS );
-			dialog.incrementProgressBy( 10 );
-			openDb();
-			try {
-				mDb.beginTransaction();
-				mDb.execSQL("DELETE FROM " + TABLE_NAME_BOROUGHS );
-				mDb.execSQL("DELETE FROM " + TABLE_NAME_PARKS );
-				mDb.execSQL("DELETE FROM " + TABLE_NAME_RINKS );
-				mDb.setTransactionSuccessful();
-			} 
-			finally {
-				mDb.endTransaction();
-			}
-			closeDb();
-			dialog.incrementProgressBy( 10 );
+			
+			Random rand = new Random();
+			dialog.incrementProgressBy( rand.nextInt( 10 ) + 5 );	// Cheating, to encourage users to wait ;)
 		}
 
 		String queryResult = jsonImportRemote( URL_JSON_INITIAL_IMPORT );
@@ -183,13 +173,26 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 			String rinkDescEnglish;
 			String[] splitName;
 			final int totalRinks = rinks.length();
-			if ( dialog != null ) {
+			
+			if ( totalRinks == 0 ) { 
+				return false; 
+			}
+			else if ( dialog != null ) {
 				dialog.setProgress( 0 );
 				dialog.setMax(totalRinks);
 			}
-
+			
 			openDb();
-
+			try {
+				mDb.beginTransaction();
+				mDb.execSQL("DELETE FROM " + TABLE_NAME_BOROUGHS );
+				mDb.execSQL("DELETE FROM " + TABLE_NAME_PARKS );
+				mDb.execSQL("DELETE FROM " + TABLE_NAME_RINKS );
+				mDb.setTransactionSuccessful();
+			} 
+			finally {
+				mDb.endTransaction();
+			}
 
 			//			Log.i( TAG , "Inserting OpenData rinks. Total: " + totalRinks );
 			try {
@@ -239,6 +242,8 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 					/**
 					 *  Get Borough info
 					 */
+					if ( rink.optString( "borough_id" ).equals( "null" ) ) { continue; }	// Skip empty borough
+					
 					try {
 						borough = (JSONObject) rink.get("borough");
 					}
@@ -259,6 +264,8 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 					/**
 					 *  Get Park info
 					 */
+					if ( rink.optString( "park_id" ).equals( "null" ) ) { continue; }	// Skip empty park
+					
 					try {
 						park = (JSONObject) rink.get("park");
 					}
@@ -306,9 +313,7 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 
 		} catch (JSONException e) { importResult = false; /* Log.e( TAG , "queryResult JSONException" ); */ }
 
-		//TODO fix this
-		return true;
-		//		return importResult;
+		return importResult;
 	}
 
 

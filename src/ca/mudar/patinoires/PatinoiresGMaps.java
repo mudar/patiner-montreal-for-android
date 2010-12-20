@@ -25,11 +25,14 @@ package ca.mudar.patinoires;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.os.Bundle;
-//import android.util.Log;
+import ca.mudar.patinoires.PatinoiresDbAdapter.MapPark;
 import ca.mudar.patinoires.PatinoiresDbAdapter.MapRink;
 
 import com.google.android.maps.GeoPoint;
@@ -63,7 +66,7 @@ public class PatinoiresGMaps extends MapActivity {
 		mapController = mapView.getController();
 		mapController.setZoom( DEFAULT_ZOOM );
 
-		myLocationManager = (LocationManager)getSystemService(this.LOCATION_SERVICE);
+		myLocationManager = (LocationManager)getSystemService( PatinoiresGMaps.LOCATION_SERVICE );
 
 		initMap();
 	}
@@ -78,23 +81,35 @@ public class PatinoiresGMaps extends MapActivity {
 
 		mDbHelper = PatinerMontreal.getmDbHelper();
 		mDbHelper.openDb();
-		ArrayList<MapRink> rinksList = mDbHelper.fetchRinksForMap( "" , "" );
+		ArrayList<MapPark> parksArrayList = mDbHelper.fetchRinksForMap( "" , "" );
 		mDbHelper.closeDb();
 
-		//		Log.w( TAG , "NB rinks = " + rinksList.size() );
 
 		List<Overlay> mapOverlays = mapView.getOverlays();
 		Drawable drawable = this.getResources().getDrawable(R.drawable.ic_map_default_marker);
-		PatinoiresItemizedOverlay itemizedoverlay = new PatinoiresItemizedOverlay(drawable , mapView.getContext() );
+		PatinoiresItemizedOverlay itemizedoverlay = new PatinoiresItemizedOverlay( drawable , mapView.getContext() );
 
-		for (MapRink r : rinksList) {
-			OverlayItem overlayitem = new OverlayItem( r.geoPoint , r.rink, r.descriptionFr );
+		String parkPrefix = (String) getResources().getText( R.string.map_context_park_prefix );
+		String language = getInterfaceLanguage();
+
+		String rinks;
+		for ( MapPark park : parksArrayList ) {
+			rinks = "";
+			for ( MapRink rink : park.rinksArrayList ) {
+				if ( rinks.length() > 0 ) { rinks = rinks + "\n"; }
+				
+				rinks = rinks + ( language.equals( "fr" ) ? rink.descriptionFr : rink.descriptionEn ); 
+			}
+			OverlayItem overlayitem = new OverlayItem( park.geoPoint , parkPrefix + park.park, rinks );
 			itemizedoverlay.addOverlay(overlayitem);
-			//Log.w( TAG , "Rink = " + r.rink + " Geopoint = " +r.geoPoint.toString()  );
 		}
 		mapOverlays.add(itemizedoverlay);
-
 	} 
+	
+	private String getInterfaceLanguage() {
+		SharedPreferences settings = getSharedPreferences( PatinerMontreal.PREFS_NAME , MODE_PRIVATE );
+		return settings.getString( "prefs_language", Locale.getDefault().getLanguage() );
+	}
 
 	/**
 	 * Get the geopoint where the map should first be centered. Current location if available, otherwise MTL-centre
@@ -104,7 +119,21 @@ public class PatinoiresGMaps extends MapActivity {
 	private void initialAnimateToPoint() {
 		List<String > enabledProviders = myLocationManager.getProviders( true );
 
-		if ( enabledProviders.contains( LocationManager.NETWORK_PROVIDER ) ) {
+		Intent intent = getIntent();
+		
+		String geoLat = intent.getStringExtra( "geoLat" );
+		String geoLng = intent.getStringExtra( "geoLng" );
+		
+		if ( ( geoLat != null ) && ( geoLng != null ) ) {
+			mapController.setZoom( DEFAULT_ZOOM + 2 );
+			// Display requested rink
+			double lat = Double.parseDouble( geoLat );
+			double lng = Double.parseDouble( geoLng );
+
+			GeoPoint animateToPoint = new GeoPoint( (int) (lat * 1E6) , (int) (lng * 1E6) ); 
+			mapController.setCenter( animateToPoint );
+		}
+		else if ( enabledProviders.contains( LocationManager.NETWORK_PROVIDER ) ) {
 			// Display user current location
 			myLocationOverlay.runOnFirstFix( new Runnable(  ) {
 				public void run() {

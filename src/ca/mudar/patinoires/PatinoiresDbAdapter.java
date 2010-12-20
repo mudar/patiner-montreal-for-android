@@ -114,22 +114,32 @@ public class PatinoiresDbAdapter {
         public final String rink;
         public final String descriptionFr;
         public final String descriptionEn;
-        public final int condition;
-        public final int kindId;
-        public final boolean isFavorite;
-        public final GeoPoint geoPoint;
 
-        public MapRink( String rink , String descriptionFr , String descriptionEn , int condition ,int kindId , boolean isFavorite , String geoLat , String geoLng ) {
+        public MapRink( String rink , String descriptionFr , String descriptionEn ) {
             this.rink = rink;
             this.descriptionFr = descriptionFr;
             this.descriptionEn = descriptionEn;
-            this.condition = condition;
-            this.kindId = kindId;
-            this.isFavorite = isFavorite;
-
+        }
+    }
+    
+    public static class MapPark {
+    	public final String park;
+    	public final GeoPoint geoPoint;
+    	public final ArrayList<MapRink> rinksArrayList = new ArrayList<MapRink>();
+    	// TODO: verify this field in the data API
+//    	public final String rinksConditions;
+    	
+        public MapPark( String park , String geoLat , String geoLng ) {
+        	this.park = park;
+//        	this.rinksConditions = rinksConditions;
+        	
             double lat = Double.parseDouble( geoLat );
 			double lng = Double.parseDouble( geoLng );
-			this.geoPoint = new GeoPoint( (int) (lat * 1E6) , (int) (lng * 1E6) ); ;
+			this.geoPoint = new GeoPoint( (int) (lat * 1E6) , (int) (lng * 1E6) ); ;        	
+        }
+
+        public void addRink( MapRink mapRink ) {
+        	this.rinksArrayList.add( mapRink );
         }
     }
 	
@@ -311,31 +321,61 @@ public class PatinoiresDbAdapter {
 		return searchRinks( "" , "hockey" );
 	}
 
-	public ArrayList<MapRink> fetchRinksForMap( String searchString , String tabFilter ) {
+	/**
+	 * 
+	 * @param searchString
+	 * @param tabFilter
+	 * @return
+	 */
+	public ArrayList<MapPark> fetchRinksForMap( String searchString , String tabFilter ) {
 
-		Cursor c = searchRinks( searchString , tabFilter );
+		Cursor c = null;
+		try {
+			c = searchRinks( searchString , tabFilter );			
+		}
+		catch ( SQLException e ) { /* Log.e( TAG , "SQLException" ); */ }
+		if ( c == null ) { return null; }
 
-		MapRink mapRink;
-		ArrayList<MapRink> rinksArrayList = new ArrayList<MapRink>();
+		// Save the previous sort
+		int originalSort = getSortList();
+		// Set sort to PARKS
+		setSortList( SORT_PARK_INDEX );
 
+		// Store each NEW park in the result arraylist (parksArrayList)
+		// Store each rink in the current park
+
+		int idParkPrevious = -1;	// Initialize  
+		MapRink mapRink = null;
+		MapPark mapPark = null;
+		ArrayList<MapPark> parksArrayList = new ArrayList<MapPark>();
+		
 		c.moveToFirst(); 
-		while( c.isAfterLast() == false) {
+		while( c.isAfterLast() == false ) {
+						
+			if ( idParkPrevious != c.getInt( c.getColumnIndex( KEY_RINKS_PARK_ID ) ) ) {
+				idParkPrevious = c.getInt( c.getColumnIndex( KEY_RINKS_PARK_ID ) );
+				// Create new park and save in the result arrayList
+				mapPark = new MapPark( 
+						c.getString( c.getColumnIndex( KEY_PARKS_NAME ) ) , 
+						c.getString( c.getColumnIndex( KEY_PARKS_GEO_LAT ) ) ,
+						c.getString( c.getColumnIndex( KEY_PARKS_GEO_LNG ) ) );
+				parksArrayList.add( mapPark );
+			}
+			
+			// Create new rink and add to current park
 			mapRink = new MapRink(
 					c.getString( c.getColumnIndex( KEY_RINKS_NAME ) ) ,
 					c.getString( c.getColumnIndex( KEY_RINKS_DESC_FR ) ) ,
-					c.getString( c.getColumnIndex( KEY_RINKS_DESC_EN ) ) ,
-					c.getInt( c.getColumnIndex( KEY_RINKS_CONDITION ) ) ,
-					c.getInt( c.getColumnIndex( KEY_RINKS_KIND_ID ) ) ,
-					( c.getInt( c.getColumnIndex( KEY_RINKS_IS_FAVORITE ) ) == 1 ? true : false ),
-					c.getString( c.getColumnIndex( KEY_PARKS_GEO_LAT ) ) ,
-					c.getString( c.getColumnIndex( KEY_PARKS_GEO_LNG ) )
-			); 
-			rinksArrayList.add( mapRink );
+					c.getString( c.getColumnIndex( KEY_RINKS_DESC_EN ) ) 
+			);
+		
+			mapPark.addRink( mapRink );
 			c.moveToNext(); 
 		}
 		c.close();
-
-		return rinksArrayList;
+		
+		setSortList( originalSort );
+		return parksArrayList;
 	}
 
 	/**
@@ -344,7 +384,7 @@ public class PatinoiresDbAdapter {
 	 */
 	public Cursor searchRinks( String searchString , String tabFilter ) throws SQLException {
 
-		String sqlOrder = KEY_RINKS_NAME;
+		String sqlOrder = KEY_RINKS_NAME + " , " + KEY_RINKS_DESC_FR;
 		String sqlConditionsFilter = "";
 		String sqlSearchFilter = "";
 		String sqlTabFilter = "";

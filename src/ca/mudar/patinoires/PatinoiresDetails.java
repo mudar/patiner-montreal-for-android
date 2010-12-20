@@ -29,14 +29,15 @@ import java.util.TimeZone;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.app.LauncherActivity.ListItem;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -45,11 +46,13 @@ import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class PatinoiresDetails extends Activity {
 	protected static final String TAG = "PatinoiresDetails";
 	private PatinoiresOpenData mDbHelper ; 
+	private ProgressDialog dialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,8 @@ public class PatinoiresDetails extends Activity {
 		if( extras != null ) {
 			long rinkId = extras.getLong("rinkId");
 			String interfaceLanguage = extras.getString("interfaceLanguage");
+			// TODO
+//Log.w( TAG , "interfaceLanguage = "  + interfaceLanguage );
 
 			view = fillData( view , rinkId , interfaceLanguage );
 		}
@@ -187,21 +192,43 @@ public class PatinoiresDetails extends Activity {
 		} 
 		else {
 			// Display the on/off icons. Set text to the best available surface service 
-			int isCleared = cursor.getInt( cursor.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_IS_CLEARED ) );
-			int isFlooded = cursor.getInt( cursor.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_IS_FLOODED ) );
-			int isResurfaced = cursor.getInt( cursor.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_IS_RESURFACED ) );
+			final int isCleared = cursor.getInt( cursor.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_IS_CLEARED ) );
+			final int isFlooded = cursor.getInt( cursor.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_IS_FLOODED ) );
+			final int isResurfaced = cursor.getInt( cursor.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_IS_RESURFACED ) );
 			surface = getSurfaceText( isCleared , isFlooded , isResurfaced );
 			( (TextView) view.findViewById(R.id.l_rink_surface) ).append( surface );
-
-			( (ImageView) view.findViewById(R.id.l_rink_is_cleared) ).setImageResource(
-					isCleared == 1 ? R.drawable.ic_surface_cleared_on : R.drawable.ic_surface_cleared_off  
-			);
-			( (ImageView) view.findViewById(R.id.l_rink_is_flooded) ).setImageResource(
-					isFlooded == 1 ? R.drawable.ic_surface_flooded_on : R.drawable.ic_surface_flooded_off
-			);
-			( (ImageView) view.findViewById(R.id.l_rink_is_resurfaced) ).setImageResource(
-					isResurfaced == 1 ? R.drawable.ic_surface_resurfaced_on : R.drawable.ic_surface_resurfaced_off 
-			);
+			
+			ImageView viewIsCleared    = (ImageView) view.findViewById(R.id.l_rink_is_cleared);
+			ImageView viewIsFlooded    = (ImageView) view.findViewById(R.id.l_rink_is_flooded);
+			ImageView viewIsResurfaced = (ImageView) view.findViewById(R.id.l_rink_is_resurfaced);
+			
+			viewIsCleared.setImageResource( isCleared == 1 ? R.drawable.ic_surface_cleared_on : R.drawable.ic_surface_cleared_off );
+			viewIsFlooded.setImageResource( isFlooded == 1 ? R.drawable.ic_surface_flooded_on : R.drawable.ic_surface_flooded_off );
+			viewIsResurfaced.setImageResource( isResurfaced == 1 ? R.drawable.ic_surface_resurfaced_on : R.drawable.ic_surface_resurfaced_off );
+			
+			final Toast toastIceSurface = Toast.makeText( this  , "", Toast.LENGTH_SHORT );
+			
+			viewIsCleared.setOnClickListener( new OnClickListener() {
+				@Override
+				public void onClick(View arg0) {
+					int message = isCleared == 1 ? R.string.rink_details_is_cleared : R.string.rink_details_is_cleared_false;
+					toastIceSurface.setText( message );
+					toastIceSurface.show();
+				} } );
+			viewIsFlooded.setOnClickListener( new OnClickListener() {
+				@Override
+				public void onClick(View arg0) {
+					int message = isFlooded == 1 ? R.string.rink_details_is_flooded : R.string.rink_details_is_flooded_false;					
+					toastIceSurface.setText( message );
+					toastIceSurface.show();
+				} } );
+			viewIsResurfaced.setOnClickListener( new OnClickListener() {
+				@Override
+				public void onClick(View arg0) {
+					int message = isResurfaced == 1 ? R.string.rink_details_is_resurfaced : R.string.rink_details_is_resurfaced_false;
+					toastIceSurface.setText( message );
+					toastIceSurface.show();
+				} } );
 		}
 
 
@@ -213,11 +240,7 @@ public class PatinoiresDetails extends Activity {
 		( (TextView) view.findViewById(R.id.l_park_name) ).append( 
 				cursor.getString( cursor.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_NAME ) )  
 		);
-		/*
-	    ( (TextView) view.findViewById(R.id.l_park_geo_id) ).setText( 
-	    		cursor.getString( cursor.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_GEO_ID ) )  
-	    );
-		 */
+
 		( (TextView) view.findViewById(R.id.l_park_address) ).append( 
 				cursor.getString( cursor.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_ADDRESS ) )  
 		);
@@ -262,20 +285,41 @@ public class PatinoiresDetails extends Activity {
 		}
 
 
-		String updatedAt =  cursor.getString( cursor.getColumnIndex( PatinoiresDbAdapter.KEY_BOROUGHS_UPDATED_AT ) );
+		String updatedAtBorough =  cursor.getString( cursor.getColumnIndex( PatinoiresDbAdapter.KEY_BOROUGHS_UPDATED_AT ) );
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss" );  
 		try {
 			dateFormat.setTimeZone( TimeZone.getTimeZone("EST") );
-			Long millis = dateFormat.parse( updatedAt ).getTime(); 
-			updatedAt = (String) DateUtils.getRelativeTimeSpanString( millis , System.currentTimeMillis() , 0 , DateUtils.FORMAT_ABBREV_RELATIVE );
+			Long millis = dateFormat.parse( updatedAtBorough ).getTime(); 
+			updatedAtBorough = (String) DateUtils.getRelativeTimeSpanString( millis , System.currentTimeMillis() , 0 , DateUtils.FORMAT_ABBREV_RELATIVE );
 		} catch (java.text.ParseException e) { }
-		( (TextView) view.findViewById(R.id.l_borough_updated_at) ).append( updatedAt );
+		( (TextView) view.findViewById(R.id.l_borough_updated_at) ).append( updatedAtBorough );
+		
+		SharedPreferences settings = getSharedPreferences( PatinerMontreal.PREFS_NAME , MODE_PRIVATE );
+		Long lastUpdateTime =  settings.getLong("lastFastUpdateTime", 0);
+		String updatedAtUser = (String) DateUtils.getRelativeTimeSpanString( lastUpdateTime , System.currentTimeMillis() , 0 , DateUtils.FORMAT_ABBREV_RELATIVE );
+		( (TextView) view.findViewById(R.id.l_user_updated_at) ).append( updatedAtUser );
+		
 
 
 		// The color of the star for Favorites button
 		( ( ImageButton ) view.findViewById(R.id.l_rink_favorites) ).setImageResource( 
 				cursor.getInt( cursor.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_IS_FAVORITE ) ) == 1 ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off 
 		);
+		
+		final String geoLat = cursor.getString( cursor.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_GEO_LAT ) );
+		final String geoLng = cursor.getString( cursor.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_GEO_LNG ) );
+		
+		// Point the map towards the location
+		( (ImageButton) view.findViewById(R.id.l_rink_mapmode) ).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent( getApplicationContext() , PatinoiresGMaps.class );
+				intent.putExtra( "geoLat" , geoLat );
+				intent.putExtra( "geoLng" , geoLng );
+				startActivity( intent );
+			}
+		});
+		
 
 		// Close here to avoid problems!
 // TODO: verify need to close cursor
@@ -300,11 +344,30 @@ public class PatinoiresDetails extends Activity {
 			}
 		});
 
+	
 		( (ImageButton) view.findViewById(R.id.l_rink_refresh) ).setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-
+				Context context = v.getContext();
+				
+				if ( isConnected() == false ) {
+					AlertDialog.Builder builder = new AlertDialog.Builder( context );
+					builder.setTitle( R.string.dialog_network_connection_title  )
+					.setMessage( R.string.dialog_network_connection_message  )
+					.setPositiveButton( android.R.string.ok , null )
+					.create()
+					.show();
+				}
+				else {
+					SyncOpenDataTask syncOpenDataTask = new SyncOpenDataTask();
+					
+					dialog = ProgressDialog.show( context , null ,  getResources().getText( R.string.dialog_updating_conditions ) , true , true);
+					syncOpenDataTask.execute( "openDataUpdateConditions" );
+				} 
+				
+// TODO				
+/*				
 				Context context = v.getContext();
 				if ( isConnected() == false ) {
 					AlertDialog.Builder builder = new AlertDialog.Builder( context );
@@ -328,24 +391,24 @@ public class PatinoiresDetails extends Activity {
 					} ).start();
 					mDbHelper.closeDb();
 				}
+	*/			
 			}
 		});
-
-		( (ImageButton) view.findViewById(R.id.l_rink_mapmode) ).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent( getApplicationContext() , PatinoiresGMaps.class );
-				startActivity( intent );
-			}
-		});
-
 
 		return view;
 	}
 
-
+	/*
+	final public void updateTimestamps() {
+		Context context = getApplicationContext();
+		View v = context.ge
+		( (TextView) v.findViewById(R.id.l_user_updated_at) ).setText( "" );
+	}
+	*/
+/*
 	@Override
 	protected void onResume() {
+// TODO verify
 		super.onResume();
 
 		LayoutInflater mInflater = LayoutInflater.from( this );
@@ -359,6 +422,7 @@ public class PatinoiresDetails extends Activity {
 		view = fillData( view , rinkId , interfaceLanguage );
 
 	}
+	*/
 	/*
 	protected void onDestroy() {
 		mDbHelper.closeDb();
@@ -379,6 +443,35 @@ public class PatinoiresDetails extends Activity {
 		}
 		else {
 			return networkInfo.isConnected(); 
+		}
+	}
+	
+	
+	private class SyncOpenDataTask extends AsyncTask<String, Void , Boolean>
+	{
+		@Override
+		protected Boolean doInBackground( String... params ) 
+		{
+			SharedPreferences settings = getSharedPreferences( PatinerMontreal.PREFS_NAME , MODE_PRIVATE );
+			settings.edit().putLong("lastFastUpdateTime", System.currentTimeMillis() ).commit();
+			return mDbHelper.openDataUpdateConditions();
+		}
+
+		@Override
+		protected void onPostExecute( Boolean result ) 
+		{
+			super.onPostExecute(result);
+			dialog.dismiss();
+			// TODO: find a better way to update cursor and fields!
+			Bundle extras = getIntent().getExtras();
+			long rinkId = extras.getLong("rinkId");
+			String interfaceLanguage = extras.getString("interfaceLanguage");
+			
+			Intent intent = new Intent( getApplicationContext() , PatinoiresDetails.class );
+			intent.putExtra( "rinkId" , rinkId );
+			intent.putExtra( "interfaceLanguage" , interfaceLanguage );
+			startActivity( intent);
+			finish();
 		}
 	}
 

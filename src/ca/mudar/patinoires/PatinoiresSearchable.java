@@ -1,8 +1,11 @@
 package ca.mudar.patinoires;
 
+import java.util.Locale;
+
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -31,9 +34,12 @@ public class PatinoiresSearchable extends ListActivity {
 		super.onCreate(savedInstanceState);
 
 		mDbHelper = PatinerMontreal.getmDbHelper();
-		interfaceLanguage = "en";
+		
+		SharedPreferences settings = getSharedPreferences( PatinerMontreal.PREFS_NAME , MODE_PRIVATE );
+		interfaceLanguage = settings.getString( "prefs_language", Locale.getDefault().getLanguage() );
 
-
+		// TODO verify this
+//		setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 		Intent intent = getIntent();
 
 		setContentView(R.layout.rinks_list);
@@ -41,17 +47,12 @@ public class PatinoiresSearchable extends ListActivity {
 
 		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
 //			Log.w( TAG , "rink found = " + intent.getDataString());
-
 			//long rinkId = intent.getData();
 			long rinkId = 1;
 			displayDetails( rinkId );
 
 			finish();
-
 		} 
-		else if ( Intent.ACTION_SEARCH.equals( intent.getAction() ) ) {
-			handleIntent(getIntent());
-		}
 
 		getListView().setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
@@ -74,7 +75,20 @@ public class PatinoiresSearchable extends ListActivity {
 	private void handleIntent(Intent intent) {
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			String query = intent.getStringExtra(SearchManager.QUERY);
-			fillData( query );
+			String title;
+			
+			// Different display for map search
+			String itemizedOverlay = intent.getStringExtra( "itemizedOverlay" );
+			if ( itemizedOverlay != null ) {
+				String parkPrefix = (String) getResources().getText( R.string.map_context_park_prefix );
+				query = query.replaceFirst( parkPrefix , "" );
+				title = parkPrefix + query;
+			}
+			else {
+				title = getString( R.string.search_results, query );
+			}
+
+			fillData( query , title );
 		}
 	}
 
@@ -85,12 +99,11 @@ public class PatinoiresSearchable extends ListActivity {
 		startActivity( intent);
 	}
 
-	private void fillData( String query ) {
-
+	private void fillData( String query , String title ) {
 		TextView mTextView = ( TextView ) findViewById( R.id.search_query );
 		mTextView.setVisibility( View.VISIBLE );
-		mTextView.setText( getString( R.string.search_results, query ) );
-
+		mTextView.setText( title );
+		
 		mDbHelper.openDb();
 
 		cursor = mDbHelper.searchRinks( query , null );
@@ -114,10 +127,7 @@ public class PatinoiresSearchable extends ListActivity {
 	protected void onResume() {
 		super.onResume();
 
-		Intent intent = getIntent();
-		String query = intent.getStringExtra( SearchManager.QUERY );
-
-		fillData(query);
+		handleIntent(getIntent());
 	}
 
 }

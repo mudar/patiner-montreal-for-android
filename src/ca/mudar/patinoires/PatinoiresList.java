@@ -40,14 +40,15 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -166,7 +167,7 @@ public class PatinoiresList extends ListActivity {
 		
 		setListAdapter( rinks );
 
-		getListView().setSelection(currentPosition);
+//		getListView().setSelection(currentPosition);
 		
 		mDbHelper.closeDb();
 	}
@@ -193,6 +194,7 @@ public class PatinoiresList extends ListActivity {
 		Intent intent = new Intent( this, PatinoiresDetails.class );
 		intent.putExtra( "rinkId" , rinkId );
 		intent.putExtra( "interfaceLanguage" , interfaceLanguage );
+//Log.w( TAG , "interfaceLanguage = " + interfaceLanguage);
 		startActivity( intent);
 	}
 
@@ -242,11 +244,11 @@ public class PatinoiresList extends ListActivity {
 		fillData();
 	}
 */
-	
+	/*
 	public String getInterfaceLanguage() {
 		return interfaceLanguage;
 	}
-
+*/
 
 	/**
 	 * Verify if last DB update was more than 24 hours ago (or was never done)
@@ -254,13 +256,14 @@ public class PatinoiresList extends ListActivity {
 	 */
 	private boolean isDailySyncRequired() {
 		SharedPreferences settings = getSharedPreferences( PREFS_NAME , MODE_PRIVATE );
+		settings.edit().putLong("lastFastUpdateTime", System.currentTimeMillis() ).commit();
 
-		Long lastUpdateTime =  settings.getLong("lastUpdateTime", 0);
+		Long lastFullUpdateTime =  settings.getLong("lastFullUpdateTime", 0);
 
-		if ( (lastUpdateTime + (24 * 60 * 60 * 1000) ) < System.currentTimeMillis() ) {
-			//        	Log.i( TAG , "Daily sync required. Last update was: " + lastUpdateTime );
+		if ( (lastFullUpdateTime + (24 * 60 * 60 * 1000) ) < System.currentTimeMillis() ) {
+			//        	Log.i( TAG , "Daily sync required. Last full update was: " + lastFullUpdateTime );
 
-			settings.edit().putLong("lastUpdateTime", System.currentTimeMillis() ).commit();
+			settings.edit().putLong("lastFullUpdateTime", System.currentTimeMillis() ).commit();
 			return true;
 		}
 		else {
@@ -390,16 +393,19 @@ public class PatinoiresList extends ListActivity {
 			break;
 		case R.id.call_rink:
 			result = true;
-			Cursor c = (Cursor) getListView().getItemAtPosition( info.position );
-			String phone = c.getString( c.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_PHONE ) );
+			Cursor cursorPhone = (Cursor) getListView().getItemAtPosition( info.position );
+			String phone = cursorPhone.getString( cursorPhone.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_PHONE ) );
 
 			Intent intentPhone = new Intent(Intent.ACTION_DIAL , Uri.parse("tel:" + phone));
 			startActivity( intentPhone );
 			break;
 		case R.id.map_view_rink:
 			result = true;
-
+			Cursor cursorMap = (Cursor) getListView().getItemAtPosition( info.position );
 			Intent intentMap = new Intent( getApplicationContext() , PatinoiresGMaps.class );
+			intentMap.putExtra( "geoLat" , cursorMap.getString( cursorMap.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_GEO_LAT ) ) );
+			intentMap.putExtra( "geoLng" , cursorMap.getString( cursorMap.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_GEO_LNG ) ) );
+
 			startActivity( intentMap );
 			break;
 		}
@@ -428,7 +434,7 @@ public class PatinoiresList extends ListActivity {
 		}
 	}
 
-	public class SyncOpenDataTask extends AsyncTask<String, Void , Boolean>
+	private class SyncOpenDataTask extends AsyncTask<String, Void , Boolean>
 	{
 		@Override
 		protected Boolean doInBackground( String... params ) 
@@ -459,7 +465,7 @@ public class PatinoiresList extends ListActivity {
 		}
 	}	
 
-	
+/*	
 	protected void onPause() {
 		if ( cursor != null ) {
 			currentPosition = getListView().getFirstVisiblePosition();
@@ -467,5 +473,5 @@ Log.w( TAG , "currentPosition saved = " + currentPosition );
 		}
 		super.onPause();
 	}
-
+*/
 }
