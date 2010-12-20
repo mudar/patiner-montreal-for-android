@@ -3,20 +3,21 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent" 
     android:layout_height="fill_parent"
-    android:orientation="vertical"  >
+    android:orientation="horizontal"  >
 
     <LinearLayout
         android:padding="3dp"
         android:id="@+id/buttons"
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" >
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:background="#404040"
+        android:layout_alignParentRight="true" >
 
         <ImageButton android:id="@+id/l_rink_refresh" 
             android:src="@drawable/ic_btn_refresh"
-            android:layout_width="fill_parent" 
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content" 
+            android:layout_height="fill_parent"
             android:layout_weight="1"  
         android:layout_alignParentLeft="true"    
             />
@@ -29,15 +30,15 @@
 
         <ImageButton android:id="@+id/l_rink_mapmode" 
             android:src="@android:drawable/ic_dialog_map"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_weight="1"
             android:layout_alignParentRight="true"
              />
     </LinearLayout>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_above="@id/buttons"
+                android:layout_toLeftOf="@id/buttons"
 	android:layout_width="fill_parent" android:layout_height="fill_parent" android:fillViewport="true">
 	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
@@ -82,48 +83,44 @@
 			android:text="@string/rink_details_conditions" 
 			android:layout_below="@+id/l_rink_desc" />
 
-        <ImageView android:id="@+id/l_rink_is_cleared"
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content"
-            android:layout_gravity="right" 
-            android:gravity="center"
-            android:layout_below="@+id/l_rink_condition"
-            android:layout_marginRight="6dp"
+		<ImageView android:id="@+id/l_rink_is_resurfaced"
+		    android:layout_width="wrap_content" 
+		    android:layout_height="wrap_content"
+			android:layout_below="@+id/l_rink_condition" 
+			android:gravity="center"
+			android:layout_gravity="right" 
+			android:layout_alignParentRight="true" 
             android:focusable="true"
             android:clickable="true" />
 
 		<ImageView android:id="@+id/l_rink_is_flooded"
 			android:layout_width="wrap_content" 
 			android:layout_height="wrap_content"
-			android:layout_gravity="right"
 			android:gravity="center"
 			android:layout_below="@+id/l_rink_condition"
-			android:layout_toRightOf="@+id/l_rink_is_cleared"
-			android:layout_marginRight="6dp"
-			android:focusable="true"
+			android:layout_toLeftOf="@+id/l_rink_is_resurfaced"
+			android:layout_gravity="right"
+            android:focusable="true"
             android:clickable="true" />
 			
-        <ImageView android:id="@+id/l_rink_is_resurfaced"
-            android:layout_width="wrap_content" 
-            android:layout_height="wrap_content"
-            android:layout_gravity="right" 
-            android:gravity="center"
-            android:layout_below="@+id/l_rink_condition"
-            android:layout_toRightOf="@+id/l_rink_is_flooded"
-            android:layout_marginRight="6dp"
+		<ImageView android:id="@+id/l_rink_is_cleared"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:layout_below="@+id/l_rink_condition"
+			android:layout_toLeftOf="@+id/l_rink_is_flooded"
+			android:layout_gravity="right"
             android:focusable="true"
             android:clickable="true" />
 
         <TextView android:id="@+id/l_rink_surface" 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="fill_vertical"
-            android:layout_toRightOf="@+id/l_rink_is_resurfaced" 
+            android:layout_gravity="fill_vertical" 
             android:gravity="center_vertical"
             android:text="@string/rink_details_surface"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorSecondary"
-            android:layout_alignBottom="@+id/l_rink_is_resurfaced"
             android:layout_below="@+id/l_rink_condition" />
 
         <ImageButton android:id="@+id/l_rink_call" android:src="@android:drawable/sym_action_call"
@@ -159,16 +156,16 @@
 			android:text="@string/rink_details_park_phone" android:layout_below="@+id/l_park_address" />
 			
 <!--
-            <TextView android:id="@+id/l_park_is_chalet"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="KEY_PARKS_IS_CHALET" />
-            <TextView
-            android:id="@+id/l_park_is_caravan"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="KEY_PARKS_IS_CARAVAN" />
-        -->
+			<TextView android:id="@+id/l_park_is_chalet"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="KEY_PARKS_IS_CHALET" />
+			<TextView
+			android:id="@+id/l_park_is_caravan"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="KEY_PARKS_IS_CARAVAN" />
+		-->
 		<TextView android:id="@+id/l_borough_name"
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
@@ -186,15 +183,15 @@
             android:textColor="?android:attr/textColorSecondary"
 			android:layout_below="@+id/l_borough_name" />
 
-		<TextView android:id="@+id/l_borough_updated_at"
-			android:layout_width="fill_parent"
-			android:layout_marginTop="18dp"
-			android:layout_alignWithParentIfMissing="true"
-			android:layout_height="wrap_content" android:text="@string/rink_details_borough_updated_at"
+        <TextView android:id="@+id/l_borough_updated_at"
+            android:layout_width="fill_parent"
+            android:layout_marginTop="18dp"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_height="wrap_content" android:text="@string/rink_details_borough_updated_at"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="?android:attr/textColorTertiary"
-			android:layout_below="@+id/l_borough_remarks" />
-			
+            android:layout_below="@+id/l_borough_remarks" />
+
         <TextView android:id="@+id/l_user_updated_at"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" android:text="@string/rink_details_user_updated_at"

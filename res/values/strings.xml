@@ -14,20 +14,16 @@
 	<string name="menu_search">Search</string>
 	<string name="menu_preferences">Settings</string>
     <string name="menu_select_conditions">Conditions</string>
-<!--	<string name="menu_sort">Sort</string>-->
-<!--	<string name="menu_links">Links</string>-->
-<!--	<string name="menu_about">About</string>-->
-<!--	<string name="menu_language">Language</string>-->
 	<string name="menu_share_map">Share</string>
 	<string name="menu_favorites_add">Add to favorites</string>
 	<string name="menu_favorites_remove">Remove from favorites</string>
 	<string name="menu_call_rink">Call</string>
-	<string name="menu_map_view_rink">View in map</string>
+	<string name="menu_map_view_rink">Locate on map</string>
 
 	<string name="context_menu_favorites_add">Add to favorites</string>
 	<string name="context_menu_favorites_remove">Remove from favorites</string>
 	<string name="context_menu_call_rink">Call</string>
-	<string name="context_menu_map_view_rink">View in map</string>
+	<string name="context_menu_map_view_rink">Locate on map</string>
 
 	<string name="list_no_rinks">Empty list...</string>
 
@@ -57,14 +53,18 @@
     <string name="rink_details_is_cleared">Cleared</string>
     <string name="rink_details_is_flooded">Flooded</string>
     <string name="rink_details_is_resurfaced">Resurfaced</string>
+    <string name="rink_details_is_cleared_false">Not cleared</string>
+    <string name="rink_details_is_flooded_false">Not flooded</string>
+    <string name="rink_details_is_resurfaced_false">Not resurfaced</string>
     <string name="rink_details_is_favorite">Favorites</string>
-    <string name="rink_details_park_name">Park&#160;</string>
+    <string name="rink_details_park_name">Parc&#160;</string>
     <string name="rink_details_park_address">Address:&#160;</string>
     <string name="rink_details_park_phone">Phone:&#160;</string>
     <string name="rink_details_borough_name">Borough:&#160;</string>
     <string name="rink_details_borough_updated_at">Last updated by the City:&#160;</string>
+    <string name="rink_details_user_updated_at">Your last update:&#160;</string>
 
-    <string name="rink_details_view_map">View in map</string>
+    <string name="rink_details_view_map">Locate on map</string>
     <string name="dialog_updating_conditions">Updating conditions. Please wait&#8230;</string>
     <string name="dialog_updating_all_rinks">Daily updates of rinks and conditions. Please wait&#8230;</string>
     <string name="dialog_updating_result_ok">Updated successfully</string>
@@ -80,7 +80,7 @@
 
     <string name="prefs_category_conditions">Rink Conditions</string>
     <string name="prefs_condition_title">Conditions</string>
-    <string name="prefs_condition_summary">Display or hide rinks based on conditions</string>
+    <string name="prefs_condition_summary">Display or hide rinks based on conditions, in lists and map</string>
     <string name="prefs_condition_dialog_title">Rink Condition</string>
     <string name="prefs_condition_excellent">Excellent</string>
     <string name="prefs_condition_good">Good</string>
@@ -104,5 +104,7 @@
     <string name="prefs_category_credits">Credits</string>
     <string name="prefs_credits_about">About</string>
     <string name="prefs_credits_links">Useful links</string>
+
+    <string name="map_context_park_prefix">Parc&#160;</string>
 
 </resources>

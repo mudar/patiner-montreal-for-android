@@ -14,20 +14,16 @@
     <string name="menu_search">Rechercher</string>
     <string name="menu_preferences">Paramètres</string>
     <string name="menu_select_conditions">Conditions</string>
-<!--    <string name="menu_sort">Trier</string>-->
-<!--    <string name="menu_links">Liens</string>-->
-<!--    <string name="menu_about">À propos</string>-->
-<!--    <string name="menu_language">Langue</string>-->
     <string name="menu_share_map">Partager</string>
     <string name="menu_favorites_add">Ajouter aux favoris</string>
     <string name="menu_favorites_remove">Supprimer des favrois</string>
     <string name="menu_call_rink">Appeler</string>
-    <string name="menu_map_view_rink">Afficher dans la carte</string>
+    <string name="menu_map_view_rink">Situer sur la carte</string>
     
     <string name="context_menu_favorites_add">Ajouter aux favoris</string>
     <string name="context_menu_favorites_remove">Supprimer des favoris</string>
     <string name="context_menu_call_rink">Appeler</string>
-    <string name="context_menu_map_view_rink">Afficher dans la carte</string>
+    <string name="context_menu_map_view_rink">Situer sur la carte</string>
 
     <string name="list_no_rinks">Liste vide...</string>
 
@@ -58,14 +54,18 @@
     <string name="rink_details_is_cleared">Déblayée</string>
     <string name="rink_details_is_flooded">Arrosée</string>
     <string name="rink_details_is_resurfaced">Resurfacée</string>
+    <string name="rink_details_is_cleared_false">Pas déblayée</string>
+    <string name="rink_details_is_flooded_false">Pas arrosée</string>
+    <string name="rink_details_is_resurfaced_false">Pas resurfacée</string>
     <string name="rink_details_is_favorite">Favoris</string>
     <string name="rink_details_park_name">Parc&#160;</string>
     <string name="rink_details_park_address">Adresse :&#160;</string>
     <string name="rink_details_park_phone">Téléphone :&#160;</string>
     <string name="rink_details_borough_name">Arrondissement :&#160;</string>
     <string name="rink_details_borough_updated_at">Dernière mise à jour par la ville :&#160;</string>
+    <string name="rink_details_user_updated_at">Votre dernière mise à jour :&#160;</string>
 
-    <string name="rink_details_view_map">Localiser sur la carte</string>
+    <string name="rink_details_view_map">Situer sur la carte</string>
     <string name="dialog_updating_conditions">Mise à jour des conditions. Veuillez patienter&#8230;</string>
     <string name="dialog_updating_all_rinks">Mise à jour des patinoires et des conditions. Veuillez patienter&#8230;</string>
     <string name="dialog_updating_result_ok">Mise à jour réussie</string>
@@ -81,7 +81,7 @@
 
     <string name="prefs_category_conditions">Condition de la patinoire</string>
     <string name="prefs_condition_title">Condition</string>
-    <string name="prefs_condition_summary">Afficher ou cacher les patinoires selon l\'état de la glace</string>
+    <string name="prefs_condition_summary">Afficher ou cacher les patinoires selon l\'état de la glace, dans les listes et sur la carte</string>
     <string name="prefs_condition_dialog_title">Rink Condition</string>
     <string name="prefs_condition_excellent">Excellente</string>
     <string name="prefs_condition_good">Bonne</string>
@@ -105,5 +105,7 @@
     <string name="prefs_category_credits">Crédits</string>
     <string name="prefs_credits_about">À propos</string>
     <string name="prefs_credits_links">Liens utiles</string>
+    
+    <string name="map_context_park_prefix">Parc&#160;</string>
     
 </resources>
