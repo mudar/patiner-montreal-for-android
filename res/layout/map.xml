@@ -3,4 +3,10 @@
 	xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/mapview"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:clickable="true" android:enabled="true"
-	android:apiKey="0by9LaJqmkVJr-oEBxEV7cEfLNyySkzPKgxQwjw" />
+	android:apiKey="0by9LaJqmkVJr-oEBxEV7cEfLNyySkzPKgxQwjw"
+	 />
+	
+<!--	android:apiKey="0by9LaJqmkVJr-oEBxEV7cEfLNyySkzPKgxQwjw"-->
+<!--	android:apiKey="0by9LaJqmkVJy7MyRTuhzBYmLCb0IEhbCNDggQw"-->
+	
+	
