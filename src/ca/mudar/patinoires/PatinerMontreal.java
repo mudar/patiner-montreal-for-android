@@ -82,7 +82,8 @@ public class PatinerMontreal extends TabActivity {
 		spec = tabHost.newTabSpec( TAB_ALL ).setIndicator( res.getText( R.string.tab_all ) , res.getDrawable( R.drawable.ic_tab_all ) ).setContent(intent);
 		tabHost.addTab(spec);
 		
-		tabHost.setCurrentTab( mDbHelper.hasFavorites() ? TAB_INDEX_FAVORITES : TAB_INDEX_ALL );
+//		tabHost.setCurrentTab( mDbHelper.hasFavorites() ? TAB_INDEX_FAVORITES : TAB_INDEX_ALL );
+		tabHost.setCurrentTab( TAB_INDEX_FAVORITES );
 	}
 
 	public static String getCurrentTabTag() {

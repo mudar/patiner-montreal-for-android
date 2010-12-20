@@ -41,7 +41,7 @@
 		project, scrapes the information to bring it to your phone. Enjoy the
 		Winter!</string>
 
-	<string name="dialog_about_credits">Android app developed by <a href="http://www.mudar.ca/">Mudar Noufal</a>. Source code is released under the GPLv3 license from the Free Software Foundation. Many thanks to <a href="http://www.slashpoundbang.com/">James McKinney</a> (open data API), Jonathan Brun &amp; Daniel Mireault.</string>
+	<string name="dialog_about_credits">Android app developed by <a href="http://patinoires.mudar.ca/">Mudar Noufal</a>. Source code is released under the GPLv3 license from the Free Software Foundation. Many thanks to <a href="http://www.slashpoundbang.com/">James McKinney</a> (open data API), Jonathan Brun &amp; Daniel Mireault.</string>
 
 	<string name="dialog_links_title">Useful links</string>
 	<string name="dialog_links_patiner_mtl"><a href="http://www.patinermontreal.ca/">patinermontreal.ca</a></string>

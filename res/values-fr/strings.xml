@@ -42,7 +42,7 @@
 		informations pour les rendre accessibles dans votre téléphone. Profitez
 		bien de l\'hiver!</string>
 
-    <string name="dialog_about_credits">Application android réalisée par <a href="http://www.mudar.ca/">Mudar Noufal</a>. Le code source est publié sous la licence GPLv3 de la Free Software Foundation. Un grand merci à <a href="http://www.slashpoundbang.com/">James McKinney</a> (API des données), Jonathan Brun et Daniel Mireault.</string>
+    <string name="dialog_about_credits">Application android réalisée par <a href="http://patinoires.mudar.ca/">Mudar Noufal</a>. Le code source est publié sous la licence GPLv3 de la Free Software Foundation. Un grand merci à <a href="http://www.slashpoundbang.com/">James McKinney</a> (API des données), Jonathan Brun et Daniel Mireault.</string>
 
     <string name="dialog_links_title">Liens utiles</string>
     <string name="dialog_links_patiner_mtl"><a href="http://www.patinermontreal.ca/">patinermontreal.ca</a></string>
