@@ -38,7 +38,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+//import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -121,7 +121,7 @@ public class PatinerMontreal extends TabActivity {
 
 		listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 			public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-				Log.w( TAG , "onSharedPreferenceChanged" );
+//				Log.w( TAG , "onSharedPreferenceChanged" );
 prefsChanged = true;
 
 			}

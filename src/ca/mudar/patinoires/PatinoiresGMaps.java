@@ -26,7 +26,6 @@ package ca.mudar.patinoires;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -36,8 +35,6 @@ import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.custom.CustomItemizedOverlay;
 import ca.mudar.patinoires.data.PatinoiresOpenData;
 import ca.mudar.patinoires.data.PatinoiresDbAdapter.MapPark;
-import ca.mudar.patinoires.data.PatinoiresDbAdapter.MapRink;
-
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;

@@ -124,6 +124,8 @@ public class CustomItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 				mContext.startActivity(intent);
 			}
 		} );
+        builder.setNegativeButton( android.R.string.cancel , null );
+
 
 		AlertDialog alert = builder.create();
 		alert.show();

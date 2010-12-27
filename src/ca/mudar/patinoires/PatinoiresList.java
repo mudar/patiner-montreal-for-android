@@ -34,7 +34,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
+//import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -96,7 +96,7 @@ public class PatinoiresList extends ListActivity {
 	
 	@Override
 	protected void onResume() {
-		Log.w( TAG , "onResume" );
+//		Log.w( TAG , "onResume" );
 		super.onResume();
 		
 		loadPreferences();
@@ -127,7 +127,7 @@ public class PatinoiresList extends ListActivity {
 		super.onDestroy();
 //		SimpleCursorAdapter adapter = (SimpleCursorAdapter) getListView().getAdapter();
 //		adapter.getCursor().close();
-		Log.w( TAG , "onDestroy closeDb" );
+//		Log.w( TAG , "onDestroy closeDb" );
 		mDbHelper.closeDb();
 	}
 
