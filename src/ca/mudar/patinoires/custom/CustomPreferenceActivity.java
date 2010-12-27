@@ -21,30 +21,32 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires;
+package ca.mudar.patinoires.custom;
 
 import android.app.AlertDialog;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import ca.mudar.patinoires.PatinoiresList;
+import ca.mudar.patinoires.R;
 
-public class PatinoiresPreferences extends PreferenceActivity {
-
+public class CustomPreferenceActivity extends PreferenceActivity {
+	protected static final String TAG = "PatinoiresPreferences";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	    getPreferenceManager().setSharedPreferencesName( PatinoiresList.PREFS_NAME );
 
 		addPreferencesFromResource(R.xml.preferences);
-		
 
 	    PreferenceScreen credits_about = (PreferenceScreen) findPreference("prefs_credits_about");
 	    credits_about.setOnPreferenceClickListener(new OnPreferenceClickListener() {
@@ -63,9 +65,8 @@ public class PatinoiresPreferences extends PreferenceActivity {
 	            return false;
 	        }
 	    });
-
-		
 	}
+	
 	
 	public void displayInfoDialog( int resource ) {
 
@@ -96,5 +97,4 @@ public class PatinoiresPreferences extends PreferenceActivity {
 		.setPositiveButton( android.R.string.ok , null )
 		.show();
 	}
-
 }

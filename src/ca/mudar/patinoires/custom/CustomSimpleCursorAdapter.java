@@ -21,19 +21,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires;
+package ca.mudar.patinoires.custom;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.location.Location;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.data.PatinoiresDbAdapter;
 
 
 /**
@@ -41,7 +41,7 @@ import android.widget.TextView;
  * @author jwei512
  * {@link http://thinkandroid.wordpress.com/2010/01/11/custom-cursoradapters/}
  */
-public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filterable {
+public class CustomSimpleCursorAdapter extends SimpleCursorAdapter implements Filterable {
 	protected static final String TAG = "RinksListCursorAdapter";
 
 	private boolean showBorough;
@@ -52,7 +52,7 @@ public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filte
 	private int mColFieldGeoDistance;
 
 
-	public RinksListCursorAdapter (Context context, int layout, Cursor cursor , String[] from, int[] to , boolean showBorough ) {
+	public CustomSimpleCursorAdapter (Context context, int layout, Cursor cursor , String[] from, int[] to , boolean showBorough ) {
 		super( context , layout , cursor , from , to );
 
 		this.showBorough = showBorough;
@@ -156,6 +156,14 @@ public class RinksListCursorAdapter extends SimpleCursorAdapter implements Filte
 		
 		super.bindView(view, context, cursor);
 	}
+	
+	/*
+	@Override
+	public void notifyDataSetChanged() {
+Log.w( TAG , "notifyDataSetChanged" );
+		super.notifyDataSetChanged();
+	}
+	*/
 	/*
 	private CharSequence getDistance( Cursor c ) {
 		String coordinates[] = { "45.5", "-73.666667" };

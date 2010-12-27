@@ -21,7 +21,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires;
+package ca.mudar.patinoires.data;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -69,7 +69,6 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 			final int totalBoroughs = boroughs.length();
 			int totalRinks = 0;
 
-			openDb();
 			mDb.beginTransaction();
 			// TODO: remove this
 //			Random rand = new Random();
@@ -139,8 +138,6 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 				mDb.endTransaction();
 			}
 
-			closeDb();
-
 		} catch (JSONException e) { importResult = false; /* Log.e( TAG , "queryResult JSONException" ); */ }
 
 		return importResult;
@@ -182,7 +179,6 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 				dialog.setMax(totalRinks);
 			}
 			
-			openDb();
 			try {
 				mDb.beginTransaction();
 				mDb.execSQL("DELETE FROM " + TABLE_NAME_BOROUGHS );
@@ -308,9 +304,6 @@ public class PatinoiresOpenData extends PatinoiresDbAdapter {
 			finally {
 				mDb.endTransaction();
 			}
-
-			closeDb();
-
 		} catch (JSONException e) { importResult = false; /* Log.e( TAG , "queryResult JSONException" ); */ }
 
 		return importResult;

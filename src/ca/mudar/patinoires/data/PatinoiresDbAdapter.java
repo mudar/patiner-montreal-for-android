@@ -21,7 +21,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires;
+package ca.mudar.patinoires.data;
 
 import java.util.ArrayList;
 
@@ -31,7 +31,9 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-//import android.location.Location;
+import android.graphics.drawable.Drawable;
+
+import ca.mudar.patinoires.R;
 
 import com.google.android.maps.GeoPoint;
 
@@ -101,48 +103,10 @@ public class PatinoiresDbAdapter {
 	public static final int SORT_BOROUGH_INDEX  = 3;
 	protected int sortOrder = SORT_DISTANCE_INDEX;
 	
-	protected static final int CONDITION_EXCELLENT_INDEX = 0;	// Based on the order in the line above.
-	protected static final int CONDITION_GOOD_INDEX      = 1;	
-	protected static final int CONDITION_BAD_INDEX       = 2;	
-	protected static final int CONDITION_CLOSED_INDEX    = 3;	
-
-	
-	/**
-	 * Class used for the ListArray sent to the Map
-	 */
-    public static class MapRink {
-        public final String rink;
-        public final String descriptionFr;
-        public final String descriptionEn;
-
-        public MapRink( String rink , String descriptionFr , String descriptionEn ) {
-            this.rink = rink;
-            this.descriptionFr = descriptionFr;
-            this.descriptionEn = descriptionEn;
-        }
-    }
-    
-    public static class MapPark {
-    	public final String park;
-    	public final GeoPoint geoPoint;
-    	public final ArrayList<MapRink> rinksArrayList = new ArrayList<MapRink>();
-    	// TODO: verify this field in the data API
-//    	public final String rinksConditions;
-    	
-        public MapPark( String park , String geoLat , String geoLng ) {
-        	this.park = park;
-//        	this.rinksConditions = rinksConditions;
-        	
-            double lat = Double.parseDouble( geoLat );
-			double lng = Double.parseDouble( geoLng );
-			this.geoPoint = new GeoPoint( (int) (lat * 1E6) , (int) (lng * 1E6) ); ;        	
-        }
-
-        public void addRink( MapRink mapRink ) {
-        	this.rinksArrayList.add( mapRink );
-        }
-    }
-	
+	public static final int CONDITION_EXCELLENT_INDEX = 0;	// Based on the order in the line above.
+	public static final int CONDITION_GOOD_INDEX      = 1;	
+	public static final int CONDITION_BAD_INDEX       = 2;	
+	public static final int CONDITION_CLOSED_INDEX    = 3;	
 
 	protected static class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -212,6 +176,54 @@ public class PatinoiresDbAdapter {
 		this.mCtx = ctx;
 	}
 
+	
+	/**
+	 * Class used for the ListArray sent to the Map
+	 */
+    public static class MapRink {
+    	public final int rinkId;
+        public final String rink;
+        public final String descriptionFr;
+        public final String descriptionEn;
+        public final int kindId;
+        public final int conditionIndex;
+
+        public MapRink( int rinkId , String rink , String descriptionFr , String descriptionEn , int kindId , int conditionIndex ) {
+        	this.rinkId = rinkId;
+            this.rink = rink;
+            this.descriptionFr = descriptionFr;
+            this.descriptionEn = descriptionEn;
+            this.kindId = kindId;
+            this.conditionIndex = conditionIndex;
+        }
+    }
+
+    
+    public static class MapPark {
+    	public final String park;
+    	public final GeoPoint geoPoint;
+    	public final int parkId;
+//    	public final ArrayList<MapRink> rinksArrayList = new ArrayList<MapRink>();
+    	// TODO: verify this field in the data API
+//    	public final String rinksConditions;
+    	
+        public MapPark( String park , String geoLat , String geoLng , int parkId ) {
+        	this.park = park;
+        	this.parkId= parkId;
+//        	this.rinksConditions = rinksConditions;
+        	
+            double lat = Double.parseDouble( geoLat );
+			double lng = Double.parseDouble( geoLng );
+			this.geoPoint = new GeoPoint( (int) (lat * 1E6) , (int) (lng * 1E6) ); ;        	
+        }
+/*
+        public void addRink( MapRink mapRink ) {
+        	this.rinksArrayList.add( mapRink );
+        }
+        */
+    }
+	
+	
 
 	/**
 	 * @return this (self reference, allowing this to be chained in an initialization call)
@@ -262,7 +274,7 @@ public class PatinoiresDbAdapter {
 
 	public int countAllRinks() {
 		// Select all columns
-		Cursor mCursor = mDb.rawQuery( "SELECT _id FROM " + TABLE_NAME_RINKS ,    			null );
+		Cursor mCursor = mDb.rawQuery( "SELECT " + KEY_ROWID + " FROM " + TABLE_NAME_RINKS , null );
 
 		return mCursor.getCount();
 	}
@@ -278,9 +290,8 @@ public class PatinoiresDbAdapter {
 	}
 
 	
-	public boolean hasFavorites() {
+	public boolean hasFavoritesXX() {
 		boolean hasFavorites = false;
-		openDb();
 		try {
 			Cursor mCursor = fetchRinksFavorites();
 			if ( ( mCursor != null ) && ( mCursor.getCount() > 0 ) ) {
@@ -289,7 +300,6 @@ public class PatinoiresDbAdapter {
 			mCursor.close();			
 		}
 		catch ( SQLException e ) {}
-		closeDb();
 		
 		return hasFavorites;
 	}
@@ -348,7 +358,7 @@ public class PatinoiresDbAdapter {
 		MapRink mapRink = null;
 		MapPark mapPark = null;
 		ArrayList<MapPark> parksArrayList = new ArrayList<MapPark>();
-		
+		/*
 		c.moveToFirst(); 
 		while( c.isAfterLast() == false ) {
 						
@@ -373,7 +383,7 @@ public class PatinoiresDbAdapter {
 			c.moveToNext(); 
 		}
 		c.close();
-		
+		*/
 		setSortList( originalSort );
 		return parksArrayList;
 	}
@@ -384,7 +394,7 @@ public class PatinoiresDbAdapter {
 	 */
 	public Cursor searchRinks( String searchString , String tabFilter ) throws SQLException {
 
-		String sqlOrder = KEY_RINKS_NAME + " , " + KEY_RINKS_DESC_FR;
+		String sqlOrder = KEY_RINKS_NAME + " , " + KEY_RINKS_DESC_EN;
 		String sqlConditionsFilter = "";
 		String sqlSearchFilter = "";
 		String sqlTabFilter = "";
@@ -407,7 +417,8 @@ public class PatinoiresDbAdapter {
 		// Get the filters for the rink conditions
 		boolean[] conditions = getConditions();
 		for (int i = 0; i < conditions.length ; i++) {
-			if ( conditions[i] ) { sqlConditionsFilter += " OR condition = " + i; }
+// TODO verify the " = i " condition
+			if ( conditions[i] ) { sqlConditionsFilter += " OR " + KEY_RINKS_CONDITION + " = " + i; }
 		}
 
 		// Build the search string
@@ -431,11 +442,11 @@ public class PatinoiresDbAdapter {
 			}			
 		}
 
-		Cursor mCursor = mDb.rawQuery( "SELECT b.* , p.* , r.* , ( f._id IS NOT NULL ) AS " + KEY_RINKS_IS_FAVORITE + " , 0 AS " + KEY_PARKS_GEO_DISTANCE
+		Cursor mCursor = mDb.rawQuery( "SELECT b.* , p.* , r.* , ( f." + KEY_ROWID + " IS NOT NULL ) AS " + KEY_RINKS_IS_FAVORITE + " , 0 AS " + KEY_PARKS_GEO_DISTANCE
 				+ " FROM " + TABLE_NAME_BOROUGHS + " AS b "
-				+ " JOIN " + TABLE_NAME_PARKS + " AS p ON p.borough_id = b._id "
-				+ " JOIN " + TABLE_NAME_RINKS + " AS r ON r.park_id = p._id " 
-				+ " LEFT JOIN " + TABLE_NAME_FAVORITES + " AS f ON r._id = f.rink_id "
+				+ " JOIN " + TABLE_NAME_PARKS + " AS p ON p." + KEY_PARKS_BOROUGH_ID + " = b." + KEY_ROWID
+				+ " JOIN " + TABLE_NAME_RINKS + " AS r ON r." + KEY_RINKS_PARK_ID + " = p." + KEY_ROWID 
+				+ " LEFT JOIN " + TABLE_NAME_FAVORITES + " AS f ON r." + KEY_ROWID + " = f." + KEY_FAVORITES_RINK_ID
 				+ " WHERE ( 0 " + sqlConditionsFilter + " ) " + sqlSearchFilter + sqlTabFilter 
 				+ " ORDER BY " + sqlOrder , 
 				null );
@@ -443,7 +454,86 @@ public class PatinoiresDbAdapter {
 		return mCursor;
 	}
 
+	
+	public ArrayList<MapPark> fetchParksForMap() {
 
+		String sqlConditionsFilter = "";
+
+		// Get the filters for the rink conditions
+		boolean[] conditions = getConditions();
+		for (int i = 0; i < conditions.length ; i++) {
+			if ( conditions[i] ) { sqlConditionsFilter += " OR " + KEY_RINKS_CONDITION + " = " + i; }
+		}
+
+		Cursor mCursor = mDb.rawQuery( "SELECT p.* "
+				+ " FROM " + TABLE_NAME_BOROUGHS + " AS b "
+				+ " JOIN " + TABLE_NAME_PARKS + " AS p ON p." + KEY_PARKS_BOROUGH_ID + " = b." + KEY_ROWID
+				+ " JOIN " + TABLE_NAME_RINKS + " AS r ON r." + KEY_RINKS_PARK_ID + " = p." + KEY_ROWID 
+				+ " WHERE ( 0 " + sqlConditionsFilter + " )" , 
+				null );
+		if ( mCursor == null ) { return null; }
+
+		MapPark mapPark;
+		ArrayList<MapPark> parksArrayList = new ArrayList<MapPark>();
+		
+		mCursor.moveToFirst(); 
+		while( mCursor.isAfterLast() == false ) {
+			mapPark = new MapPark(
+					mCursor.getString( mCursor.getColumnIndex( KEY_PARKS_NAME ) ) , 
+					mCursor.getString( mCursor.getColumnIndex( KEY_PARKS_GEO_LAT ) ) ,
+					mCursor.getString( mCursor.getColumnIndex( KEY_PARKS_GEO_LNG ) ) ,
+					mCursor.getInt( mCursor.getColumnIndex( KEY_ROWID ) ) );
+			parksArrayList.add( mapPark );
+
+			mCursor.moveToNext(); 
+		}
+		mCursor.close();
+
+		return parksArrayList;
+	}
+	
+
+	public ArrayList<MapRink> fetchParkRinksForMap( String parkId ) {
+		
+		String sqlConditionsFilter = "";
+
+		// Get the filters for the rink conditions
+		boolean[] conditions = getConditions();
+		for (int i = 0; i < conditions.length ; i++) {
+			if ( conditions[i] ) { sqlConditionsFilter += " OR " + KEY_RINKS_CONDITION + " = " + i; }
+		}
+
+		Cursor mCursor = mDb.rawQuery( "SELECT b.* , p.* , r.* "
+				+ " FROM " + TABLE_NAME_BOROUGHS + " AS b "
+				+ " JOIN " + TABLE_NAME_PARKS + " AS p ON p." + KEY_PARKS_BOROUGH_ID + " = b." + KEY_ROWID
+				+ " JOIN " + TABLE_NAME_RINKS + " AS r ON r." + KEY_RINKS_PARK_ID + " = p." + KEY_ROWID 
+				+ " WHERE ( 0 " + sqlConditionsFilter + " ) AND p." + KEY_ROWID + " = " + parkId
+				+ " ORDER BY " + KEY_RINKS_NAME + " , " + KEY_RINKS_DESC_EN ,
+				null );
+		if ( mCursor == null ) { return null; }
+
+		MapRink mapRink;
+		ArrayList<MapRink> rinksArrayList = new ArrayList<MapRink>();
+		
+		mCursor.moveToFirst(); 
+		while( mCursor.isAfterLast() == false ) {
+			mapRink = new MapRink(
+					mCursor.getInt( mCursor.getColumnIndex( KEY_ROWID ) ) ,
+					mCursor.getString( mCursor.getColumnIndex( KEY_RINKS_NAME ) ) , 
+					mCursor.getString( mCursor.getColumnIndex( KEY_RINKS_DESC_FR ) ) ,
+					mCursor.getString( mCursor.getColumnIndex( KEY_RINKS_DESC_EN ) ) ,
+					mCursor.getInt( mCursor.getColumnIndex( KEY_RINKS_KIND_ID ) ) ,
+					mCursor.getInt( mCursor.getColumnIndex( KEY_RINKS_CONDITION ) ) );
+			rinksArrayList.add( mapRink );
+
+			mCursor.moveToNext(); 
+		}
+		mCursor.close();
+
+		return rinksArrayList;
+	}
+	
+	
 	/**
 	 * @param rowId id of rink to retrieve
 	 * @return Cursor positioned to matching rink, if found
@@ -509,6 +599,7 @@ public class PatinoiresDbAdapter {
 		}
 	}
 
+	
 	/*
 	 * notifyDataSetChanged()
 	 * getFirstVisiblePosition()
