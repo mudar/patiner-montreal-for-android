@@ -18,22 +18,20 @@
             android:layout_width="fill_parent" 
             android:layout_height="wrap_content"
             android:layout_weight="1"  
-        android:layout_alignParentLeft="true"    
-            />
+            android:layout_alignParentLeft="true" />
 
-        <ImageButton android:id="@+id/l_rink_favorites" 
+        <ImageButton android:id="@+id/l_rink_favorites"
+            android:src="@drawable/ic_tab_favorites_disabled" 
             android:layout_width="fill_parent" 
             android:layout_height="fill_parent"
-            android:layout_weight="1"  
-            />
+            android:layout_weight="1" />
 
         <ImageButton android:id="@+id/l_rink_mapmode" 
             android:src="@android:drawable/ic_dialog_map"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_alignParentRight="true"
-             />
+            android:layout_alignParentRight="true" />
     </LinearLayout>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -46,6 +44,7 @@
 
 
 		<ImageView android:id="@+id/l_rink_kind_id"
+		    android:src="@drawable/ic_rink_skating_3"
 			android:layout_width="wrap_content" 
 			android:layout_height="wrap_content"
 			android:layout_marginRight="6dp"
@@ -83,6 +82,7 @@
 			android:layout_below="@+id/l_rink_desc" />
 
         <ImageView android:id="@+id/l_rink_is_cleared"
+            android:src="@drawable/ic_surface_cleared_off"
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
             android:layout_gravity="right" 
@@ -93,6 +93,7 @@
             android:clickable="true" />
 
 		<ImageView android:id="@+id/l_rink_is_flooded"
+		    android:src="@drawable/ic_surface_flooded_off"
 			android:layout_width="wrap_content" 
 			android:layout_height="wrap_content"
 			android:layout_gravity="right"
@@ -104,6 +105,7 @@
             android:clickable="true" />
 			
         <ImageView android:id="@+id/l_rink_is_resurfaced"
+            android:src="@drawable/ic_surface_resurfaced_off"
             android:layout_width="wrap_content" 
             android:layout_height="wrap_content"
             android:layout_gravity="right" 
