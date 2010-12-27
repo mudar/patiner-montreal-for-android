@@ -27,32 +27,27 @@ import java.util.Locale;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.custom.CustomSimpleCursorAdapter;
+import ca.mudar.patinoires.data.PatinoiresOpenData;
 
 
 public class PatinoiresList extends ListActivity {
@@ -61,30 +56,24 @@ public class PatinoiresList extends ListActivity {
 
 	private PatinoiresOpenData mDbHelper;
 	private String interfaceLanguage;
-	private boolean[] tempConditions;
-	private static String currentTab;
-	private ProgressDialog dialog;
-	private Cursor cursor;
-	private int currentPosition = 0;
+
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+//		Log.w( TAG , "onCreate");		
 		setContentView(R.layout.rinks_list);
 
-		mDbHelper = PatinerMontreal.getmDbHelper();
+		Intent intent = getIntent();
+		String tabTag = intent.getStringExtra( "tabTag" );
 
-		currentTab = PatinerMontreal.getCurrentTabTag();
+//		mDbHelper = PatinerMontreal.getmDbHelper();
+		mDbHelper = new PatinoiresOpenData(this);
+		mDbHelper.openDb();
 
-		if ( isFirstLaunch() ) {
-			dialogUpdate();
-		}
-
-		//TODO Verify real need for this, seems managed by onResume
 		loadPreferences();
-//		fillData();
+		fillData( tabTag );
 
 		registerForContextMenu( getListView() );
 
@@ -92,18 +81,67 @@ public class PatinoiresList extends ListActivity {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				displayRinksDetails( arg3 );
 			} } );
-		
+		/*
+// TODO this should be in TABS activity
 		if ( ( PatinerMontreal.getCurrentTabTag() == PatinerMontreal.TAB_FAVORITES ) && !mDbHelper.hasFavorites() ) {
 			PatinerMontreal.setCurrentTabAllRinks();
 		}
-
+*/
 	}
 
+	
+	/**
+	 * Close the DB connection. This also reopens the cursor!
+	 */
+	
+	@Override
+	protected void onResume() {
+		Log.w( TAG , "onResume" );
+		super.onResume();
+		
+		loadPreferences();
+		
+		CustomSimpleCursorAdapter adapter = (CustomSimpleCursorAdapter) getListView().getAdapter();
+		adapter.getCursor().requery();
+	}
+	
+	
+	/**
+	 * Reopen the DB connection. Cursor is not closed yet
+	 */
+	/*
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		SimpleCursorAdapter adapter = (SimpleCursorAdapter) getListView().getAdapter();
+		adapter.getCursor().deactivate();
+	}
+	*/
+	/**
+	 * Close the unmanaged cursor
+	 */
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+//		SimpleCursorAdapter adapter = (SimpleCursorAdapter) getListView().getAdapter();
+//		adapter.getCursor().close();
+		Log.w( TAG , "onDestroy closeDb" );
+		mDbHelper.closeDb();
+	}
+
+
+	
+
+
+	
 	
 	/**
 	 * Verify is the first launch of the application, to import remote data
 	 * @return boolean
 	 */
+	/*
 	private boolean isFirstLaunch() {
 		SharedPreferences settings = getSharedPreferences( PatinoiresList.PREFS_NAME , MODE_PRIVATE );
 
@@ -116,7 +154,7 @@ public class PatinoiresList extends ListActivity {
 			return false;
 		}
 	}
-
+*/
 	
 	public void loadPreferences() {
 
@@ -133,16 +171,16 @@ public class PatinoiresList extends ListActivity {
 		mDbHelper.setShowClosed( settings.getBoolean( "prefs_show_closed" , defaultConditions[3] ) );
 	}
 
-	private void fillData() {
-		mDbHelper.openDb();
+	private void fillData( String tabTag ) {
 
-		if ( currentTab.equals( PatinerMontreal.TAB_FAVORITES ) ) {
+		Cursor cursor;
+		if ( tabTag.equals( PatinerMontreal.TAB_FAVORITES ) ) {
 			cursor = mDbHelper.fetchRinksFavorites();
 		}
-		else if ( currentTab.equals( PatinerMontreal.TAB_SKATING ) ) {
+		else if ( tabTag.equals( PatinerMontreal.TAB_SKATING ) ) {
 			cursor = mDbHelper.fetchRinksSkating();
 		}
-		else if ( currentTab.equals( PatinerMontreal.TAB_HOCKEY ) ) {
+		else if ( tabTag.equals( PatinerMontreal.TAB_HOCKEY ) ) {
 			cursor = mDbHelper.fetchRinksHockey();
 		}
 		else {
@@ -151,50 +189,36 @@ public class PatinoiresList extends ListActivity {
 
 		startManagingCursor( cursor );
 		
-		String[] from = new String[] { PatinoiresDbAdapter.KEY_RINKS_NAME, 
-				( interfaceLanguage.equals( "fr" ) ? PatinoiresDbAdapter.KEY_RINKS_DESC_FR : PatinoiresDbAdapter.KEY_RINKS_DESC_EN ) ,
+		String[] from = new String[] { PatinoiresOpenData.KEY_ROWID , 
+				PatinoiresOpenData.KEY_RINKS_NAME, 
+				( interfaceLanguage.equals( "fr" ) ? PatinoiresOpenData.KEY_RINKS_DESC_FR : PatinoiresOpenData.KEY_RINKS_DESC_EN ) ,
 //				PatinoiresDbAdapter.KEY_PARKS_GEO_DISTANCE  ,
-				PatinoiresDbAdapter.KEY_BOROUGHS_NAME , 
-				PatinoiresDbAdapter.KEY_BOROUGHS_REMARKS };
-		int[] to = new int[] { 
+				PatinoiresOpenData.KEY_BOROUGHS_NAME , 
+				PatinoiresOpenData.KEY_BOROUGHS_REMARKS };
+		int[] to = new int[] {
+				R.id.l_rink__id ,
 				R.id.l_rink_name , 
 				R.id.l_rink_desc ,
 //				R.id.l_park_geo_distance , 
 				R.id.l_borough_name , 
 				R.id.l_borough_remarks };
 
-		RinksListCursorAdapter rinks = new RinksListCursorAdapter(this, R.layout.rinks_list_item , cursor, from, to, mDbHelper.isSortOnBorough() );
+		CustomSimpleCursorAdapter rinks = new CustomSimpleCursorAdapter( this , R.layout.rinks_list_item , cursor, from, to, mDbHelper.isSortOnBorough() );
 		
 		setListAdapter( rinks );
-
-//		getListView().setSelection(currentPosition);
-		
-		mDbHelper.closeDb();
 	}
 
 
-	public void displayMap() {
-		Intent intent = new Intent( this, PatinoiresGMaps.class );
-		startActivity( intent );
-	}
 
-	
-	public void displayPreferences() {
-		Intent intent = new Intent( this, PatinoiresPreferences.class );
-		startActivity( intent );
-	}
-	
-	
-	public void displaySearch() {
-		onSearchRequested();
-	}
 	
 
 	public void displayRinksDetails( long rinkId ) {
+//		Log.w( TAG , "interfaceLanguage = " + interfaceLanguage);
+		
 		Intent intent = new Intent( this, PatinoiresDetails.class );
 		intent.putExtra( "rinkId" , rinkId );
-		intent.putExtra( "interfaceLanguage" , interfaceLanguage );
-//Log.w( TAG , "interfaceLanguage = " + interfaceLanguage);
+		intent.putExtra( "interfaceLanguage" , "fr" );
+
 		startActivity( intent);
 	}
 
@@ -250,26 +274,7 @@ public class PatinoiresList extends ListActivity {
 	}
 */
 
-	/**
-	 * Verify if last DB update was more than 24 hours ago (or was never done)
-	 * @return True when last update is older than 24 hours.
-	 */
-	private boolean isDailySyncRequired() {
-		SharedPreferences settings = getSharedPreferences( PREFS_NAME , MODE_PRIVATE );
-		settings.edit().putLong("lastFastUpdateTime", System.currentTimeMillis() ).commit();
 
-		Long lastFullUpdateTime =  settings.getLong("lastFullUpdateTime", 0);
-
-		if ( (lastFullUpdateTime + (24 * 60 * 60 * 1000) ) < System.currentTimeMillis() ) {
-			//        	Log.i( TAG , "Daily sync required. Last full update was: " + lastFullUpdateTime );
-
-			settings.edit().putLong("lastFullUpdateTime", System.currentTimeMillis() ).commit();
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
 
 
 	/*
@@ -281,67 +286,6 @@ public class PatinoiresList extends ListActivity {
 	 */
 
 
-	/**
-	 * Display a progress bar (daily update of all rinks) or a spinning wheel (fas conditions update).
-	 * Starts a new thread in the background 
-	 */
-	public void dialogUpdate() {
-		
-		if ( isConnected() == false ) {
-			AlertDialog.Builder builder = new AlertDialog.Builder( this );
-			builder.setTitle( R.string.dialog_network_connection_title  )
-			.setMessage( R.string.dialog_network_connection_message  )
-			.setPositiveButton( android.R.string.ok , null )
-			.create()
-			.show();
-		}
-		else {
-			mDbHelper.openDb();
-			int totalRinks = mDbHelper.countAllRinks();
-			mDbHelper.closeDb();
-
-			SyncOpenDataTask syncOpenDataTask = new SyncOpenDataTask();
-			if ( isDailySyncRequired() || totalRinks == 0 ) {
-				dialog = new ProgressDialog(this);
-				dialog.setCancelable(true);
-				dialog.setMessage( getResources().getText( R.string.dialog_updating_all_rinks ) );
-				dialog.setProgressStyle( ProgressDialog.STYLE_HORIZONTAL );
-				dialog.setProgress( 0 );
-				dialog.setMax( totalRinks  );
-				dialog.show();
-
-				syncOpenDataTask.execute( "openDataSyncAll" );
-			}
-			else {
-				dialog = ProgressDialog.show( this , null ,  getResources().getText( R.string.dialog_updating_conditions ) , true , true);
-				syncOpenDataTask.execute( "openDataUpdateConditions" );
-			}
-		} 
-	}
-
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
-		// TODO : what's the use of the onOptionsItemSelected return value?!
-		switch ( item.getItemId() ) {
-		case R.id.refresh_list:
-			dialogUpdate();
-			fillData();	// This goes here to avoid problem with async threads
-			return true;
-		case R.id.view_map:
-			displayMap();
-			return true;
-		case R.id.search:
-			displaySearch();
-			return true;
-		case R.id.preferences:
-			displayPreferences();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
 
 
 	@Override 
@@ -350,19 +294,19 @@ public class PatinoiresList extends ListActivity {
 
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
 		Cursor c = (Cursor) getListView().getItemAtPosition( info.position );
-		String name = c.getString( c.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_NAME ) );
+		String name = c.getString( c.getColumnIndex( PatinoiresOpenData.KEY_RINKS_NAME ) );
 
 		menu.setHeaderTitle( name );
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate( R.menu.rink_context_menu , menu);
 
-		int isFavorite = c.getInt( c.getColumnIndex( PatinoiresDbAdapter.KEY_RINKS_IS_FAVORITE ) );
+		int isFavorite = c.getInt( c.getColumnIndex( PatinoiresOpenData.KEY_RINKS_IS_FAVORITE ) );
 		if ( isFavorite == 1 ) {
 			menu.findItem( R.id.favorites_add ).setVisible( false );
 			menu.findItem( R.id.favorites_remove ).setVisible( true );
 		}
 
-		String phone = c.getString( c.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_PHONE ) );
+		String phone = c.getString( c.getColumnIndex( PatinoiresOpenData.KEY_PARKS_PHONE ) );
 		if ( phone == null ) {
 			menu.findItem( R.id.call_rink ).setVisible( false );
 		}
@@ -375,26 +319,31 @@ public class PatinoiresList extends ListActivity {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		boolean result = super.onContextItemSelected(item);
 
+		
+		
 		switch( item.getItemId() ) {
 		case R.id.favorites_add:
-			mDbHelper.openDb();
 			mDbHelper.updateFavorites( info.id , true );
-			mDbHelper.closeDb();
 
+			CustomSimpleCursorAdapter adapterAdding = (CustomSimpleCursorAdapter) getListView().getAdapter();
+//			adapterRemoving.notifyDataSetChanged();
+			adapterAdding.getCursor().requery();
+		
 			result = true;
 			break;
 		case R.id.favorites_remove:
-			mDbHelper.openDb();
 			mDbHelper.updateFavorites( info.id , false );
-			mDbHelper.closeDb();
+		
+			CustomSimpleCursorAdapter adapterRemoving = (CustomSimpleCursorAdapter) getListView().getAdapter();
+//			adapterRemoving.notifyDataSetChanged();
+			adapterRemoving.getCursor().requery();
+			
 			result = true;
-
-			fillData();
 			break;
 		case R.id.call_rink:
 			result = true;
 			Cursor cursorPhone = (Cursor) getListView().getItemAtPosition( info.position );
-			String phone = cursorPhone.getString( cursorPhone.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_PHONE ) );
+			String phone = cursorPhone.getString( cursorPhone.getColumnIndex( PatinoiresOpenData.KEY_PARKS_PHONE ) );
 
 			Intent intentPhone = new Intent(Intent.ACTION_DIAL , Uri.parse("tel:" + phone));
 			startActivity( intentPhone );
@@ -403,8 +352,8 @@ public class PatinoiresList extends ListActivity {
 			result = true;
 			Cursor cursorMap = (Cursor) getListView().getItemAtPosition( info.position );
 			Intent intentMap = new Intent( getApplicationContext() , PatinoiresGMaps.class );
-			intentMap.putExtra( "geoLat" , cursorMap.getString( cursorMap.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_GEO_LAT ) ) );
-			intentMap.putExtra( "geoLng" , cursorMap.getString( cursorMap.getColumnIndex( PatinoiresDbAdapter.KEY_PARKS_GEO_LNG ) ) );
+			intentMap.putExtra( "geoLat" , cursorMap.getString( cursorMap.getColumnIndex( PatinoiresOpenData.KEY_PARKS_GEO_LAT ) ) );
+			intentMap.putExtra( "geoLng" , cursorMap.getString( cursorMap.getColumnIndex( PatinoiresOpenData.KEY_PARKS_GEO_LNG ) ) );
 
 			startActivity( intentMap );
 			break;
@@ -413,65 +362,4 @@ public class PatinoiresList extends ListActivity {
 		return result;
 	}
 
-
-	protected void onResume() {
-//		getListView().invalidateViews();
-		
-		super.onResume();
-		currentTab = PatinerMontreal.getCurrentTabTag();
-		loadPreferences();
-		fillData();
-	}
-
-	public boolean isConnected() {
-		ConnectivityManager conMan = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo networkInfo = conMan.getActiveNetworkInfo();
-		if ( networkInfo == null ) { 
-			return false; 
-		}
-		else {
-			return networkInfo.isConnected(); 
-		}
-	}
-
-	private class SyncOpenDataTask extends AsyncTask<String, Void , Boolean>
-	{
-		@Override
-		protected Boolean doInBackground( String... params ) 
-		{
-			if ( params[ 0 ] == "openDataUpdateConditions" ) {
-				return mDbHelper.openDataUpdateConditions();
-			}
-			else if ( params[ 0 ] == "openDataUpdateFirstLaunch" ) {
-				return mDbHelper.openDataSyncAll( null );
-			}
-			else {
-				return mDbHelper.openDataSyncAll( dialog );
-			}
-		}
-
-		@Override
-		protected void onPostExecute( Boolean result ) 
-		{
-			super.onPostExecute(result);
-			if ( dialog != null) {
-				dialog.dismiss();
-			}
-
-			fillData();
-			String message = (String) getResources().getText( result ? R.string.dialog_updating_result_ok : R.string.dialog_updating_result_error );
-			int displayLength = ( result ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG );
-			Toast.makeText(getApplicationContext(), message , displayLength ).show();
-		}
-	}	
-
-/*	
-	protected void onPause() {
-		if ( cursor != null ) {
-			currentPosition = getListView().getFirstVisiblePosition();
-Log.w( TAG , "currentPosition saved = " + currentPosition );
-		}
-		super.onPause();
-	}
-*/
 }

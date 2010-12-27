@@ -47,6 +47,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import ca.mudar.patinoires.custom.CustomSimpleCursorAdapter;
+import ca.mudar.patinoires.data.PatinoiresDbAdapter;
+import ca.mudar.patinoires.data.PatinoiresOpenData;
 
 
 public class PatinoiresDetails extends Activity {
@@ -58,7 +61,14 @@ public class PatinoiresDetails extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mDbHelper = PatinerMontreal.getmDbHelper();
+//		mDbHelper = PatinerMontreal.getmDbHelper();
+		mDbHelper = new PatinoiresOpenData(this);
+	}
+	
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
 
 		LayoutInflater mInflater = LayoutInflater.from( this );
 		View view = mInflater.inflate( R.layout.rinks_details , null , false );
@@ -68,9 +78,11 @@ public class PatinoiresDetails extends Activity {
 			long rinkId = extras.getLong("rinkId");
 			String interfaceLanguage = extras.getString("interfaceLanguage");
 			// TODO
-//Log.w( TAG , "interfaceLanguage = "  + interfaceLanguage );
+// Log.w( TAG , "interfaceLanguage = "  + interfaceLanguage );
 
+			mDbHelper.openDb();
 			view = fillData( view , rinkId , interfaceLanguage );
+			mDbHelper.closeDb();
 		}
 
 		setContentView( view );
@@ -120,8 +132,6 @@ public class PatinoiresDetails extends Activity {
 
 
 	public View fillData( View view , final long rinkId , final String language ) {
-		mDbHelper.openDb();
-
 		Cursor cursor = mDbHelper.fetchRinkDetails( rinkId );
 		startManagingCursor( cursor );
 
@@ -166,7 +176,7 @@ public class PatinoiresDetails extends Activity {
 		TextView viewRinkCondition = ( (TextView) view.findViewById(R.id.l_rink_condition) );
 		viewRinkCondition.append( getConditionText( conditionIndex ) );
 
-		viewRinkCondition.setBackgroundColor( RinksListCursorAdapter.getConditionColor( conditionIndex ) );
+		viewRinkCondition.setBackgroundColor( CustomSimpleCursorAdapter.getConditionColor( conditionIndex ) );
 		if ( ( conditionIndex == PatinoiresDbAdapter.CONDITION_EXCELLENT_INDEX ) || ( conditionIndex == PatinoiresDbAdapter.CONDITION_GOOD_INDEX ) ) {
 			viewRinkCondition.setTextColor( Color.parseColor( "#000000" ) );
 		} 
@@ -319,13 +329,6 @@ public class PatinoiresDetails extends Activity {
 				startActivity( intent );
 			}
 		});
-		
-
-		// Close here to avoid problems!
-// TODO: verify need to close cursor
-//		cursor.close();
-		mDbHelper.closeDb();	
-		
 
 
 		/**
@@ -365,75 +368,13 @@ public class PatinoiresDetails extends Activity {
 					dialog = ProgressDialog.show( context , null ,  getResources().getText( R.string.dialog_updating_conditions ) , true , true);
 					syncOpenDataTask.execute( "openDataUpdateConditions" );
 				} 
-				
-// TODO				
-/*				
-				Context context = v.getContext();
-				if ( isConnected() == false ) {
-					AlertDialog.Builder builder = new AlertDialog.Builder( context );
-					builder.setTitle( R.string.dialog_network_connection_title  )
-					.setMessage( R.string.dialog_network_connection_message  )
-					.setPositiveButton( android.R.string.ok , null )
-					.create()
-					.show();
-				}
-				else {
-					mDbHelper.openDb();
-					final ProgressDialog progressDialog = ProgressDialog.show( context  , null ,  context.getResources().getText( R.string.dialog_updating_conditions ) , true , true);
-
-					new Thread(new Runnable(){
-						public void run(){
-
-							mDbHelper.openDataUpdateConditions();
-
-							progressDialog.dismiss();
-						}
-					} ).start();
-					mDbHelper.closeDb();
-				}
-	*/			
 			}
 		});
 
 		return view;
 	}
 
-	/*
-	final public void updateTimestamps() {
-		Context context = getApplicationContext();
-		View v = context.ge
-		( (TextView) v.findViewById(R.id.l_user_updated_at) ).setText( "" );
-	}
-	*/
-/*
-	@Override
-	protected void onResume() {
-// TODO verify
-		super.onResume();
 
-		LayoutInflater mInflater = LayoutInflater.from( this );
-		View view = mInflater.inflate( R.layout.rinks_details , null , false );
-
-		Bundle extras = getIntent().getExtras();
-		long rinkId = extras.getLong("rinkId");
-		String interfaceLanguage = extras.getString("interfaceLanguage");
-
-		//    	mDbHelper.openDb();        	
-		view = fillData( view , rinkId , interfaceLanguage );
-
-	}
-	*/
-	/*
-	protected void onDestroy() {
-		mDbHelper.closeDb();
-		super.onDestroy();
-	}
-
-	protected void onPause() {
-		mDbHelper.closeDb();
-		super.onPause();
-	}
-	 */
 // TODO: remove this duplicate function!
 	public boolean isConnected() {
 		ConnectivityManager conMan = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -454,7 +395,10 @@ public class PatinoiresDetails extends Activity {
 		{
 			SharedPreferences settings = getSharedPreferences( PatinerMontreal.PREFS_NAME , MODE_PRIVATE );
 			settings.edit().putLong("lastFastUpdateTime", System.currentTimeMillis() ).commit();
-			return mDbHelper.openDataUpdateConditions();
+			mDbHelper.openDb();
+			Boolean result = mDbHelper.openDataUpdateConditions();
+			mDbHelper.closeDb();
+			return result;
 		}
 
 		@Override
@@ -462,16 +406,10 @@ public class PatinoiresDetails extends Activity {
 		{
 			super.onPostExecute(result);
 			dialog.dismiss();
-			// TODO: find a better way to update cursor and fields!
-			Bundle extras = getIntent().getExtras();
-			long rinkId = extras.getLong("rinkId");
-			String interfaceLanguage = extras.getString("interfaceLanguage");
-			
-			Intent intent = new Intent( getApplicationContext() , PatinoiresDetails.class );
-			intent.putExtra( "rinkId" , rinkId );
-			intent.putExtra( "interfaceLanguage" , interfaceLanguage );
-			startActivity( intent);
-			finish();
+
+			// TODO: Verify call of onResume
+			onPause();
+			onResume();
 		}
 	}
 

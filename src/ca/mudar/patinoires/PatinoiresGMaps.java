@@ -32,8 +32,11 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.os.Bundle;
-import ca.mudar.patinoires.PatinoiresDbAdapter.MapPark;
-import ca.mudar.patinoires.PatinoiresDbAdapter.MapRink;
+import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.custom.CustomItemizedOverlay;
+import ca.mudar.patinoires.data.PatinoiresOpenData;
+import ca.mudar.patinoires.data.PatinoiresDbAdapter.MapPark;
+import ca.mudar.patinoires.data.PatinoiresDbAdapter.MapRink;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -79,28 +82,29 @@ public class PatinoiresGMaps extends MapActivity {
 
 		initialAnimateToPoint();
 
-		mDbHelper = PatinerMontreal.getmDbHelper();
+		mDbHelper = new PatinoiresOpenData(this);
 		mDbHelper.openDb();
-		ArrayList<MapPark> parksArrayList = mDbHelper.fetchRinksForMap( "" , "" );
+		ArrayList<MapPark> parksArrayList = mDbHelper.fetchParksForMap();
 		mDbHelper.closeDb();
 
 
 		List<Overlay> mapOverlays = mapView.getOverlays();
 		Drawable drawable = this.getResources().getDrawable(R.drawable.ic_map_default_marker);
-		PatinoiresItemizedOverlay itemizedoverlay = new PatinoiresItemizedOverlay( drawable , mapView.getContext() );
+		CustomItemizedOverlay itemizedoverlay = new CustomItemizedOverlay( drawable , mapView.getContext() );
 
 		String parkPrefix = (String) getResources().getText( R.string.map_context_park_prefix );
 		String language = getInterfaceLanguage();
 
-		String rinks;
 		for ( MapPark park : parksArrayList ) {
+			/*
 			rinks = "";
 			for ( MapRink rink : park.rinksArrayList ) {
 				if ( rinks.length() > 0 ) { rinks = rinks + "\n"; }
 				
 				rinks = rinks + ( language.equals( "fr" ) ? rink.descriptionFr : rink.descriptionEn ); 
 			}
-			OverlayItem overlayitem = new OverlayItem( park.geoPoint , parkPrefix + park.park, rinks );
+			*/
+			OverlayItem overlayitem = new OverlayItem( park.geoPoint , parkPrefix + park.park, Integer.toString( park.parkId ) );
 			itemizedoverlay.addOverlay(overlayitem);
 		}
 		mapOverlays.add(itemizedoverlay);

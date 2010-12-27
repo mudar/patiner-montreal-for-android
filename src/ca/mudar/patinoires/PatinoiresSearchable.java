@@ -12,6 +12,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.custom.CustomSimpleCursorAdapter;
+import ca.mudar.patinoires.data.PatinoiresDbAdapter;
+import ca.mudar.patinoires.data.PatinoiresOpenData;
 
 
 /**
@@ -33,7 +37,7 @@ public class PatinoiresSearchable extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mDbHelper = PatinerMontreal.getmDbHelper();
+		mDbHelper = new PatinoiresOpenData(this);
 		
 		SharedPreferences settings = getSharedPreferences( PatinerMontreal.PREFS_NAME , MODE_PRIVATE );
 		interfaceLanguage = settings.getString( "prefs_language", Locale.getDefault().getLanguage() );
@@ -45,7 +49,7 @@ public class PatinoiresSearchable extends ListActivity {
 		setContentView(R.layout.rinks_list);
 
 
-		if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+		if (Intent.ACTION_VIEW.equals( intent.getAction() ) ) {
 //			Log.w( TAG , "rink found = " + intent.getDataString());
 			//long rinkId = intent.getData();
 			long rinkId = 1;
@@ -88,7 +92,9 @@ public class PatinoiresSearchable extends ListActivity {
 				title = getString( R.string.search_results, query );
 			}
 
+			mDbHelper.openDb();
 			fillData( query , title );
+			mDbHelper.closeDb();
 		}
 	}
 
@@ -103,8 +109,6 @@ public class PatinoiresSearchable extends ListActivity {
 		TextView mTextView = ( TextView ) findViewById( R.id.search_query );
 		mTextView.setVisibility( View.VISIBLE );
 		mTextView.setText( title );
-		
-		mDbHelper.openDb();
 
 		cursor = mDbHelper.searchRinks( query , null );
 		startManagingCursor( cursor );
@@ -118,10 +122,8 @@ public class PatinoiresSearchable extends ListActivity {
 		};
 		int[] to = new int[] { R.id.l_rink_name , R.id.l_rink_desc , R.id.l_borough_name , R.id.l_borough_remarks };
 
-		RinksListCursorAdapter rinks = new RinksListCursorAdapter(this, R.layout.rinks_list_item , cursor, from, to, mDbHelper.isSortOnBorough() );
+		CustomSimpleCursorAdapter rinks = new CustomSimpleCursorAdapter(this, R.layout.rinks_list_item , cursor, from, to, mDbHelper.isSortOnBorough() );
 		setListAdapter( rinks );
-
-		mDbHelper.closeDb();
 	}
 
 	protected void onResume() {
