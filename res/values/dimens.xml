@@ -23,26 +23,18 @@
 -->
 
 <resources>
-	<string-array name="prefs_sort_entries">
-		<item>@string/prefs_sort_distance</item>
-		<item>@string/prefs_sort_rink</item>
-<!--		<item>@string/prefs_sort_park</item>-->
-		<item>@string/prefs_sort_borough</item>
-	</string-array>
-	<string-array name="prefs_sort_values">
-		<item>0</item>
-		<item>1</item>
-<!--		<item>2</item>-->
-		<item>3</item>
-	</string-array>
 
-	<string-array name="prefs_language_entries">
-		<item>@string/prefs_language_french</item>
-		<item>@string/prefs_language_english</item>
-	</string-array>
-	<string-array name="prefs_language_values">
-		<item>fr</item>
-		<item>en</item>
-	</string-array>
+    <dimen name="paddingSmall">2dp</dimen>
+    <dimen name="paddingMedium">4dp</dimen>
+    <dimen name="paddingLarge">6dp</dimen>
+    <dimen name="bodyPaddingSmall">10dp</dimen>
+    <dimen name="bodyPaddingMedium">20dp</dimen>
+    <dimen name="bodyPaddingLarge">30dp</dimen>
+    <dimen name="textSizeSmall">12sp</dimen>
+    <dimen name="textSizeMedium">15sp</dimen>
+    <dimen name="textSizeLarge">18sp</dimen>
+    <dimen name="textSizeXLarge">30sp</dimen>
+    <dimen name="tab_height">38dp</dimen>
+    <dimen name="tab_side_padding">2dp</dimen>
 
 </resources>

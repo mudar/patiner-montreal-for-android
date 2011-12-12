@@ -1,47 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Patiner Montréal for Android. 
+    Information about outdoor rinks in the city of Montréal: conditions,
+    services, contact, map, etc.
+
+    Copyright (C) 2010 Mudar Noufal <mn@mudar.ca>
+
+    This file is part of Patiner Montréal for Android.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="ca.mudar.patinoires" android:versionName="0.4.1"
-	android:installLocation="auto" android:versionCode="9">
-	<application android:label="@string/app_name_manifest"
-		android:theme="@android:style/Theme.Light" android:icon="@drawable/ic_launcher_patinoires"
-		android:debuggable="false">
-		<activity android:name=".PatinerMontreal"
-		android:launchMode="singleTop" 
-			android:configChanges="locale" android:label="@string/app_name">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
-		<activity android:name=".PatinoiresList" android:label="@string/app_name"
-			android:configChanges="locale|orientation">
-		</activity>
-		<activity android:name=".PatinoiresGMaps"
-			android:configChanges="locale" android:label="@string/app_name_map"></activity>
-		<activity android:name=".PatinoiresDetails"
-			android:configChanges="locale" android:label="@string/app_name_details"></activity>
-		<activity android:name=".PatinoiresSearchable"
-			android:launchMode="singleTask">
-			<intent-filter>
-				<action android:name="android.intent.action.SEARCH" />
-			</intent-filter>
-			<meta-data android:name="android.app.searchable"
-				android:resource="@xml/searchable" />
-		</activity>
-		<activity android:name=".custom.CustomPreferenceActivity"
-			android:label="@string/app_name_preferences" android:theme="@android:style/Theme.Black">
-		</activity>
-		<meta-data android:name="android.app.default_searchable"
-			android:value=".PatinoiresSearchable" />
+    android:installLocation="auto"
+    package="ca.mudar.patinoires"
+    android:versionCode="9"
+    android:versionName="@string/app_version" >
 
-		<uses-library android:name="com.google.android.maps" />
-	</application>
-	<uses-sdk android:minSdkVersion="3" />
+    <application
+        android:debuggable="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name_manifest"
+        android:name=".PatinoiresApp"
+        android:theme="@style/Theme.Patinoires" >
+        <activity
+            android:label="@string/app_name"
+            android:name=".MainActivity"
+            android:theme="@style/Theme.Dashboard" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
 
-	<supports-screens android:anyDensity="true" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:configChanges="locale|orientation"
+            android:label="@string/app_name"
+            android:name=".PatinoiresList" >
+        </activity>
+        <activity
+            android:label="@string/app_name_map"
+            android:name=".ui.MapActivity"
+            android:theme="@style/Theme.Map" >
+        </activity>
+        <activity
+            android:configChanges="locale"
+            android:label="@string/app_name_details"
+            android:name=".PatinoiresDetails" >
+        </activity>
+        <activity
+            android:launchMode="singleTask"
+            android:name=".PatinoiresSearchable" >
+            <intent-filter >
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
 
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-	<uses-permission android:name="android.permission.CALL_PHONE" />
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-</manifest> 
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity
+            android:label="@string/app_name_preferences"
+            android:name=".custom.CustomPreferenceActivity"
+            android:theme="@android:style/Theme.Black" >
+        </activity>
+
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value=".PatinoiresSearchable" />
+
+        <uses-library android:name="com.google.android.maps" />
+        
+                <service android:name=".services.SyncService" />
+        <service android:name=".services.DistanceUpdateService" />
+
+        <receiver android:name=".receivers.LocationChangedReceiver" />
+        <receiver android:name=".receivers.PassiveLocationChangedReceiver" />
+        <receiver
+            enabled="false"
+            android:name=".receivers.ConnectivityChangedReceiver" >
+            <intent-filter >
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receivers.PowerStateChangedReceiver" >
+            <intent-filter >
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <action android:name="android.intent.action.BATTERY_OKAY" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:authorities="ca.mudar.patinoires.data"
+            android:name=".providers.RinksProvider" />
+    </application>
+
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="14" />
+
+    <!-- <supports-screens android:anyDensity="true" /> -->
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
+
+</manifest>

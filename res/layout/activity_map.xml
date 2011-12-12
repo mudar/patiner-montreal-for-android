@@ -22,27 +22,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<resources>
-	<string-array name="prefs_sort_entries">
-		<item>@string/prefs_sort_distance</item>
-		<item>@string/prefs_sort_rink</item>
-<!--		<item>@string/prefs_sort_park</item>-->
-		<item>@string/prefs_sort_borough</item>
-	</string-array>
-	<string-array name="prefs_sort_values">
-		<item>0</item>
-		<item>1</item>
-<!--		<item>2</item>-->
-		<item>3</item>
-	</string-array>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/map_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
 
-	<string-array name="prefs_language_entries">
-		<item>@string/prefs_language_french</item>
-		<item>@string/prefs_language_english</item>
-	</string-array>
-	<string-array name="prefs_language_values">
-		<item>fr</item>
-		<item>en</item>
-	</string-array>
+    <!-- <fragment -->
+    <!-- android:id="@+id/fragment_list" -->
+    <!-- android:layout_width="0px" -->
+    <!-- android:layout_height="match_parent" -->
+    <!-- android:layout_weight="1" -->
+    <!-- android:name="ca.mudar.mtlaucasou.ui.WaterSuppliesListFragment" -->
+    <!-- android:tag="tag_fragment_list" /> -->
 
-</resources>
+    <fragment
+        android:id="@+id/fragment_map"
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:name="ca.mudar.patinoires.ui.MapFragment" />
+
+</LinearLayout>

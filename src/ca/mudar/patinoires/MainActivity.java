@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-    Patiner Montréal for Android. 
+/*
+    Patiner Montréal for Android.
     Information about outdoor rinks in the city of Montréal: conditions,
     services, contact, map, etc.
 
@@ -20,29 +19,21 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
+ */
 
-<resources>
-	<string-array name="prefs_sort_entries">
-		<item>@string/prefs_sort_distance</item>
-		<item>@string/prefs_sort_rink</item>
-<!--		<item>@string/prefs_sort_park</item>-->
-		<item>@string/prefs_sort_borough</item>
-	</string-array>
-	<string-array name="prefs_sort_values">
-		<item>0</item>
-		<item>1</item>
-<!--		<item>2</item>-->
-		<item>3</item>
-	</string-array>
+package ca.mudar.patinoires;
 
-	<string-array name="prefs_language_entries">
-		<item>@string/prefs_language_french</item>
-		<item>@string/prefs_language_english</item>
-	</string-array>
-	<string-array name="prefs_language_values">
-		<item>fr</item>
-		<item>en</item>
-	</string-array>
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
-</resources>
+public class MainActivity extends FragmentActivity {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+    }
+}

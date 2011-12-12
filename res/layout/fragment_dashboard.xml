@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Patiner Montréal for Android. 
+    Information about outdoor rinks in the city of Montréal: conditions,
+    services, contact, map, etc.
+
+    Copyright (C) 2010 Mudar Noufal <mn@mudar.ca>
+
+    This file is part of Patiner Montréal for Android.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <ProgressBar
+        android:id="@+id/progress_horizontal"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:max="100"
+        android:progress="0"
+        android:progressDrawable="@drawable/progress_horizontal"
+        android:visibility="invisible" />
+
+    <ca.mudar.patinoires.ui.widgets.DashboardLayout
+        android:id="@+id/dashboard_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <Button
+            android:id="@+id/home_btn_skating"
+            style="@style/DashboardButton"
+            android:drawableTop="@drawable/btn_dashboard_skating"
+            android:text="@string/btn_skating" />
+
+        <Button
+            android:id="@+id/home_btn_hockey"
+            style="@style/DashboardButton"
+            android:drawableTop="@drawable/btn_dashboard_hockey"
+            android:text="@string/btn_hockey" />
+
+        <Button
+            android:id="@+id/home_btn_map"
+            style="@style/DashboardButton"
+            android:drawableTop="@drawable/btn_dashboard_map"
+            android:text="@string/btn_map" />
+
+        <Button
+            android:id="@+id/home_btn_favorites"
+            style="@style/DashboardButton"
+            android:drawableTop="@drawable/btn_dashboard_favorites"
+            android:text="@string/btn_favorites" />
+    </ca.mudar.patinoires.ui.widgets.DashboardLayout>
+
+</LinearLayout>
