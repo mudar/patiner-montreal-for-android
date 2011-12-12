@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Patiner Montréal for Android. 
+    Information about outdoor rinks in the city of Montréal: conditions,
+    services, contact, map, etc.
+
+    Copyright (C) 2010 Mudar Noufal <mn@mudar.ca>
+
+    This file is part of Patiner Montréal for Android.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="match_parent"
+	style="@style/TabsHost" android:layout_height="match_parent">
+
+	<TabHost xmlns:android="http://schemas.android.com/apk/res/android" android:layout_weight="1"
+		android:id="@android:id/tabhost" android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<LinearLayout android:orientation="vertical"
+			android:layout_width="match_parent" android:layout_height="match_parent">
+
+			<TabWidget android:id="@android:id/tabs"
+				
+				android:orientation="horizontal" android:layout_width="match_parent"
+				android:layout_height="wrap_content" android:layout_weight="0" />
+<!--             android:background="@drawable/tab_off_background" -->
+
+			<FrameLayout android:id="@android:id/tabcontent"
+				android:layout_width="0dp" android:layout_height="0dp"
+				android:layout_weight="0" />
+
+			<android.support.v4.view.ViewPager
+				android:id="@+id/pager" android:layout_width="match_parent"
+				android:layout_height="0dp" android:layout_weight="1" />
+
+		</LinearLayout>
+	</TabHost>
+
+<!-- 	<TextView android:id="@+id/tabs_top_balance"  -->
+<!-- 		android:layout_width="match_parent" android:layout_height="?android:attr/listPreferredItemHeight" -->
+<!-- 		style="@style/TabsHostTop" -->
+<!-- 		android:text="@string/tabs_top_current_balance" /> -->
+
+</LinearLayout>

@@ -23,7 +23,10 @@
 -->
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:drawable="@drawable/ic_tab_all_enabled"
-		android:state_selected="true" />
-	<item android:drawable="@drawable/ic_tab_all_disabled" />
+
+    <item android:state_focused="true" android:state_pressed="true" android:color="@color/dashboard_text_pressed"/>
+    <item android:state_focused="false" android:state_pressed="true" android:color="@color/dashboard_text_pressed"/>
+    <item android:state_focused="true" android:color="@color/dashboard_text_focused"/>
+    <item android:state_focused="false" android:state_pressed="false" android:color="@color/dashboard_text_default"/>
+
 </selector>

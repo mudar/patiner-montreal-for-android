@@ -22,8 +22,19 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:drawable="@drawable/ic_tab_all_enabled"
-		android:state_selected="true" />
-	<item android:drawable="@drawable/ic_tab_all_disabled" />
-</selector>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/map_root"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/separator_map_list"
+    android:orientation="vertical"
+    android:paddingLeft="2px" >
+
+    <com.google.android.maps.MapView
+        android:id="@+id/map_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:apiKey="@string/google_map_api_key_debug"
+        android:clickable="true" />
+
+</LinearLayout>
