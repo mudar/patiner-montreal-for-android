@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            style="@style/AboutBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/l_rink_kind_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/l_rink_condition"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="fill_vertical"
+                android:layout_marginRight="6dp"
+                android:gravity="center_vertical"
+                android:src="@drawable/ic_rink_skating_3" />
+
+            <TextView
+                android:id="@+id/l_rink_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/l_rink_kind_id"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/l_rink_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/l_rink_name"
+                android:layout_toRightOf="@+id/l_rink_kind_id"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/l_rink_condition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/l_rink_desc"
+                android:layout_marginBottom="18dp"
+                android:layout_marginTop="18dp"
+                android:gravity="left"
+                android:paddingLeft="3dp"
+                android:text="@string/rink_details_conditions"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <ImageView
+                android:id="@+id/l_rink_is_cleared"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/l_rink_condition"
+                android:layout_gravity="right"
+                android:layout_marginRight="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:src="@drawable/ic_surface_cleared_off" />
+
+            <ImageView
+                android:id="@+id/l_rink_is_flooded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/l_rink_condition"
+                android:layout_gravity="right"
+                android:layout_marginRight="6dp"
+                android:layout_toRightOf="@+id/l_rink_is_cleared"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:src="@drawable/ic_surface_flooded_off" />
+
+            <ImageView
+                android:id="@+id/l_rink_is_resurfaced"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/l_rink_condition"
+                android:layout_gravity="right"
+                android:layout_marginRight="6dp"
+                android:layout_toRightOf="@+id/l_rink_is_flooded"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:src="@drawable/ic_surface_resurfaced_off" />
+
+            <TextView
+                android:id="@+id/l_rink_surface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/l_rink_is_resurfaced"
+                android:layout_below="@+id/l_rink_condition"
+                android:layout_gravity="fill_vertical"
+                android:layout_toRightOf="@+id/l_rink_is_resurfaced"
+                android:gravity="center_vertical"
+                android:text="@string/rink_details_surface"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <ImageButton
+                android:id="@+id/l_rink_call"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/l_rink_surface"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="18dp"
+                android:autoLink="phone"
+                android:focusable="true"
+                android:linksClickable="true"
+                android:src="@android:drawable/sym_action_call" />
+
+            <TextView
+                android:id="@+id/l_park_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/l_rink_surface"
+                android:layout_marginTop="18dp"
+                android:layout_toLeftOf="@+id/l_rink_call"
+                android:gravity="bottom"
+                android:text="@string/rink_details_park_name"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/l_park_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/l_park_name"
+                android:layout_toLeftOf="@+id/l_rink_call"
+                android:text="@string/rink_details_park_address"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/l_park_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/l_park_address"
+                android:text="@string/rink_details_park_phone"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <!--
+            <TextView android:id="@+id/l_park_is_chalet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="KEY_PARKS_IS_CHALET" />
+            <TextView
+            android:id="@+id/l_park_is_caravan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="KEY_PARKS_IS_CARAVAN" />
+            -->
+
+            <TextView
+                android:id="@+id/l_borough_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/l_park_phone"
+                android:layout_marginTop="18dp"
+                android:gravity="bottom"
+                android:text="@string/rink_details_borough_name"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/l_borough_remarks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/l_borough_name"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/l_borough_updated_at"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/bodyPaddingSmall"
+            android:gravity="center_horizontal"
+            android:text="@string/rink_details_borough_updated_at"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/l_user_updated_at"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/bodyPaddingSmall"
+            android:gravity="center_horizontal"
+            android:text="@string/rink_details_user_updated_at"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
+
+</ScrollView>
