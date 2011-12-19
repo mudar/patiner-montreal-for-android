@@ -25,7 +25,7 @@ package ca.mudar.patinoires.ui;
 
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.custom.CustomSimpleCursorAdapter;
+//import ca.mudar.patinoires.custom.CustomSimpleCursorAdapter;
 import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
@@ -41,6 +41,7 @@ import android.os.Handler;
 import android.provider.BaseColumns;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.MenuItem;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -63,7 +64,7 @@ public abstract class BaseListFragment extends ListFragment implements
     protected int QUERY_TOKEN;
 
     protected NotifyingAsyncQueryHandler mHandler;
-    protected CustomSimpleCursorAdapter mAdapter;
+    protected SimpleCursorAdapter mAdapter;
     protected Cursor mCursor;
 
     public BaseListFragment(Uri contentUri) {
@@ -103,7 +104,7 @@ public abstract class BaseListFragment extends ListFragment implements
                 RINKS_SUMMARY_PROJECTION, null, null, null);
         getActivity().startManagingCursor(mCursor);
 
-        mAdapter = new CustomSimpleCursorAdapter(getActivity(),
+        mAdapter = new SimpleCursorAdapter(getActivity(),
                 R.layout.fragment_list_item_rinks,
                 mCursor,
                 new String[] {
