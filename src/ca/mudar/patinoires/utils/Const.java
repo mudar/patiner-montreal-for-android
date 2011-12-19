@@ -31,12 +31,33 @@ public class Const {
 
     public static final String URL_JSON_INITIAL_IMPORT = "http://patinoires.heroku.com/fr/rinks/all.json?include=park,geocoding,borough";
     public static final String URL_JSON_CONDITIONS_UPDATES = "http://patinoires.heroku.com/fr/boroughs.json?include=rinks";
+    
+    public static final String URL_GMAPS_DIRECTIONS = "http://maps.google.com/maps?saddr=%s1&daddr=%s2&dirflg=r";
 
+    public static final int TABS_INDEX_SKATING = 0x0;
+    public static final int TABS_INDEX_HOCKEY = 0x1;
+    public static final int TABS_INDEX_ALL = 0x2;
+    public static final int TABS_INDEX_FAVORITES = 0x3;
+
+    public static final String TABS_TAG_FAVORITES = "tab_favorites";
+    public static final String TABS_TAG_SKATING = "tab_skating";
+    public static final String TABS_TAG_HOCKEY = "tab_hockey";
+    public static final String TABS_TAG_ALL = "tab_all";
+
+    public static final int INDEX_PREFS_EXCELLENT = 0x0;
+    public static final int INDEX_PREFS_GOOD = 0x1;
+    public static final int INDEX_PREFS_BAD = 0x2;
+    public static final int INDEX_PREFS_CLOSED = 0x3;
+    
     public static interface DbValues {
         final int SORT_DISTANCE = 0x0;
         final int SORT_RINK = 0x1;
         final int SORT_PARK = 0x2;
         final int SORT_BOROUGH = 0x3;
+
+        final int KIND_PP = 4; // paysagée
+        final int KIND_PPL = 5; // patin libre
+        final int KIND_PSE = 6; // sport d'équipe
 
         final int CONDITION_EXCELLENT = 0x0;
         final int CONDITION_GOOD = 0x1;
@@ -55,6 +76,11 @@ public class Const {
         final String LAST_UPDATE_TIME = "prefs_last_update_time";
         final String LAST_UPDATE_LAT = "prefs_last_update_lat";
         final String LAST_UPDATE_LNG = "prefs_last_update_lng";
+
+        final String CONDITIONS_SHOW_EXCELLENT = "prefs_show_excellent";
+        final String CONDITIONS_SHOW_GOOD = "prefs_show_good";
+        final String CONDITIONS_SHOW_BAD = "prefs_show_bad";
+        final String CONDITIONS_SHOW_CLOSED = "prefs_show_closed";
 
         final String LAST_FAST_UPDATE = "lastFastUpdateTime";
     }
@@ -98,6 +124,8 @@ public class Const {
     public static final String INTENT_EXTRA_GEO_LNG = "geo_lng";
     public static final String INTENT_EXTRA_CONTENT_URI = "content_uri";
     public static final String INTENT_EXTRA_FORCE_UPDATE = "force_update";
+    public static final String INTENT_EXTRA_TABS_CURRENT = "tabs_current";
+    public static final String INTENT_EXTRA_ID_RINK = "id_rink";
 
     public static final int INDEX_ACTIVITY_FIRE_HALLS = 0x1;
     public static final int INDEX_ACTIVITY_SPVM_STATIONS = 0x2;
@@ -121,22 +149,6 @@ public class Const {
     public static final String KEY_BUNDLE_ADDRESS_LNG = "bundle_address_lng";
 
     public static final String LOCATION_PROVIDER = "my_default_provider";
-
-    public static interface KmlRemoteUrls {
-        final String FIRE_HALLS = "http://depot.ville.montreal.qc.ca/casernes-pompiers/data.kml";
-        final String SPVM_STATIONS = "http://depot.ville.montreal.qc.ca/carte-postes-quartier/data.kml";
-        final String WATER_SUPPLIES = "http://depot.ville.montreal.qc.ca/points-eau/data.kml";
-        final String EMERGENCY_HOSTELS = "http://depot.ville.montreal.qc.ca/centres-hebergement-urgence/data.kml";
-        final String CONDITIONED_PLACES = "http://depot.ville.montreal.qc.ca/lieux-publics-climatises/data.kml";
-    }
-
-    public static interface KmlLocalAssets {
-        final String FIRE_HALLS = "casernes-pompiers.kml";
-        final String SPVM_STATIONS = "carte-postes-quartier.kml";
-        final String WATER_SUPPLIES = "points-eau.kml";
-        final String EMERGENCY_HOSTELS = "centres-hebergement-urgence.kml";
-        final String CONDITIONED_PLACES = "lieux-publics-climatises.kml";
-    }
 
     public static boolean SUPPORTS_HONEYCOMB = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB;
     public static boolean SUPPORTS_GINGERBREAD = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.GINGERBREAD;

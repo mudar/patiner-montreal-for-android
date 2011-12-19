@@ -30,8 +30,9 @@ import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
 import ca.mudar.patinoires.utils.ApiStringHelper;
-import ca.mudar.patinoires.utils.Lists;
 import ca.mudar.patinoires.utils.Const.DbValues;
+import ca.mudar.patinoires.utils.Helper;
+import ca.mudar.patinoires.utils.Lists;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,6 +48,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 
 public class RemoteRinksHandler extends JsonHandler {
     private static final String TAG = "RemoteRinksHandler";
@@ -71,6 +73,8 @@ public class RemoteRinksHandler extends JsonHandler {
         ContentProviderOperation.Builder builderRinks;
 
         boolean importResult = true;
+//        Random rand = new Random();
+        
         CharSequence createdAt = DateFormat.format(DbValues.DATE_FORMAT, new Date());
 
         JSONArray rinks = new JSONArray(jsonTokener);
@@ -141,6 +145,7 @@ public class RemoteRinksHandler extends JsonHandler {
                     RinksColumns.RINK_CONDITION,
                     ApiStringHelper.getConditionIndex(rink.optString(RemoteTags.RINK_IS_OPEN),
                             rink.optString(RemoteTags.RINK_CONDITION)));
+//            builderRinks.withValue(RinksColumns.RINK_CONDITION,rand.nextInt(4));
             builderRinks.withValue(RinksColumns.RINK_CREATED_AT, createdAt);
 
             batch.add(builderRinks.build());
@@ -215,7 +220,7 @@ public class RemoteRinksHandler extends JsonHandler {
             builderParks.withValue(ParksColumns.PARK_ID, park.optString(RemoteTags.PARK_ID));
             builderParks.withValue(ParksColumns.PARK_BOROUGH_ID,
                     borough.optString(RemoteTags.BOROUGH_ID));
-            builderParks.withValue(ParksColumns.PARK_NAME, park.optString(RemoteTags.PARK_NAME));
+            builderParks.withValue(ParksColumns.PARK_NAME, "%s " + park.optString(RemoteTags.PARK_NAME));
             builderParks.withValue(ParksColumns.PARK_GEO_ID,
                     geocoding.optString(RemoteTags.GEOCODING_ID));
             builderParks.withValue(ParksColumns.PARK_GEO_LAT,
@@ -224,7 +229,7 @@ public class RemoteRinksHandler extends JsonHandler {
                     geocoding.optString(RemoteTags.GEOCODING_LNG));
             if (park.optString(RemoteTags.PARK_ADDRESS).trim().toLowerCase() != RemoteValues.STRING_NULL) {
                 builderParks.withValue(ParksColumns.PARK_ADDRESS,
-                        park.optString(RemoteTags.PARK_ADDRESS));
+                        Helper.capitalize(park.optString(RemoteTags.PARK_ADDRESS)));
             }
             if (park.optString(RemoteTags.PARK_PHONE).trim().toLowerCase() != RemoteValues.STRING_NULL) {
                 builderParks.withValue(ParksColumns.PARK_PHONE,

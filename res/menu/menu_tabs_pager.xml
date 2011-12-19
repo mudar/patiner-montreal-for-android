@@ -25,23 +25,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/refresh_list"
-        android:icon="@drawable/ic_menu_refresh"
-        android:title="@string/menu_refresh_list"/>
+        android:id="@+id/menu_refresh"
+        android:icon="@drawable/ic_actionbar_refresh"
+        android:showAsAction="always"
+        android:title="@string/menu_refresh"/>
 
     <item
-        android:id="@+id/view_map"
-        android:icon="@android:drawable/ic_menu_mapmode"
+        android:id="@+id/menu_map"
+        android:icon="@android:drawable/ic_menu_compass"
         android:title="@string/menu_view_map"/>
 
     <item
-        android:id="@+id/search"
+        android:id="@+id/menu_search"
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/menu_search"/>
-
-    <item
-        android:id="@+id/preferences"
-        android:icon="@android:drawable/ic_menu_preferences"
-        android:title="@string/menu_preferences"/>
 
 </menu>

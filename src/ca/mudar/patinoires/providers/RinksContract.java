@@ -81,7 +81,7 @@ public class RinksContract {
     }
 
     public static interface RinksColumns {
-        final String RINK_ID = "rink_id";
+        final String RINK_ID = "rink_rink_id";
         final String RINK_PARK_ID = "rink_park_id";
         final String RINK_KIND_ID = "rink_kind_id";
         final String RINK_NAME = "rink_name";
@@ -98,10 +98,12 @@ public class RinksContract {
     }
 
     public static interface FavoritesColumns {
+        final String FAVORITE_ID = "rink_id";
         final String FAVORITE_RINK_ID = "rink_id";
+        final String FAVORITE_ALIAS_IS_FAVORITE = "( favorites.rink_id IS NOT NULL )";
     }
 
-    public static final String CONTENT_AUTHORITY = "ca.mudar.patinoires.data";
+    public static final String CONTENT_AUTHORITY = "ca.mudar.patinoires";
 
     private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
@@ -109,6 +111,11 @@ public class RinksContract {
     private static final String PATH_PARKS = "parks";
     private static final String PATH_RINKS = "rinks";
     private static final String PATH_FAVORITES = "favorites";
+    // TODO Verify this duplicate!
+    private static final String PATH_RINKS_FAVORITES = "favorites";
+    private static final String PATH_RINKS_SKATING = "skating";
+    private static final String PATH_RINKS_HOCKEY = "hockey";
+    private static final String PATH_RINKS_ALL = "all";
 
     public static class Boroughs implements BoroughsColumns, SyncColumns, BaseColumns {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
@@ -147,8 +154,18 @@ public class RinksContract {
     }
 
     public static class Rinks implements RinksColumns, SyncColumns, BaseColumns {
+
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_RINKS).build();
+
+        public static final Uri CONTENT_FAVORITES_URI = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_RINKS).appendPath(PATH_RINKS_FAVORITES).build();
+        public static final Uri CONTENT_SKATING_URI = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_RINKS).appendPath(PATH_RINKS_SKATING).build();
+        public static final Uri CONTENT_HOCKEY_URI = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_RINKS).appendPath(PATH_RINKS_HOCKEY).build();
+        public static final Uri CONTENT_ALL_URI = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_RINKS).appendPath(PATH_RINKS_ALL).build();
 
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.patinoires.rink";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.patinoires.rink";
@@ -182,4 +199,6 @@ public class RinksContract {
         }
     }
 
+    private RinksContract() {
+    }
 }

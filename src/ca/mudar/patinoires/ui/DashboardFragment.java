@@ -24,7 +24,8 @@
 package ca.mudar.patinoires.ui;
 
 import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.services.SyncService;
+import ca.mudar.patinoires.utils.ActivityHelper;
+import ca.mudar.patinoires.utils.Const;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,21 +39,17 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
+        final ActivityHelper mActivityHelper = ActivityHelper.createInstance(getActivity());
+        
         root.findViewById(R.id.home_btn_skating).setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View view) {
 
                         Intent intent = new Intent(Intent.ACTION_SYNC, null, getSupportActivity()
                                 .getApplicationContext(),
-                                SyncService.class);
-                        // intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER,
-                        // mSyncStatusUpdaterFragment.mReceiver);
-                        getSupportActivity().startService(intent);
-
-                        // Intent intent = new
-                        // Intent(getSupportActivity().getApplicationContext(),
-                        // TabsPagerActivity.class);
-                        // startActivity(intent);
+                                TabsPagerActivity.class);
+                        intent.putExtra(Const.INTENT_EXTRA_TABS_CURRENT, Const.TABS_INDEX_SKATING);
+                        startActivity(intent);
                     }
                 });
         root.findViewById(R.id.home_btn_hockey).setOnClickListener(
@@ -60,26 +57,23 @@ public class DashboardFragment extends Fragment {
                     public void onClick(View view) {
                         Intent intent = new Intent(getSupportActivity().getApplicationContext(),
                                 TabsPagerActivity.class);
+                        intent.putExtra(Const.INTENT_EXTRA_TABS_CURRENT, Const.TABS_INDEX_HOCKEY);
                         startActivity(intent);
                     }
                 });
         root.findViewById(R.id.home_btn_map).setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View view) {
-                        Intent intent = new Intent(getSupportActivity().getApplicationContext(),
-                                MapActivity.class);
-                        startActivity(intent);
+                        mActivityHelper.goMap();
                     }
                 });
         root.findViewById(R.id.home_btn_favorites).setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View view) {
-                        Intent intent = new Intent(Intent.ACTION_SYNC, null, getSupportActivity()
-                                .getApplicationContext(),
-                                SyncService.class);
-                        // intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER,
-                        // mSyncStatusUpdaterFragment.mReceiver);
-                        getSupportActivity().startService(intent);
+                        Intent intent = new Intent(getSupportActivity().getApplicationContext(),
+                                TabsPagerActivity.class);
+                        intent.putExtra(Const.INTENT_EXTRA_TABS_CURRENT, Const.TABS_INDEX_FAVORITES);
+                        startActivity(intent);
                     }
                 });
 

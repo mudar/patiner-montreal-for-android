@@ -24,8 +24,6 @@
 
 <resources>
 
-    <style name="TabsHost"></style>
-
     <style name="BigButton">
         <item name="android:layout_gravity">center</item>
         <item name="android:layout_width">wrap_content</item>
@@ -37,9 +35,9 @@
         <item name="android:textSize">@dimen/textSizeMedium</item>
     </style>
 
-    <style name="Patinoires.ActionBar.TitleTextStyle" parent="TextAppearance.Widget.Title">
-        <item name="android:textColor">@color/actionbar_text</item>
-    </style>
+    <!-- <style name="Patinoires.ActionBar.TitleTextStyle" parent="TextAppearance.Widget.Title"> -->
+    <!-- <item name="android:visibility">gone</item> -->
+    <!-- </style> -->
 
     <style name="DashboardButton">
         <item name="android:layout_gravity">center_vertical</item>
@@ -52,18 +50,19 @@
         <item name="android:background">@null</item>
     </style>
 
-    <style name="AboutSeparator">
-
-        <!-- <item name="android:layout_margin">@dimen/textSizeXLarge</item> -->
-        <item name="android:background">@color/separator_about</item>
-        <item name="android:layout_marginTop">@dimen/bodyPaddingLarge</item>
-        <item name="android:layout_marginBottom">@dimen/bodyPaddingLarge</item>
+    <style name="AboutBox">
+        <item name="android:background">@drawable/about_background</item>
+        <item name="android:paddingLeft">@dimen/boxPaddingH</item>
+        <item name="android:paddingRight">@dimen/boxPaddingH</item>
+        <item name="android:paddingTop">@dimen/boxPaddingV</item>
+        <item name="android:paddingBottom">@dimen/boxPaddingV</item>
         <!-- <item name="android:background">@drawable/about_separator_background</item> -->
-
     </style>
 
     <style name="ListItem">
+        <item name="android:cacheColorHint">#660000</item>
         <item name="android:background">@drawable/list_selector</item>
+        <!-- <item name="android:textColor">@color/listview_text</item> -->
         <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>
         <item name="android:paddingLeft">@dimen/paddingMedium</item>
         <item name="android:paddingRight">@dimen/paddingMedium</item>

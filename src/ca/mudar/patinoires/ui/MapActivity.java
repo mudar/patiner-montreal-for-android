@@ -28,6 +28,7 @@ import com.google.android.maps.GeoPoint;
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.ui.MapFragment.OnMyLocationChangedListener;
+import ca.mudar.patinoires.utils.ActivityHelper;
 import ca.mudar.patinoires.utils.ConnectionHelper;
 import ca.mudar.patinoires.utils.Helper;
 
@@ -35,6 +36,7 @@ import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentMapActivity;
+import android.support.v4.view.MenuItem;
 import android.view.View;
 
 public class MapActivity extends FragmentMapActivity implements OnMyLocationChangedListener {
@@ -54,17 +56,13 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-       
-        // ((AppHelper) getApplicationContext()).updateUiLanguage();
+         ((PatinoiresApp) getApplicationContext()).updateUiLanguage();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             getActionBar().setHomeButtonEnabled(true);
         }
 
         setContentView(R.layout.activity_map);
-        
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
     }
 
     @Override
@@ -77,6 +75,20 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
 
         View root = findViewById(R.id.map_root_landscape);
         boolean isTablet = (root != null);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        getWindow().setBackgroundDrawable(null);
+        System.gc();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        ActivityHelper mActivityHelper = ActivityHelper.createInstance(this);
+        return mActivityHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     /**

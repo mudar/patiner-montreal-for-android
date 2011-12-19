@@ -30,6 +30,8 @@
     <dimen name="bodyPaddingSmall">10dp</dimen>
     <dimen name="bodyPaddingMedium">20dp</dimen>
     <dimen name="bodyPaddingLarge">30dp</dimen>
+    <dimen name="boxPaddingH">35dp</dimen>
+    <dimen name="boxPaddingV">33dp</dimen>
     <dimen name="textSizeSmall">12sp</dimen>
     <dimen name="textSizeMedium">15sp</dimen>
     <dimen name="textSizeLarge">18sp</dimen>

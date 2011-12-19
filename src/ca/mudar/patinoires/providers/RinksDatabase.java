@@ -39,13 +39,24 @@ public class RinksDatabase extends SQLiteOpenHelper {
     private static final String TAG = "RinksDatabase";
 
     private static final String DATABASE_NAME = "patinoires_mtl";
-    private static final int DATABASE_VERSION = 19;
+    private static final int DATABASE_VERSION = 21;
 
     public static interface Tables {
         final String BOROUGHS = "boroughs";
         final String PARKS = "parks";
         final String RINKS = "rinks";
         final String FAVORITES = "favorites";
+
+        final String BOROUGHS_JOIN_PARKS_RINKS = "boroughs "
+                + "LEFT OUTER JOIN parks ON boroughs.borough_id=parks.borough_id "
+                + "LEFT OUTER JOIN rinks ON parks.park_id=rinks.park_id ";
+
+        final String BOROUGHS_JOIN_PARKS_RINKS_FAVORITES = "boroughs "
+                + "LEFT OUTER JOIN parks ON boroughs.borough_id=parks.park_borough_id "
+                + "LEFT OUTER JOIN rinks ON parks.park_id=rinks.rink_park_id "
+                + "LEFT OUTER JOIN favorites ON rinks.rink_rink_id=favorites.rink_id ";
+        final String PARKS_JOIN_RINKS = "parks "
+                + "LEFT OUTER JOIN rinks ON parks.park_id=rinks.rink_park_id ";
     }
 
     public RinksDatabase(Context context) {
@@ -64,47 +75,49 @@ public class RinksDatabase extends SQLiteOpenHelper {
                 + Tables.RINKS + " and " + Tables.FAVORITES);
 
         db.execSQL("CREATE TABLE " + Tables.BOROUGHS + " ( "
-                + BaseColumns._ID                    + " INTEGER PRIMARY KEY AUTOINCREMENT , "
-                + BoroughsColumns.BOROUGH_ID         + " INTEGER NOT NULL , "
-                + BoroughsColumns.BOROUGH_NAME       + " TEXT NOT NULL DEFAULT '' COLLATE UNICODE, "
-                + BoroughsColumns.BOROUGH_REMARKS    + " TEXT NULL , "
+                + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT , "
+                + BoroughsColumns.BOROUGH_ID + " INTEGER NOT NULL , "
+                + BoroughsColumns.BOROUGH_NAME + " TEXT NOT NULL DEFAULT '' COLLATE UNICODE, "
+                + BoroughsColumns.BOROUGH_REMARKS + " TEXT NULL , "
                 + BoroughsColumns.BOROUGH_CREATED_AT + " DATE , "
-                + BoroughsColumns.BOROUGH_UPDATED_AT + " TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , "
+                + BoroughsColumns.BOROUGH_UPDATED_AT
+                + " TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , "
                 + "UNIQUE (" + BoroughsColumns.BOROUGH_ID + ") ON CONFLICT REPLACE)");
 
         db.execSQL("CREATE TABLE " + Tables.PARKS + " ( "
-                + BaseColumns._ID                + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + ParksColumns.PARK_ID           + " INTEGER NOT NULL , "
-                + ParksColumns.PARK_BOROUGH_ID   + " INTEGER NOT NULL DEFAULT '0' , "
-                + ParksColumns.PARK_NAME         + " TEXT NOT NULL DEFAULT '' COLLATE UNICODE, "
-                + ParksColumns.PARK_GEO_ID       + " INTEGER NOT NULL DEFAULT '0' , "
-                + ParksColumns.PARK_GEO_LAT      + " TEXT NULL , "
-                + ParksColumns.PARK_GEO_LNG      + " TEXT NULL , "
+                + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + ParksColumns.PARK_ID + " INTEGER NOT NULL , "
+                + ParksColumns.PARK_BOROUGH_ID + " INTEGER NOT NULL DEFAULT '0' , "
+                + ParksColumns.PARK_NAME + " TEXT NOT NULL DEFAULT '' COLLATE UNICODE, "
+                + ParksColumns.PARK_GEO_ID + " INTEGER NOT NULL DEFAULT '0' , "
+                + ParksColumns.PARK_GEO_LAT + " TEXT NULL , "
+                + ParksColumns.PARK_GEO_LNG + " TEXT NULL , "
                 + ParksColumns.PARK_GEO_DISTANCE + " INTEGER DEFAULT '0' , "
-                + ParksColumns.PARK_ADDRESS      + " TEXT NULL , "
-                + ParksColumns.PARK_PHONE        + " TEXT NULL , "
-                + ParksColumns.PARK_IS_CHALET    + " BOOLEAN NOT NULL DEFAULT '0' , "
-                + ParksColumns.PARK_IS_CARAVAN   + " BOOLEAN NOT NULL DEFAULT '0' ,"
-                + ParksColumns.PARK_CREATED_AT   + " DATE , "
+                + ParksColumns.PARK_ADDRESS + " TEXT NULL , "
+                + ParksColumns.PARK_PHONE + " TEXT NULL , "
+                + ParksColumns.PARK_IS_CHALET + " BOOLEAN NOT NULL DEFAULT '0' , "
+                + ParksColumns.PARK_IS_CARAVAN + " BOOLEAN NOT NULL DEFAULT '0' ,"
+                + ParksColumns.PARK_CREATED_AT + " DATE , "
                 + "UNIQUE (" + ParksColumns.PARK_ID + ") ON CONFLICT REPLACE)");
 
         db.execSQL("CREATE TABLE " + Tables.RINKS + " ( "
-                + BaseColumns._ID                 + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + RinksColumns.RINK_ID            + " INTEGER NOT NULL , "
-                + RinksColumns.RINK_PARK_ID       + " INTEGER NOT NULL DEFAULT '0' , "
-                + RinksColumns.RINK_KIND_ID       + " INTEGER NOT NULL DEFAULT '0' , "
-                + RinksColumns.RINK_NAME          + " TEXT NOT NULL , "
-                + RinksColumns.RINK_DESC_FR       + " TEXT NULL , "
-                + RinksColumns.RINK_DESC_EN       + " TEXT NULL , "
-                + RinksColumns.RINK_IS_CLEARED    + " BOOLEAN NOT NULL DEFAULT '0' , "
-                + RinksColumns.RINK_IS_FLOODED    + " BOOLEAN NOT NULL DEFAULT '0' , "
+                + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + RinksColumns.RINK_ID + " INTEGER NOT NULL , "
+                + RinksColumns.RINK_PARK_ID + " INTEGER NOT NULL DEFAULT '0' , "
+                + RinksColumns.RINK_KIND_ID + " INTEGER NOT NULL DEFAULT '0' , "
+                + RinksColumns.RINK_NAME + " TEXT NOT NULL , "
+                + RinksColumns.RINK_DESC_FR + " TEXT NULL , "
+                + RinksColumns.RINK_DESC_EN + " TEXT NULL , "
+                + RinksColumns.RINK_IS_CLEARED + " BOOLEAN NOT NULL DEFAULT '0' , "
+                + RinksColumns.RINK_IS_FLOODED + " BOOLEAN NOT NULL DEFAULT '0' , "
                 + RinksColumns.RINK_IS_RESURFACED + " BOOLEAN NOT NULL DEFAULT '0' , "
-                + RinksColumns.RINK_CONDITION     + " INTEGER NOT NULL DEFAULT '" + Const.DbValues.CONDITION_CLOSED + "' ,"
-                + RinksColumns.RINK_CREATED_AT    + " DATE , "
+                + RinksColumns.RINK_CONDITION + " INTEGER NOT NULL DEFAULT '"
+                + Const.DbValues.CONDITION_CLOSED + "' ,"
+                + RinksColumns.RINK_CREATED_AT + " DATE , "
                 + "UNIQUE (" + RinksColumns.RINK_ID + ") ON CONFLICT REPLACE)");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS " + Tables.FAVORITES + " ( "
-                + BaseColumns._ID                   + " INTEGER PRIMARY KEY AUTOINCREMENT , "
+                + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT , "
                 + FavoritesColumns.FAVORITE_RINK_ID + " INTEGER UNIQUE NOT NULL );");
     }
 

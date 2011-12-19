@@ -1,55 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Patiner Montréal for Android. 
+    Information about outdoor rinks in the city of Montréal: conditions,
+    services, contact, map, etc.
+
+    Copyright (C) 2010 Mudar Noufal <mn@mudar.ca>
+
+    This file is part of Patiner Montréal for Android.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-	<string name="hello">Hello World, Patinoires!</string>
-	<string name="app_name">Patiner Montréal</string>
-	<string name="app_name_map">Map of Patiner Montréal</string>
-	<string name="app_name_details">Rink information</string>
-	<string name="app_name_search">Patiner Montréal</string>
-	<string name="app_name_preferences">Patiner Montréal</string>
-	<string name="app_name_manifest">Patiner Montreal</string>
-	<string name="menu_refresh_list">Refresh</string>
-	<string name="menu_refresh_map">Refresh</string>
-	<string name="menu_refresh_rink">Refresh</string>
-	<string name="menu_view_map">Map</string>
-	<string name="menu_search">Search</string>
-	<string name="menu_preferences">Settings</string>
+
+    <string name="hello">Hello World, Patinoires!</string>
+    <string name="app_name">Patiner Montréal</string>
+    <string name="app_version">1.0.0</string>
+    <string name="google_map_api_key">0by9LaJqmkVJy7MyRTuhzBYmLCb0IEhbCNDggQw</string>
+    <string name="google_map_api_key_debug">0glAHGvFHL0gAEDm5bMNdruBtKReUb1qDlpZSlA</string>
+    <string name="app_name_map">Map of Patiner Montréal</string>
+    <string name="app_name_details">Rink information</string>
+    <string name="app_name_search">Patiner Montréal</string>
+    <string name="app_name_preferences">Patiner Montréal</string>
+    <string name="app_name_manifest">Patiner Montreal</string>
+    <string name="menu_about">About</string>
+    <string name="menu_preferences">Settings</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_refresh_map">Refresh</string>
+    <string name="menu_refresh_rink">Refresh</string>
+    <string name="menu_view_map">Map</string>
+    <string name="menu_search">Search</string>
     <string name="menu_select_conditions">Conditions</string>
-	<string name="menu_share_map">Share</string>
-	<string name="menu_favorites_add">Add to favorites</string>
-	<string name="menu_favorites_remove">Remove from favorites</string>
-	<string name="menu_call_rink">Call</string>
-	<string name="menu_map_view_rink">Locate on map</string>
-
-	<string name="context_menu_favorites_add">Add to favorites</string>
-	<string name="context_menu_favorites_remove">Remove from favorites</string>
-	<string name="context_menu_call_rink">Call</string>
-	<string name="context_menu_map_view_rink">Locate on map</string>
-
-	<string name="list_no_rinks">Empty list...</string>
-
-	<string name="tab_favorites">Favorites</string>
-	<string name="tab_skating">Skating</string>
-	<string name="tab_hockey">Hockey</string>
-	<string name="tab_all">All</string>
-
-	<string name="dialog_about_title">About Patiner Montréal</string>
-	<string name="logo_open_data">@drawable/logo_open_data_en</string>
-	<string name="dialog_about_intro">Patiner Montréal for Android is an open source
+    <string name="menu_share_map">Share</string>
+    <string name="menu_favorites_add">Add to favorites</string>
+    <string name="menu_favorites_remove">Remove from favorites</string>
+    <string name="menu_call_rink">Call</string>
+    <string name="menu_map_view_rink">Locate on map</string>
+    <string name="context_menu_favorites_add">Add to favorites</string>
+    <string name="context_menu_favorites_remove">Remove from favorites</string>
+    <string name="context_menu_call_rink">Call</string>
+    <string name="context_menu_map_view_rink">Locate on map</string>
+    <string name="btn_skating">Skating</string>
+    <string name="btn_hockey">Hockey</string>
+    <string name="btn_map">Map</string>
+    <string name="btn_favorites">Favorites</string>
+    <string name="list_no_rinks">Empty list…</string>
+    <string name="tab_favorites">Favorites</string>
+    <string name="tab_skating">Skating</string>
+    <string name="tab_hockey">Hockey</string>
+    <string name="tab_all">All</string>
+    <string name="dialog_about_title">About Patiner Montréal</string>
+    <string name="logo_open_data">@drawable/logo_open_data_en</string>
+    <string name="dialog_about_intro">Patiner Montréal for Android is an open source
 		project to promote Open Data in Montréal. The City publishes PDF files
 		with daily information on the conditions and locations of outdoor
 		rinks. Patiner Montréal, with the help of an other Montréal Ouvert
 		project, scrapes the information to bring it to your phone. Enjoy the
 		Winter!</string>
-
-	<string name="dialog_about_credits">Android app developed by <a href="http://patinoires.mudar.ca/">Mudar Noufal</a>. Source code is released under the GPLv3 license from the Free Software Foundation. Many thanks to <a href="http://www.slashpoundbang.com/">James McKinney</a> (open data API), Jonathan Brun &amp; Daniel Mireault.</string>
-
-	<string name="dialog_links_title">Useful links</string>
-	<string name="dialog_links_patiner_mtl"><a href="http://www.patinermontreal.ca/">patinermontreal.ca</a></string>
-	<string name="dialog_links_conditions_pdf"><a href="http://ville.montreal.qc.ca/portal/page?_pageid=5977,41729602&amp;_dad=portal&amp;_schema=PORTAL">Conditions at winter activity sites</a></string>
-	<string name="dialog_links_rinks_contact"><a href="http://www11.ville.montreal.qc.ca/sherlock2/servlet/template/sherlock%2CAfficherDocumentInternet.vm/nodocument/154">Skating rinks contact information</a></string>
-
-    <string name="rink_details_conditions">Conditions:&#160;</string>
-    <string name="rink_details_surface">Ice surface:&#160;</string>
+    <string name="dialog_about_credits">Android app developed by <a href="http://patinoires.mudar.ca/">Mudar Noufal</a>. Source code is released under the GPLv3 license from the Free Software Foundation.\nMany thanks to <a href="http://www.slashpoundbang.com/">James McKinney</a> (open data API), Jonathan Brun &amp; Daniel Mireault.</string>
+    <string name="dialog_links_title">Useful links</string>
+    <string name="dialog_links_patiner_mtl"><a href="http://www.patinermontreal.ca/">patinermontreal.ca</a></string>
+    <string name="dialog_links_conditions_pdf"><a href="http://ville.montreal.qc.ca/portal/page?_pageid=5977,41729602&amp;_dad=portal&amp;_schema=PORTAL">Conditions at winter activity sites</a></string>
+    <string name="dialog_links_rinks_contact"><a href="http://www11.ville.montreal.qc.ca/sherlock2/servlet/template/sherlock%2CAfficherDocumentInternet.vm/nodocument/154">Skating rinks contact information</a></string>
+    <string name="rink_details_conditions">Conditions: </string>
+    <string name="rink_details_surface">Ice surface: </string>
     <string name="rink_details_is_cleared">Cleared</string>
     <string name="rink_details_is_flooded">Flooded</string>
     <string name="rink_details_is_resurfaced">Resurfaced</string>
@@ -57,27 +82,22 @@
     <string name="rink_details_is_flooded_false">Not flooded</string>
     <string name="rink_details_is_resurfaced_false">Not resurfaced</string>
     <string name="rink_details_is_favorite">Favorites</string>
-    <string name="rink_details_park_name">Parc&#160;</string>
-    <string name="rink_details_park_address">Address:&#160;</string>
-    <string name="rink_details_park_phone">Phone:&#160;</string>
-    <string name="rink_details_borough_name">Borough:&#160;</string>
-    <string name="rink_details_borough_updated_at">Last updated by the City:&#160;</string>
-    <string name="rink_details_user_updated_at">Your last update:&#160;</string>
-
+    <string name="rink_details_park_name">Parc</string>
+    <string name="rink_details_park_address">Address: </string>
+    <string name="rink_details_park_phone">Phone: </string>
+    <string name="rink_details_borough_name">Borough: </string>
+    <string name="rink_details_borough_updated_at">Last updated by the City: </string>
+    <string name="rink_details_user_updated_at">Your last update: </string>
     <string name="rink_details_view_map">Locate on map</string>
-    <string name="dialog_updating_conditions">Updating conditions. Please wait&#8230;</string>
-    <string name="dialog_updating_all_rinks">Daily updates of rinks and conditions. Please wait&#8230;</string>
+    <string name="dialog_updating_conditions">Updating conditions. Please wait…</string>
+    <string name="dialog_updating_all_rinks">Daily updates of rinks and conditions. Please wait…</string>
     <string name="dialog_updating_result_ok">Updated successfully</string>
     <string name="dialog_updating_result_error">Update has encountered an error. Please try again.</string>
-    
     <string name="dialog_network_connection_title">No connection!</string>
-    <string name="dialog_network_connection_message">You need a network connection to update the rinks information. Please turn on mobile network or Wi-Fi in Settings&#8230;</string>
-
+    <string name="dialog_network_connection_message">You need a network connection to update the rinks information. Please turn on mobile network or Wi-Fi in Settings…</string>
     <string name="search_hint">Search rinks</string>
     <string name="search_results">Results for \'<xliff:g id="string">%s</xliff:g>\'</string>
-
-    <string name="prefs_category_display">Display Settings</string>
-
+    <!-- <string name="prefs_category_display">Display Settings</string> -->
     <string name="prefs_category_conditions">Rink Conditions</string>
     <string name="prefs_condition_title">Conditions</string>
     <string name="prefs_condition_summary">Display or hide rinks based on conditions, in lists and map</string>
@@ -86,25 +106,60 @@
     <string name="prefs_condition_good">Good</string>
     <string name="prefs_condition_bad">Bad</string>
     <string name="prefs_condition_closed">Closed</string>
-    
-    <string name="prefs_sort_title">Sort Order</string>
-    <string name="prefs_sort_summary">Set the rinks list order</string>
-    <string name="prefs_sort_dialog_title">Sort by</string>
-    <string name="prefs_sort_distance">Distance</string>
-    <string name="prefs_sort_rink">Rink</string>
-    <string name="prefs_sort_park">Park</string>
-    <string name="prefs_sort_borough">Borough</string>
-
+    <!-- <string name="prefs_sort_title">Sort Order</string> -->
+    <!-- <string name="prefs_sort_summary">Set the rinks list order</string> -->
+    <!-- <string name="prefs_sort_dialog_title">Sort by</string> -->
+    <!-- <string name="prefs_sort_distance">Distance</string> -->
+    <!-- <string name="prefs_sort_rink">Rink</string> -->
+    <!-- <string name="prefs_sort_park">Park</string> -->
+    <!-- <string name="prefs_sort_borough">Borough</string> -->
+    <!-- <string name="prefs_language_title">Language</string> -->
+    <!-- <string name="prefs_language_summary">Change the interface language</string> -->
+    <!-- <string name="prefs_language_dialog_title">Set language</string> -->
+    <!-- <string name="prefs_language_french">Français</string> -->
+    <!-- <string name="prefs_language_english">English</string> -->
+    <!-- <string name="prefs_category_credits">Credits</string> -->
+    <!-- <string name="prefs_credits_about">About</string> -->
+    <!-- <string name="prefs_credits_links">Useful links</string> -->
+    <string name="map_context_park_prefix">Parc </string>
+    <!-- NEW -->
+    <string name="park_distance_iso">%.1f km</string>
+    <string name="park_distance_iso_min">&lt; 100 m</string>
+    <string name="park_distance_imp">%.1f mi</string>
+    <string name="park_distance_imp_feet">%s ft</string>
+    <string name="park_distance_imp_min">&lt; 200 ft</string>
+    <string name="toast_sync_error">Sync error: %s</string>
+    <string name="toast_sync_finished">Update completed successfully</string>
+    <string name="app_name_about">About Patiner Montréal</string>
+    <string name="logo_open_data_content_desc">Montréal Ouvert</string>
+    <string name="menu_favorites_toggle">Favorite rink</string>
+    <string name="about_contents_project_version">Version %s</string>
+    <string name="toast_network_connection_error">Network connection is unavailable…</string>
+    <string name="toast_favorites_added">Added %s to favorites</string>
+    <string name="toast_favorites_removed">Removed %s from favorites</string>
+    <string name="toast_prefs_conditions_error">Please check at least one condition…</string>
+    <!-- Prefs -->
+    <string name="prefs_category_general">General Preferences</string>
+    <string name="prefs_category_performance">Performance</string>
     <string name="prefs_language_title">Language</string>
     <string name="prefs_language_summary">Change the interface language</string>
     <string name="prefs_language_dialog_title">Set language</string>
     <string name="prefs_language_french">Français</string>
     <string name="prefs_language_english">English</string>
-
-    <string name="prefs_category_credits">Credits</string>
-    <string name="prefs_credits_about">About</string>
-    <string name="prefs_credits_links">Useful links</string>
-
-    <string name="map_context_park_prefix">Parc&#160;</string>
+    <string name="prefs_units_title">Distance Units System</string>
+    <string name="prefs_units_summary">Calculate distances using km or mi</string>
+    <string name="prefs_units_dialog_title">Set units system</string>
+    <string name="prefs_units_iso">Metric (km)</string>
+    <string name="prefs_units_imperial">Imperial (mile)</string>
+    <string name="prefs_list_sort_title">Sort By</string>
+    <string name="prefs_list_sort_summary">Sort lists by name or distance</string>
+    <string name="prefs_list_sort_summary_todo">By name or distance. Coming soon…</string>
+    <string name="prefs_list_sort_dialog_title">Sort lists by</string>
+    <string name="prefs_list_sort_name">Alphabetical order</string>
+    <string name="prefs_list_sort_distance">Distance</string>
+    <string name="prefs_follow_location_title">Enhanced measurements</string>
+    <string name="prefs_follow_location_summary">Experimental: Background location updates. Useful if on the move.</string>
+    <string name="menu_gmaps_directions">Directions</string>
+    <string name="dialog_title_maps_chooser">Get STM itinerary using</string>
 
 </resources>

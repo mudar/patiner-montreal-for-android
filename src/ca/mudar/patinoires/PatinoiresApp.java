@@ -50,6 +50,7 @@ public class PatinoiresApp extends Application {
     private String mLanguage;
     private Toast mToast;
     private SharedPreferences prefs;
+    private boolean[] conditionsFilter = new boolean[4];
 
     public Location getLocation() {
         /**
@@ -122,7 +123,6 @@ public class PatinoiresApp extends Application {
      */
     public void updateUiLanguage() {
         Locale locale = new Locale(mLanguage);
-
         Configuration config = new Configuration();
         config.locale = locale;
         Locale.setDefault(locale);
@@ -156,11 +156,24 @@ public class PatinoiresApp extends Application {
 
         mListSort = prefs.getString(PrefsNames.LIST_SORT, PrefsValues.LIST_SORT_DISTANCE);
 
-        mLanguage = prefs.getString(Const.PrefsNames.LANGUAGE, Locale.getDefault().getLanguage());
+        mLanguage = prefs.getString(PrefsNames.LANGUAGE, Locale.getDefault().getLanguage());
         if (!mLanguage.equals(PrefsValues.LANG_EN) && !mLanguage.equals(PrefsValues.LANG_FR)) {
             mLanguage = PrefsValues.LANG_EN;
         }
 
+        /**
+         * Display/hide rinks based on their condition
+         */
+        conditionsFilter[Const.INDEX_PREFS_EXCELLENT] = prefs.getBoolean(
+                PrefsNames.CONDITIONS_SHOW_EXCELLENT, true);
+        conditionsFilter[Const.INDEX_PREFS_GOOD] = prefs.getBoolean(
+                PrefsNames.CONDITIONS_SHOW_GOOD, true);
+        conditionsFilter[Const.INDEX_PREFS_BAD] = prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_BAD,
+                true);
+        conditionsFilter[Const.INDEX_PREFS_CLOSED] = prefs.getBoolean(
+                PrefsNames.CONDITIONS_SHOW_CLOSED, true);
+        
+        
         /**
          * Having a single Toast instance allows overriding (replacing) the
          * messages and avoiding Toast stack delays.
@@ -185,6 +198,22 @@ public class PatinoiresApp extends Application {
 
     public void setUnits(String units) {
         this.mUnits = units;
+    }
+
+    public boolean[] getConditionsFilter() {
+        return conditionsFilter;
+    }
+
+    public boolean getConditionsFilter(int index) {
+        return conditionsFilter[index];
+    }
+
+    public void setConditionsFilter(boolean[] conditions) {
+        this.conditionsFilter = conditions;
+    }
+
+    public void setConditionsFilter(boolean condition, int index) {
+        this.conditionsFilter[index] = condition;
     }
 
     // TODO: verify possible memory leakage of the following code

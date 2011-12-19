@@ -29,6 +29,8 @@ import ca.mudar.patinoires.providers.RinksContract.Favorites;
 import ca.mudar.patinoires.providers.RinksContract.Parks;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.providers.RinksDatabase.Tables;
+import ca.mudar.patinoires.services.SyncService;
+import ca.mudar.patinoires.utils.Const.DbValues;
 import ca.mudar.patinoires.utils.SelectionBuilder;
 
 import android.app.Activity;
@@ -40,10 +42,12 @@ import android.content.Context;
 import android.content.OperationApplicationException;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -53,6 +57,7 @@ import java.util.ArrayList;
  * {@link SyncService}, and queried by various {@link Activity} instances.
  */
 public class RinksProvider extends ContentProvider {
+    private static final String TAG = "RinksProvider ";
 
     private RinksDatabase mOpenHelper;
 
@@ -65,7 +70,11 @@ public class RinksProvider extends ContentProvider {
     private static final int PARKS_ID = 121;
 
     private static final int RINKS = 130;
-    private static final int RINKS_ID = 131;
+    private static final int RINKS_FAVORITES = 131;
+    private static final int RINKS_SKATING = 132;
+    private static final int RINKS_HOCKEY = 133;
+    private static final int RINKS_ALL = 134;
+    private static final int RINKS_ID = 135;
 
     private static final int FAVORITES = 140;
     private static final int FAVORITES_ID = 141;
@@ -81,6 +90,10 @@ public class RinksProvider extends ContentProvider {
         matcher.addURI(authority, "parks/*", PARKS_ID);
 
         matcher.addURI(authority, "rinks", RINKS);
+        matcher.addURI(authority, "rinks/favorites", RINKS_FAVORITES);
+        matcher.addURI(authority, "rinks/skating", RINKS_SKATING);
+        matcher.addURI(authority, "rinks/hockey", RINKS_HOCKEY);
+        matcher.addURI(authority, "rinks/all", RINKS_ALL);
         matcher.addURI(authority, "rinks/*", RINKS_ID);
 
         matcher.addURI(authority, "favorites", FAVORITES);
@@ -90,12 +103,10 @@ public class RinksProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
-        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        final SelectionBuilder builder = buildSimpleSelection(uri);
-        int retVal = builder.where(selection, selectionArgs).delete(db);
-        getContext().getContentResolver().notifyChange(uri, null);
-        return retVal;
+    public boolean onCreate() {
+        final Context context = getContext();
+        mOpenHelper = new RinksDatabase(context);
+        return true;
     }
 
     @Override
@@ -112,6 +123,14 @@ public class RinksProvider extends ContentProvider {
                 return Parks.CONTENT_ITEM_TYPE;
             case RINKS:
                 return Rinks.CONTENT_TYPE;
+            case RINKS_FAVORITES:
+                return Rinks.CONTENT_TYPE;
+            case RINKS_SKATING:
+                return Rinks.CONTENT_TYPE;
+            case RINKS_HOCKEY:
+                return Rinks.CONTENT_TYPE;
+            case RINKS_ALL:
+                return Rinks.CONTENT_TYPE;
             case RINKS_ID:
                 return Rinks.CONTENT_ITEM_TYPE;
             case FAVORITES:
@@ -121,6 +140,20 @@ public class RinksProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+    }
+
+    @Override
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+            String sortOrder) {
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+
+        final int match = sUriMatcher.match(uri);
+        final SelectionBuilder builder = buildExpandedSelection(uri, match);
+
+        Cursor c = builder.where(selection, selectionArgs).query(db, projection, sortOrder);
+        c.setNotificationUri(getContext().getContentResolver(), uri);
+
+        return c;
     }
 
     @Override
@@ -146,8 +179,12 @@ public class RinksProvider extends ContentProvider {
                 return Rinks.buildRinkUri(values.getAsString(BaseColumns._ID));
             }
             case FAVORITES: {
-                db.insertOrThrow(Tables.FAVORITES, null, values);
-                getContext().getContentResolver().notifyChange(uri, null);
+                try {
+                    db.insertOrThrow(Tables.FAVORITES, null, values);
+                    getContext().getContentResolver().notifyChange(uri, null);
+                } catch (SQLiteConstraintException e) {
+                    Log.v(TAG, "Hmmm... seems like a bug: rink is already a favorite!");
+                }
                 return Favorites.buildFavoriteUri(values.getAsString(BaseColumns._ID));
             }
             default: {
@@ -157,31 +194,19 @@ public class RinksProvider extends ContentProvider {
     }
 
     @Override
-    public boolean onCreate() {
-        final Context context = getContext();
-        mOpenHelper = new RinksDatabase(context);
-        return true;
-    }
-
-    @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
-            String sortOrder) {
-        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-
-        final int match = sUriMatcher.match(uri);
-        final SelectionBuilder builder = buildExpandedSelection(uri, match);
-
-        Cursor c = builder.where(selection, selectionArgs).query(db, projection, sortOrder);
-        c.setNotificationUri(getContext().getContentResolver(), uri);
-
-        return c;
-    }
-
-    @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final SelectionBuilder builder = buildSimpleSelection(uri);
         int retVal = builder.where(selection, selectionArgs).update(db, values);
+        getContext().getContentResolver().notifyChange(uri, null);
+        return retVal;
+    }
+
+    @Override
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final SelectionBuilder builder = buildSimpleSelection(uri);
+        int retVal = builder.where(selection, selectionArgs).delete(db);
         getContext().getContentResolver().notifyChange(uri, null);
         return retVal;
     }
@@ -205,12 +230,8 @@ public class RinksProvider extends ContentProvider {
     }
 
     private SelectionBuilder buildSimpleSelection(Uri uri) {
-        final int match = sUriMatcher.match(uri);
-        return buildExpandedSelection(uri, match);
-    }
-
-    private SelectionBuilder buildExpandedSelection(Uri uri, int match) {
         final SelectionBuilder builder = new SelectionBuilder();
+        final int match = sUriMatcher.match(uri);
         switch (match) {
             case BOROUGHS: {
                 return builder.table(Tables.BOROUGHS);
@@ -246,6 +267,81 @@ public class RinksProvider extends ContentProvider {
         }
     }
 
+    private SelectionBuilder buildExpandedSelection(Uri uri, int match) {
+        final SelectionBuilder builder = new SelectionBuilder();
+        switch (match) {
+            case BOROUGHS: {
+                return builder.table(Tables.BOROUGHS);
+            }
+            case BOROUGHS_ID: {
+                final String boroughId = Boroughs.getBoroughId(uri);
+                return builder.table(Tables.BOROUGHS).where(BaseColumns._ID + "=?", boroughId);
+            }
+            case PARKS: {
+                return builder.table(Tables.PARKS_JOIN_RINKS)
+                        .mapToTable(Parks._ID, Tables.PARKS);
+            }
+            case PARKS_ID: {
+                final String parkId = Parks.getParkId(uri);
+                return builder.table(Tables.PARKS).where(BaseColumns._ID + "=?", parkId);
+            }
+            case RINKS_ALL:
+            case RINKS: {
+                return builder.table(Tables.BOROUGHS_JOIN_PARKS_RINKS_FAVORITES)
+                        .mapToTable(Rinks._ID, Tables.RINKS)
+                        .mapToTable(Rinks.RINK_ID, Tables.RINKS)
+                        .mapToTable(Favorites.FAVORITE_RINK_ID, Tables.FAVORITES)
+                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_ALIAS_IS_FAVORITE);
+            }
+            case RINKS_FAVORITES: {
+                return builder.table(Tables.BOROUGHS_JOIN_PARKS_RINKS_FAVORITES)
+                        .mapToTable(Rinks._ID, Tables.RINKS)
+                        .mapToTable(Rinks.RINK_ID, Tables.RINKS)
+                        .mapToTable(Favorites.FAVORITE_RINK_ID, Tables.FAVORITES)
+                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_ALIAS_IS_FAVORITE)
+                        .where(Rinks.RINK_IS_FAVORITE + "=1");
+            }
+            case RINKS_SKATING: {
+                String[] args = new String[] {
+                        Integer.toString(DbValues.KIND_PP), Integer.toString(DbValues.KIND_PPL)
+                };
+                return builder.table(Tables.BOROUGHS_JOIN_PARKS_RINKS_FAVORITES)
+                        .mapToTable(Rinks._ID, Tables.RINKS)
+                        .mapToTable(Rinks.RINK_ID, Tables.RINKS)
+                        .mapToTable(Favorites.FAVORITE_RINK_ID, Tables.FAVORITES)
+                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_ALIAS_IS_FAVORITE)
+                        .where(Rinks.RINK_KIND_ID + "=? OR " + Rinks.RINK_KIND_ID + "=?", args);
+            }
+            case RINKS_HOCKEY: {
+                return builder.table(Tables.BOROUGHS_JOIN_PARKS_RINKS_FAVORITES)
+                        .mapToTable(Rinks._ID, Tables.RINKS)
+                        .mapToTable(Rinks.RINK_ID, Tables.RINKS)
+                        .mapToTable(Favorites.FAVORITE_RINK_ID, Tables.FAVORITES)
+                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_ALIAS_IS_FAVORITE)
+                        .where(Rinks.RINK_KIND_ID + "=?", Integer.toString(DbValues.KIND_PSE));
+            }
+            case RINKS_ID: {
+                final String rinkId = Rinks.getRinkId(uri);
+                return builder.table(Tables.BOROUGHS_JOIN_PARKS_RINKS_FAVORITES)
+                        .mapToTable(Rinks._ID, Tables.RINKS)
+                        .mapToTable(Rinks.RINK_ID, Tables.RINKS)
+                        .mapToTable(Favorites.FAVORITE_RINK_ID, Tables.FAVORITES)
+                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_ALIAS_IS_FAVORITE)
+                        .where(Qualified.RINKS_RINK_ID + "=?", rinkId);
+            }
+            case FAVORITES: {
+                return builder.table(Tables.FAVORITES);
+            }
+            case FAVORITES_ID: {
+                final String favoriteId = Favorites.getFavoriteId(uri);
+                return builder.table(Tables.FAVORITES).where(BaseColumns._ID + "=?", favoriteId);
+            }
+            default: {
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+            }
+        }
+    }
+
     @Override
     public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
         final int match = sUriMatcher.match(uri);
@@ -254,5 +350,16 @@ public class RinksProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
             }
         }
+
+    }
+
+    /**
+     * {@link ScheduleContract} fields that are fully qualified with a specific
+     * parent {@link Tables}. Used when needed to work around SQL ambiguity.
+     */
+    private interface Qualified {
+        String RINKS_RINK_ID = Tables.RINKS + "." + Rinks.RINK_ID;
+        String FAVORITE_RINK_ID = Tables.FAVORITES + "." + Favorites.FAVORITE_RINK_ID;
+        // String FAVORITE_ID = Tables.FAVORITES + "." + BaseColumns._ID;
     }
 }

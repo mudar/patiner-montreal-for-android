@@ -25,6 +25,8 @@ package ca.mudar.patinoires.utils;
 
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
+import ca.mudar.patinoires.utils.Const.DbValues;
 import ca.mudar.patinoires.utils.Const.UnitsDisplay;
 
 import com.google.android.maps.GeoPoint;
@@ -45,6 +47,48 @@ import java.util.List;
 // TODO Refactor this into geohelper and iohelper
 public class Helper {
     private static final String TAG = "Helper";
+
+    public static String getSqliteConditionsFilter(boolean[] conditionsFilter) {
+        String filter = " 0 ";
+
+        int totalEnabled = 0;
+        if (conditionsFilter[Const.INDEX_PREFS_EXCELLENT]) {
+            filter += " OR " + RinksColumns.RINK_CONDITION + " = " + DbValues.CONDITION_EXCELLENT;
+            totalEnabled++;
+        }
+        if (conditionsFilter[Const.INDEX_PREFS_GOOD]) {
+            filter += " OR " + RinksColumns.RINK_CONDITION + " = " + DbValues.CONDITION_GOOD;
+            totalEnabled++;
+        }
+        if (conditionsFilter[Const.INDEX_PREFS_BAD]) {
+            filter += " OR " + RinksColumns.RINK_CONDITION + " = " + DbValues.CONDITION_BAD;
+            totalEnabled++;
+        }
+        if (conditionsFilter[Const.INDEX_PREFS_CLOSED]) {
+            filter += " OR " + RinksColumns.RINK_CONDITION + " = " + DbValues.CONDITION_CLOSED;
+            totalEnabled++;
+        }
+
+        if (totalEnabled == 4) {
+            /**
+             * If all conditions are enabled, the sqlite filter is useless.
+             */
+            return null;
+        }
+        else {
+            return " ( " + filter + " ) ";
+        }
+    }
+
+    public static String capitalize(final String string)
+    {
+        if (string == null)
+            throw new NullPointerException("string");
+        if (string.equals(""))
+            throw new NullPointerException("string");
+
+        return Character.toUpperCase(string.charAt(0)) + string.substring(1);
+    }
 
     public static String inputStreamToString(InputStream inputStream) {
         BufferedReader r;
@@ -199,33 +243,33 @@ public class Helper {
         return location;
     }
 
-//    public static void debugFragment(Fragment fragment) {
-//        if (fragment == null) {
-//            Log.d(TAG, "Fragment is NULL");
-//            return;
-//        }
-//
-//        Log.d(TAG, "Fragment name = " + fragment.toString());
-//        if (fragment.isAdded()) {
-//            Log.d(TAG, "isAdded");
-//        }
-//        if (fragment.isDetached()) {
-//            Log.d(TAG, "isDetached");
-//        }
-//        if (fragment.isHidden()) {
-//            Log.d(TAG, "isHidden");
-//        }
-//        if (fragment.isInLayout()) {
-//            Log.d(TAG, "isInLayout");
-//        }
-//        if (fragment.isRemoving()) {
-//            Log.d(TAG, "isRemoving");
-//        }
-//        if (fragment.isResumed()) {
-//            Log.d(TAG, "isResumed");
-//        }
-//        if (fragment.isVisible()) {
-//            Log.d(TAG, "isVisible");
-//        }
-//    }
+    // public static void debugFragment(Fragment fragment) {
+    // if (fragment == null) {
+    // Log.d(TAG, "Fragment is NULL");
+    // return;
+    // }
+    //
+    // Log.d(TAG, "Fragment name = " + fragment.toString());
+    // if (fragment.isAdded()) {
+    // Log.d(TAG, "isAdded");
+    // }
+    // if (fragment.isDetached()) {
+    // Log.d(TAG, "isDetached");
+    // }
+    // if (fragment.isHidden()) {
+    // Log.d(TAG, "isHidden");
+    // }
+    // if (fragment.isInLayout()) {
+    // Log.d(TAG, "isInLayout");
+    // }
+    // if (fragment.isRemoving()) {
+    // Log.d(TAG, "isRemoving");
+    // }
+    // if (fragment.isResumed()) {
+    // Log.d(TAG, "isResumed");
+    // }
+    // if (fragment.isVisible()) {
+    // Log.d(TAG, "isVisible");
+    // }
+    // }
 }

@@ -180,26 +180,7 @@ public class MapFragment extends Fragment {
     }
 
     /**
-     * Disable/Enable user location (GPS) updates on map hide/display.
-     * {@inheritDoc}
-     */
-    // @Override
-    // public void onHiddenChanged(boolean hidden) {
-    // if (hidden) {
-    // mLocationOverlay.disableMyLocation();
-    // }
-    // else {
-    // mLocationOverlay.enableMyLocation();
-    // }
-    // super.onHiddenChanged(hidden);
-    // }
-
-    // @Override
-    // public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    // }
-
-    /**
-     * Initialize Map: centre and load placemarks
+     * Initialize Map: centre and load rinks
      */
     protected void initMap() {
         mLocationOverlay = new MyLocationOverlay(getActivity().getApplicationContext(), mMapView);
@@ -293,7 +274,10 @@ public class MapFragment extends Fragment {
                     }
 
                     mMapCenter = userGeoPoint;
-                    mMapController.animateTo(userGeoPoint);
+                    if (userGeoPoint != null) {
+                        mMapController.animateTo(userGeoPoint);
+                    }
+
                 }
             });
         }
@@ -327,17 +311,39 @@ public class MapFragment extends Fragment {
         MapMarker mMapMarker;
         ArrayList<MapMarker> alLocations = new ArrayList<MapMarker>();
 
+        /**
+         * Filter rinks by conditions.
+         */
+        String filter = Helper.getSqliteConditionsFilter(mAppHelper.getConditionsFilter());
+
         Cursor cur = getActivity().getApplicationContext().getContentResolver()
-                .query(Parks.CONTENT_URI, MAP_MARKER_PROJECTION, null, null, null);
+                .query(Parks.CONTENT_URI, MAP_MARKER_PROJECTION, filter, null, null);
         if (cur.moveToFirst()) {
-            final int columnId = cur.getColumnIndexOrThrow(BaseColumns._ID);
-            final int columnName = cur.getColumnIndexOrThrow(ParksColumns.PARK_NAME);
-            final int columnAddress = cur.getColumnIndexOrThrow(ParksColumns.PARK_ADDRESS);
-            final int columnGeoLat = cur.getColumnIndexOrThrow(ParksColumns.PARK_GEO_LAT);
-            final int columnGeoLng = cur.getColumnIndexOrThrow(ParksColumns.PARK_GEO_LNG);
+
+            /**
+             * Values are Hardcoded for performance!
+             */
+            // final int columnId = cur.getColumnIndexOrThrow(BaseColumns._ID);
+            // final int columnName =
+            // cur.getColumnIndexOrThrow(ParksColumns.PARK_NAME);
+            // final int columnAddress =
+            // cur.getColumnIndexOrThrow(ParksColumns.PARK_ADDRESS);
+            // final int columnGeoLat =
+            // cur.getColumnIndexOrThrow(ParksColumns.PARK_GEO_LAT);
+            // final int columnGeoLng =
+            // cur.getColumnIndexOrThrow(ParksColumns.PARK_GEO_LNG);
+// TODO: put this in a query Interface
+            final int columnId = 0x0;
+            final int columnName = 0x1;
+            final int columnAddress = 0x2;
+            final int columnGeoLat = 0x3;
+            final int columnGeoLng = 0x4;
+
+            String prefixParcName = getResources().getString(R.string.rink_details_park_name);
 
             do {
-                mMapMarker = new MapMarker(cur.getInt(columnId), cur.getString(columnName),
+                mMapMarker = new MapMarker(cur.getInt(columnId), String.format(
+                        cur.getString(columnName), prefixParcName),
                         cur.getString(columnAddress), cur.getDouble(columnGeoLat),
                         cur.getDouble(columnGeoLng));
                 alLocations.add(mMapMarker);

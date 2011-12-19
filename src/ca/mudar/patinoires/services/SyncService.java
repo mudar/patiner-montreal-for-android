@@ -72,7 +72,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class SyncService extends IntentService {
     private static final String TAG = "SyncService";
-    
+
     public static final String EXTRA_STATUS_RECEIVER =
             "ca.mudar.patinoires.extra.STATUS_RECEIVER";
 
@@ -105,6 +105,7 @@ public class SyncService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+//        Log.v(TAG, "onHandleIntent");
         final ResultReceiver receiver = intent.getParcelableExtra(EXTRA_STATUS_RECEIVER);
         if (receiver != null) {
             receiver.send(STATUS_RUNNING, Bundle.EMPTY);
@@ -127,20 +128,24 @@ public class SyncService extends IntentService {
             // Parse values from local cache first, since SecurityServices copy
             // or network might be down.
 
-//            receiver.send(STATUS_RUNNING, bundle);
-//            mLocalExecutor.execute(context, KmlLocalAssets.FIRE_HALLS,
-//                    new RemotePlacemarksHandler(FireHalls.CONTENT_URI, true));
+            if (receiver != null) {
+                receiver.send(STATUS_RUNNING, bundle);
+            }
+            // mLocalExecutor.execute(context, KmlLocalAssets.FIRE_HALLS,
+            // new RemotePlacemarksHandler(FireHalls.CONTENT_URI, true));
 
-            Log.v(TAG, "Sync duration: " + (System.currentTimeMillis() - startLocal) + " ms");
+            Log.v(TAG, "Local sync duration: " + (System.currentTimeMillis() - startLocal) + " ms");
 
             // TODO: update data from remote source
-//             Always hit remote SecurityServices for any updates
-             final long startRemote = System.currentTimeMillis();
-             
-//             mRemoteExecutor.executeGet(Const.URL_JSON_INITIAL_IMPORT, new RemoteRinksHandler(RinksContract.CONTENT_AUTHORITY));
-             mRemoteExecutor.executeGet(Const.URL_JSON_CONDITIONS_UPDATES, new RemoteConditionsUpdatesHandler(RinksContract.CONTENT_AUTHORITY));
-             
-             Log.d(TAG, "remote sync took " + (System.currentTimeMillis() - startRemote) + "ms");
+            // Always hit remote SecurityServices for any updates
+            final long startRemote = System.currentTimeMillis();
+
+            mRemoteExecutor.executeGet(Const.URL_JSON_INITIAL_IMPORT, new RemoteRinksHandler(
+                    RinksContract.CONTENT_AUTHORITY));
+            // mRemoteExecutor.executeGet(Const.URL_JSON_CONDITIONS_UPDATES, new
+            // RemoteConditionsUpdatesHandler(RinksContract.CONTENT_AUTHORITY));
+
+            Log.v(TAG, "Remote sync took " + (System.currentTimeMillis() - startRemote) + "ms");
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());

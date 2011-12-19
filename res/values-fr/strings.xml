@@ -1,56 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Patiner Montréal for Android. 
+    Information about outdoor rinks in the city of Montréal: conditions,
+    services, contact, map, etc.
+
+    Copyright (C) 2010 Mudar Noufal <mn@mudar.ca>
+
+    This file is part of Patiner Montréal for Android.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
     <string name="hello">Hello World, Patinoires!</string>
     <string name="app_name">Patiner Montréal</string>
+    <string name="app_version">1.0.0</string>
+    <string name="google_map_api_key">0by9LaJqmkVJy7MyRTuhzBYmLCb0IEhbCNDggQw</string>
+    <string name="google_map_api_key_debug">0glAHGvFHL0gAEDm5bMNdruBtKReUb1qDlpZSlA</string>
     <string name="app_name_map">Carte de Patiner Montréal</string>
     <string name="app_name_details">Informations de la patinoire</string>
     <string name="app_name_search">Patiner Montréal</string>
     <string name="app_name_preferences">Paramètres de Patiner Montréal</string>
     <string name="app_name_manifest">Patiner Montreal</string>
-    <string name="menu_refresh_list">Rafraîchir</string>
+    <string name="menu_about">À propos</string>
+    <string name="menu_preferences">Paramètres</string>
+    <string name="menu_refresh">Rafraîchir</string>
     <string name="menu_refresh_map">Rafraîchir</string>
     <string name="menu_refresh_rink">Rafraîchir</string>
     <string name="menu_view_map">Carte</string>
     <string name="menu_search">Rechercher</string>
-    <string name="menu_preferences">Paramètres</string>
     <string name="menu_select_conditions">Conditions</string>
     <string name="menu_share_map">Partager</string>
     <string name="menu_favorites_add">Ajouter aux favoris</string>
     <string name="menu_favorites_remove">Supprimer des favrois</string>
     <string name="menu_call_rink">Appeler</string>
     <string name="menu_map_view_rink">Situer sur la carte</string>
-    
     <string name="context_menu_favorites_add">Ajouter aux favoris</string>
     <string name="context_menu_favorites_remove">Supprimer des favoris</string>
     <string name="context_menu_call_rink">Appeler</string>
     <string name="context_menu_map_view_rink">Situer sur la carte</string>
-
-    <string name="list_no_rinks">Liste vide...</string>
-
+    <string name="btn_skating">Patinage</string>
+    <string name="btn_hockey">Hockey</string>
+    <string name="btn_map">Carte</string>
+    <string name="btn_favorites">Favoris</string>
+    <string name="list_no_rinks">Liste vide…</string>
     <string name="tab_favorites">Favoris</string>
     <string name="tab_skating">Patinage</string>
     <string name="tab_hockey">Hockey</string>
     <string name="tab_all">Tous</string>
-    
     <string name="dialog_about_title">Patiner Montréal</string>
-	<string name="logo_open_data">@drawable/logo_open_data_fr</string>
-	<string name="dialog_about_intro">Patiner Montréal pour Android est un projet libre
+    <string name="logo_open_data">@drawable/logo_open_data_fr</string>
+    <string name="dialog_about_intro">Patiner Montréal pour Android est un projet libre
 		pour la promotion des données ouvertes à Montréal. La ville publie
 		quotidiennement des fichiers PDF qui recensent les conditions et les
 		emplacements des patinoires extérieures. Patiner Montréal, en
 		collaboration avec un autre projet de Montréal Ouvert, récupère ces
-		informations pour les rendre accessibles dans votre téléphone. Profitez
-		bien de l\'hiver!</string>
-
-    <string name="dialog_about_credits">Application android réalisée par <a href="http://patinoires.mudar.ca/">Mudar Noufal</a>. Le code source est publié sous la licence GPLv3 de la Free Software Foundation. Un grand merci à <a href="http://www.slashpoundbang.com/">James McKinney</a> (API des données), Jonathan Brun et Daniel Mireault.</string>
-
+		informations pour les rendre accessibles dans votre téléphone. Profitez bien de l\'hiver!</string>
+    <string name="dialog_about_credits">Application android réalisée par <a href="http://patinoires.mudar.ca/">Mudar Noufal</a>. Le code source est publié sous la licence GPLv3 de la Free Software Foundation.\nUn grand merci à <a href="http://www.slashpoundbang.com/">James McKinney</a> (API des données), Jonathan Brun et Daniel Mireault.</string>
     <string name="dialog_links_title">Liens utiles</string>
     <string name="dialog_links_patiner_mtl"><a href="http://www.patinermontreal.ca/">patinermontreal.ca</a></string>
     <string name="dialog_links_conditions_pdf"><a href="http://ville.montreal.qc.ca/portal/page?_pageid=5798,40305564&amp;_dad=portal&amp;_schema=PORTAL">Conditions des sites hivernaux</a></string>
     <string name="dialog_links_rinks_contact"><a href="http://www11.ville.montreal.qc.ca/sherlock2/servlet/template/sherlock%2CAfficherDocumentInternet.vm/nodocument/154">Coordonnées des patinoires</a></string>
-
-    <string name="rink_details_conditions">Conditions :&#160;</string>
-    <string name="rink_details_surface">Surface :&#160;</string>
+    <string name="rink_details_conditions">Conditions : </string>
+    <string name="rink_details_surface">Surface : </string>
     <string name="rink_details_is_cleared">Déblayée</string>
     <string name="rink_details_is_flooded">Arrosée</string>
     <string name="rink_details_is_resurfaced">Resurfacée</string>
@@ -58,27 +82,22 @@
     <string name="rink_details_is_flooded_false">Pas arrosée</string>
     <string name="rink_details_is_resurfaced_false">Pas resurfacée</string>
     <string name="rink_details_is_favorite">Favoris</string>
-    <string name="rink_details_park_name">Parc&#160;</string>
-    <string name="rink_details_park_address">Adresse :&#160;</string>
-    <string name="rink_details_park_phone">Téléphone :&#160;</string>
-    <string name="rink_details_borough_name">Arrondissement :&#160;</string>
-    <string name="rink_details_borough_updated_at">Dernière mise à jour par la ville :&#160;</string>
-    <string name="rink_details_user_updated_at">Votre dernière mise à jour :&#160;</string>
-
+    <string name="rink_details_park_name">Parc</string>
+    <string name="rink_details_park_address">Adresse : </string>
+    <string name="rink_details_park_phone">Téléphone : </string>
+    <string name="rink_details_borough_name">Arrondissement : </string>
+    <string name="rink_details_borough_updated_at">Dernière mise à jour par la ville : </string>
+    <string name="rink_details_user_updated_at">Votre dernière mise à jour : </string>
     <string name="rink_details_view_map">Situer sur la carte</string>
-    <string name="dialog_updating_conditions">Mise à jour des conditions. Veuillez patienter&#8230;</string>
-    <string name="dialog_updating_all_rinks">Mise à jour des patinoires et des conditions. Veuillez patienter&#8230;</string>
+    <string name="dialog_updating_conditions">Mise à jour des conditions. Veuillez patienter…</string>
+    <string name="dialog_updating_all_rinks">Mise à jour des patinoires et des conditions. Veuillez patienter…</string>
     <string name="dialog_updating_result_ok">Mise à jour réussie</string>
-    <string name="dialog_updating_result_error">La mise à jour Le serveur a rencontré une erreur. Veuillez réessayer.</string>    
-
+    <string name="dialog_updating_result_error">La mise à jour Le serveur a rencontré une erreur. Veuillez réessayer.</string>
     <string name="dialog_network_connection_title">Pas de connexion!</string>
-    <string name="dialog_network_connection_message">Une connexion réseau est nécessaire pour la mise à jour des informations des patinoires. Veuillez activer votre connexion au réseau mobile ou Wi-Fi&#8230;</string>
-
+    <string name="dialog_network_connection_message">Une connexion réseau est nécessaire pour la mise à jour des informations des patinoires. Veuillez activer votre connexion au réseau mobile ou Wi-Fi…</string>
     <string name="search_hint">Rechercher les patinoires</string>
-    <string name="search_results">Résultats pour &#171;&#160;<xliff:g id="string">%s</xliff:g>&#160;&#187;</string>
-    
-    <string name="prefs_category_display">Paramètres de l\'affichage</string>
-
+    <string name="search_results">Résultats pour « <xliff:g id="string">%s</xliff:g> »</string>
+    <!-- <string name="prefs_category_display">Paramètres de l\'affichage</string> -->
     <string name="prefs_category_conditions">Condition de la patinoire</string>
     <string name="prefs_condition_title">Condition</string>
     <string name="prefs_condition_summary">Afficher ou cacher les patinoires selon l\'état de la glace, dans les listes et sur la carte</string>
@@ -87,25 +106,60 @@
     <string name="prefs_condition_good">Bonne</string>
     <string name="prefs_condition_bad">Mauvaise</string>
     <string name="prefs_condition_closed">Fermée</string>
-    
-    <string name="prefs_sort_title">Ordre d\'affichage</string>
-    <string name="prefs_sort_summary">Modifier l\'ordre d\'affichage des patinoires</string>
-    <string name="prefs_sort_dialog_title">Trier par</string>
-    <string name="prefs_sort_distance">Distance</string>
-    <string name="prefs_sort_rink">Patinoire</string>
-    <string name="prefs_sort_park">Parc</string>
-    <string name="prefs_sort_borough">Arrondissement</string>
-
+    <!-- <string name="prefs_sort_title">Ordre d\'affichage</string> -->
+    <!-- <string name="prefs_sort_summary">Modifier l\'ordre d\'affichage des patinoires</string> -->
+    <!-- <string name="prefs_sort_dialog_title">Trier par</string> -->
+    <!-- <string name="prefs_sort_distance">Distance</string> -->
+    <!-- <string name="prefs_sort_rink">Patinoire</string> -->
+    <!-- <string name="prefs_sort_park">Parc</string> -->
+    <!-- <string name="prefs_sort_borough">Arrondissement</string> -->
+    <!-- <string name="prefs_language_title">Langue</string> -->
+    <!-- <string name="prefs_language_summary">Modifier la langue de l\'interface</string> -->
+    <!-- <string name="prefs_language_dialog_title">Langue</string> -->
+    <!-- <string name="prefs_language_french">Français</string> -->
+    <!-- <string name="prefs_language_english">English</string> -->
+    <!-- <string name="prefs_category_credits">Crédits</string> -->
+    <!-- <string name="prefs_credits_about">À propos</string> -->
+    <!-- <string name="prefs_credits_links">Liens utiles</string> -->
+    <string name="map_context_park_prefix">Parc </string>
+    <!-- NEW -->
+    <string name="park_distance_iso">%.1f km</string>
+    <string name="park_distance_iso_min">&lt; 100 m</string>
+    <string name="park_distance_imp">%.1f mi</string>
+    <string name="park_distance_imp_feet">%s pi</string>
+    <string name="park_distance_imp_min">&lt; 200 pi</string>
+    <string name="toast_sync_error">Erreur de connexion : %s</string>
+    <string name="toast_sync_finished">Mise à jour terminée</string>
+    <string name="app_name_about">À propos de Patiner Montréal</string>
+    <string name="logo_open_data_content_desc">Montréal Ouvert</string>
+    <string name="menu_favorites_toggle">Patinoire favorite</string>
+    <string name="about_contents_project_version">Version %s</string>
+    <string name="toast_network_connection_error">Pas de connexion réseau…</string>
+    <string name="toast_favorites_added">Ajoutée aux favoris : %s</string>
+    <string name="toast_favorites_removed">Supprimée des favoris : %s</string>
+    <string name="toast_prefs_conditions_error">Veuillez cocher au moins une condition…</string>
+    <!-- Prefs -->
+    <string name="prefs_category_general">Paramètres généraux</string>
+    <string name="prefs_category_performance">Performance</string>
     <string name="prefs_language_title">Langue</string>
-    <string name="prefs_language_summary">Modifier la langue de l\'interface</string>
-    <string name="prefs_language_dialog_title">Langue</string>
+    <string name="prefs_language_summary">Changer la langue de l\'interface</string>
+    <string name="prefs_language_dialog_title">Choix de langue</string>
     <string name="prefs_language_french">Français</string>
     <string name="prefs_language_english">English</string>
+    <string name="prefs_units_title">Unités de mesure</string>
+    <string name="prefs_units_summary">Afficher les distances en km ou en milles</string>
+    <string name="prefs_units_dialog_title">Système des unités de mesure</string>
+    <string name="prefs_units_iso">Métrique (km)</string>
+    <string name="prefs_units_imperial">Impérial (mile)</string>
+    <string name="prefs_list_sort_title">Ordre d\'affichage</string>
+    <string name="prefs_list_sort_summary">Modifier l\'ordre d\'affichage des listes</string>
+    <string name="prefs_list_sort_summary_todo">Ordre alphabétique ou distance. À venir…</string>
+    <string name="prefs_list_sort_dialog_title">Trier par</string>
+    <string name="prefs_list_sort_name">Ordre alphabétique</string>
+    <string name="prefs_list_sort_distance">Distance</string>
+    <string name="prefs_follow_location_title">Optimiser les mesures</string>
+    <string name="prefs_follow_location_summary">Expérimental : actualisation en arrière-plan de la position géographique. Utile en déplacement.</string>
+    <string name="menu_gmaps_directions">Itinéraire</string>
+    <string name="dialog_title_maps_chooser">Afficher l\'itinéraire STM avec</string>
 
-    <string name="prefs_category_credits">Crédits</string>
-    <string name="prefs_credits_about">À propos</string>
-    <string name="prefs_credits_links">Liens utiles</string>
-    
-    <string name="map_context_park_prefix">Parc&#160;</string>
-    
 </resources>

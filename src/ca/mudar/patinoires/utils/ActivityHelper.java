@@ -24,10 +24,18 @@
 package ca.mudar.patinoires.utils;
 
 import ca.mudar.patinoires.MainActivity;
+import ca.mudar.patinoires.PatinoiresDetails;
 import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.ui.widgets.MyPreferenceActivity;
+import ca.mudar.patinoires.services.SyncService;
+import ca.mudar.patinoires.ui.AboutActivity;
+import ca.mudar.patinoires.ui.MapActivity;
+import ca.mudar.patinoires.ui.RinkDetailsActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 import android.view.MenuItem;
 
 public class ActivityHelper {
@@ -74,38 +82,61 @@ public class ActivityHelper {
     }
 
     /**
-     * Wrapper for onOptionsItemSelected(MenuItem item, int indexSection),
-     * setting indexSection to -1.
-     * 
-     * @param item The selected menu item
-     * @return boolean
+     * Display the Map
      */
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return onOptionsItemSelected(item, -1);
+    public final void goMap() {
+        if (mActivity instanceof MapActivity) {
+            return;
+        }
+
+        final Intent intent = new Intent(mActivity.getApplicationContext(), MapActivity.class);
+        mActivity.startActivity(intent);
     }
+
+    /**
+     * Display the Map
+     */
+    public final void goRinkDetails(int id) {
+        if (mActivity instanceof RinkDetailsActivity) {
+            return;
+        }
+
+        final Intent intent = new Intent(mActivity.getApplicationContext(),
+                RinkDetailsActivity.class);
+        intent.putExtra(Const.INTENT_EXTRA_ID_RINK, id);
+        mActivity.startActivity(intent);
+    }
+
 
     /**
      * @param item The selected menu item
      * @param indexSection The current section
      * @return boolean
      */
-    public boolean onOptionsItemSelected(MenuItem item, int indexSection) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.v(TAG, "onOptionsItemSelected");
         Intent intent = new Intent();
         switch (item.getItemId()) {
             case android.R.id.home:
                 goHome();
                 return true;
-                // case R.id.menu_preferences:
-                // intent = new Intent(mActivity, MyPreferenceActivity.class);
-                // mActivity.startActivity(intent);
+            case R.id.menu_preferences:
+                intent = new Intent(mActivity, MyPreferenceActivity.class);
+                mActivity.startActivity(intent);
+                return true;
+
+                // case R.id.menu_refresh:
+                // intent = new Intent(Intent.ACTION_SYNC, null, mActivity,
+                // SyncService.class);
+                // mActivity.startService(intent);
                 // return true;
-                // case R.id.menu_about:
-                // intent = new Intent(mActivity, AboutActivity.class);
-                // mActivity.startActivity(intent);
-                // return true;
-                // case R.id.menu_link_kml:
-                // showAttachmentDownloadDialog(indexSection);
-                // return true;
+            case R.id.menu_about:
+                intent = new Intent(mActivity, AboutActivity.class);
+                mActivity.startActivity(intent);
+                return true;
+            case R.id.menu_map:
+                goMap();
+                return true;
         }
         return false;
     }

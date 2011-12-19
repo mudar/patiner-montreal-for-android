@@ -26,12 +26,15 @@ package ca.mudar.patinoires.ui;
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.utils.ActivityHelper;
+import ca.mudar.patinoires.utils.Const;
 import ca.mudar.patinoires.receivers.DetachableResultReceiver;
+import ca.mudar.patinoires.services.SyncService;
 
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -60,11 +63,9 @@ public class TabsPagerActivity extends FragmentActivity {
     private TabHost mTabHost;
     private ViewPager mViewPager;
     private TabsAdapter mTabsAdapter;
-    
+
     private PatinoiresApp mAppHelper;
     private ActivityHelper mActivityHelper;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +73,12 @@ public class TabsPagerActivity extends FragmentActivity {
 
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
+        ((PatinoiresApp) getApplicationContext()).updateUiLanguage();
+
         setContentView(R.layout.tabs_pager_fragment);
         setProgressBarIndeterminateVisibility(Boolean.FALSE);
 
         PatinoiresApp mAppHelper = (PatinoiresApp) getApplicationContext();
-
 
         mTabHost = (TabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup();
@@ -85,44 +87,48 @@ public class TabsPagerActivity extends FragmentActivity {
 
         mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
 
-        // Resources res = getResources();
+        Resources res = getResources();
 
-//        mTabsAdapter.addTab(mTabHost.newTabSpec(Const.TABS_TAG_GIFTS).setIndicator(buildIndicator(R.drawable.ic_tab_gifts)),
-//                GiftsActivity.GiftsListFragment.class, null);
-//
-//        mTabsAdapter.addTab(
-//                mTabHost.newTabSpec(Const.TABS_TAG_REWARDS).setIndicator(buildIndicator(R.drawable.ic_tab_rewards)),
-//                RewardsFragment.class, null);
-//
-//        mTabsAdapter.addTab(
-//                mTabHost.newTabSpec(Const.TABS_TAG_HISTORY).setIndicator(buildIndicator(R.drawable.ic_tab_history)),
-//                HistoryActivity.HistoryListFragment.class, null);
+        mTabsAdapter.addTab(
+                mTabHost.newTabSpec(Const.TABS_TAG_SKATING).setIndicator(
+                        res.getString(R.string.tab_skating)), SkatingListFragment.class, null);
+        mTabsAdapter.addTab(
+                mTabHost.newTabSpec(Const.TABS_TAG_HOCKEY).setIndicator(
+                        res.getString(R.string.tab_hockey)), HockeyListFragment.class, null);
+        mTabsAdapter.addTab(
+                mTabHost.newTabSpec(Const.TABS_TAG_ALL).setIndicator(
+                        res.getString(R.string.tab_all)), AllListFragment.class, null);
+        mTabsAdapter.addTab(
+                mTabHost.newTabSpec(Const.TABS_TAG_FAVORITES).setIndicator(
+                        res.getString(R.string.tab_favorites)), FavoritesListFragment.class, null);
 
-//        int mCurrentTab = getIntent().getIntExtra(Const.INTENT_EXTRA_TABS_CURRENT, -1);
-//        if (mCurrentTab != -1) {
-//            mTabHost.setCurrentTab(mCurrentTab);
-//        } else if (savedInstanceState != null) {
-//            mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
-//        }
-//
-//        FragmentManager fm = getSupportFragmentManager();
-//
-//        mSyncStatusUpdaterFragment = (SyncStatusUpdaterFragment) fm.findFragmentByTag(SyncStatusUpdaterFragment.TAG);
-//        if (mSyncStatusUpdaterFragment == null) {
-//            // Log.w(TAG, "mSyncStatusUpdaterFragment");
-//            mSyncStatusUpdaterFragment = new SyncStatusUpdaterFragment();
-//            fm.beginTransaction().add(mSyncStatusUpdaterFragment, SyncStatusUpdaterFragment.TAG).commit();
-//
-//            triggerRefresh();
-//        }
+        int mCurrentTab = getIntent().getIntExtra(Const.INTENT_EXTRA_TABS_CURRENT, -1);
+        if (mCurrentTab != -1) {
+            mTabHost.setCurrentTab(mCurrentTab);
+        } else if (savedInstanceState != null) {
+            Log.v(TAG, "tab from savedInstanceState");
+            mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
+        }
+
+        FragmentManager fm = getSupportFragmentManager();
+
+        mSyncStatusUpdaterFragment = (SyncStatusUpdaterFragment)
+                fm.findFragmentByTag(SyncStatusUpdaterFragment.TAG);
+        if (mSyncStatusUpdaterFragment == null) {
+            // Log.w(TAG, "mSyncStatusUpdaterFragment");
+            mSyncStatusUpdaterFragment = new SyncStatusUpdaterFragment();
+            fm.beginTransaction().add(mSyncStatusUpdaterFragment,
+                    SyncStatusUpdaterFragment.TAG).commit();
+
+            // triggerRefresh();
+        }
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
+
     }
-
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -131,7 +137,22 @@ public class TabsPagerActivity extends FragmentActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        Log.v(TAG, "onDestroy");
+        super.onDestroy();
+
+        getWindow().setBackgroundDrawable(null);
+        System.gc();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.menu_refresh) {
+            triggerRefresh();
+            return true;
+        }
+
         ActivityHelper mActivityHelper = ActivityHelper.createInstance(this);
         return mActivityHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
@@ -140,17 +161,15 @@ public class TabsPagerActivity extends FragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-
-//        inflater.inflate(R.menu.actionbar_items, menu);
-//        inflater.inflate(R.menu.actionbar_pay, menu);
+        inflater.inflate(R.menu.menu_tabs_pager, menu);
 
         return true;
     }
 
     private View buildIndicator(int imageRes) {
         ViewGroup mRootView = (ViewGroup) findViewById(android.R.id.content);
-        final ImageView indicator = (ImageView) this.getLayoutInflater().inflate(R.layout.tab_indicator,
+        final ImageView indicator = (ImageView) this.getLayoutInflater().inflate(
+                R.layout.tab_indicator,
                 (ViewGroup) mRootView.findViewById(android.R.id.tabs), false);
         indicator.setImageResource(imageRes);
         return indicator;
@@ -167,7 +186,8 @@ public class TabsPagerActivity extends FragmentActivity {
      * switch to the correct paged in the ViewPager whenever the selected tab
      * changes.
      */
-    public static class TabsAdapter extends FragmentPagerAdapter implements TabHost.OnTabChangeListener,
+    public static class TabsAdapter extends FragmentPagerAdapter implements
+            TabHost.OnTabChangeListener,
             ViewPager.OnPageChangeListener {
         private final Context mContext;
         private final TabHost mTabHost;
@@ -237,26 +257,6 @@ public class TabsPagerActivity extends FragmentActivity {
         @Override
         public void onTabChanged(String tabId) {
             int position = mTabHost.getCurrentTab();
-//            int resTitle = -1;
-//            switch (position) {
-//            case Const.TABS_INDEX_GIFTS: {
-//                resTitle = R.string.tabs_title_gifts;
-//
-//                break;
-//            }
-//            case Const.TABS_INDEX_REWARDS: {
-//                resTitle = R.string.tabs_title_rewards;
-//                break;
-//            }
-//            case Const.TABS_INDEX_HISTORY: {
-//                resTitle = R.string.tabs_title_history;
-//                break;
-//            }
-//            }
-//            if (resTitle != -1) {
-//                ((FragmentActivity) mContext).getSupportActionBar().setTitle(resTitle);
-//            }
-            // Log.w(TAG , "title = " + );
             mViewPager.setCurrentItem(position);
         }
 
@@ -276,18 +276,19 @@ public class TabsPagerActivity extends FragmentActivity {
 
     private void triggerRefresh() {
         Log.v(TAG, "triggerRefresh");
-//        final Intent intent = new Intent(Intent.ACTION_SYNC, null, this, SyncService.class);
-//        intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mSyncStatusUpdaterFragment.mReceiver);
-//        intent.putExtra(Const.INTENT_EXTRA_SYNC_PARTIAL, true);
-//        startService(intent);
+        final Intent intent = new Intent(Intent.ACTION_SYNC, null, getApplicationContext(), SyncService.class);
+        intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mSyncStatusUpdaterFragment.mReceiver);
+        // intent.putExtra(Const.INTENT_EXTRA_SYNC_PARTIAL, true);
+        startService(intent);
     }
 
     private void updateRefreshStatus(boolean refreshing) {
         Log.v(TAG, "updateRefreshStatus");
-//        mActivityHelper.setRefreshActionButtonState(refreshing);
+        // mActivityHelper.setRefreshActionButtonState(refreshing);
     }
 
-    public static class SyncStatusUpdaterFragment extends Fragment implements DetachableResultReceiver.Receiver {
+    public static class SyncStatusUpdaterFragment extends Fragment implements
+            DetachableResultReceiver.Receiver {
         public static final String TAG = SyncStatusUpdaterFragment.class.getName();
 
         private boolean mSyncing = false;
@@ -296,6 +297,7 @@ public class TabsPagerActivity extends FragmentActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
             setRetainInstance(true);
             mReceiver = new DetachableResultReceiver(new Handler());
             mReceiver.setReceiver(this);
@@ -303,36 +305,42 @@ public class TabsPagerActivity extends FragmentActivity {
 
         /** {@inheritDoc} */
         public void onReceiveResult(int resultCode, Bundle resultData) {
+
+            Log.v(TAG, "onReceiveResult. resultCode = " + resultCode);
             TabsPagerActivity activity = (TabsPagerActivity) getActivity();
             if (activity == null) {
                 return;
             }
             activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
 
-//            switch (resultCode) {
-//            case SyncService.STATUS_RUNNING: {
-//                activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
-//                mSyncing = true;
-//                break;
-//            }
-//            case SyncService.STATUS_FINISHED: {
-//                activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
-//                mSyncing = false;
-//                // Toast.makeText(activity, "Sync finished...",
-//                // Toast.LENGTH_SHORT).show();
-//                break;
-//            }
-//            case SyncService.STATUS_ERROR: {
-//                activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
-//                // Error happened down in SyncService, show as toast.
-//                mSyncing = false;
-//                final String errorText = getString(R.string.toast_sync_error, resultData.getString(Intent.EXTRA_TEXT));
-//                Toast.makeText(activity, errorText, Toast.LENGTH_LONG).show();
-//                break;
-//            }
-//            }
+            switch (resultCode) {
+                case SyncService.STATUS_RUNNING: {
+                    Log.v(TAG, "STATUS_RUNNING");
+                    activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
+                    mSyncing = true;
+                    break;
+                }
+                case SyncService.STATUS_FINISHED: {
+                    Log.v(TAG, "STATUS_FINISHED");
+                    activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
+                    mSyncing = false;
+                    Toast.makeText(activity, R.string.toast_sync_finished, Toast.LENGTH_SHORT)
+                            .show();
+                    break;
+                }
+                case SyncService.STATUS_ERROR: {
+                    Log.v(TAG, "STATUS_ERROR");
+                    activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
+                    // Error happened down in SyncService, show as toast.
+                    mSyncing = false;
+                    final String errorText = getString(R.string.toast_sync_error,
+                            resultData.getString(Intent.EXTRA_TEXT));
+                    Toast.makeText(activity, errorText, Toast.LENGTH_LONG).show();
+                    break;
+                }
+            }
 
-            // activity.updateRefreshStatus(mSyncing);
+            activity.updateRefreshStatus(mSyncing);
         }
 
         @Override
@@ -340,18 +348,6 @@ public class TabsPagerActivity extends FragmentActivity {
             super.onActivityCreated(savedInstanceState);
             ((TabsPagerActivity) getActivity()).updateRefreshStatus(mSyncing);
         }
-    }
-    
-    public final void setTabGifts() {
-//        mTabHost.setCurrentTabByTag(Const.TABS_TAG_GIFTS);
-    }
-
-    public final void setTabRewards() {
-//        mTabHost.setCurrentTabByTag(Const.TABS_TAG_REWARDS);
-    }
-
-    public final void setTabHistory() {
-//        mTabHost.setCurrentTabByTag(Const.TABS_TAG_HISTORY);
     }
 
 }
