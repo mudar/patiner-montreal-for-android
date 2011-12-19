@@ -24,17 +24,14 @@
 package ca.mudar.patinoires.utils;
 
 import ca.mudar.patinoires.MainActivity;
-import ca.mudar.patinoires.PatinoiresDetails;
 import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.ui.widgets.MyPreferenceActivity;
-import ca.mudar.patinoires.services.SyncService;
 import ca.mudar.patinoires.ui.AboutActivity;
 import ca.mudar.patinoires.ui.MapActivity;
 import ca.mudar.patinoires.ui.RinkDetailsActivity;
+import ca.mudar.patinoires.ui.widgets.MyPreferenceActivity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.util.Log;
 import android.view.MenuItem;
 

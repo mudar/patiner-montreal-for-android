@@ -25,7 +25,6 @@ package ca.mudar.patinoires.ui;
 
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.data.PatinoiresDbAdapter;
 import ca.mudar.patinoires.providers.RinksContract;
 import ca.mudar.patinoires.providers.RinksContract.BoroughsColumns;
 import ca.mudar.patinoires.providers.RinksContract.Favorites;
@@ -429,13 +428,13 @@ public class RinkDetailsActivity extends FragmentActivity {
             int conditionIndex;
 
             switch (condition) {
-                case PatinoiresDbAdapter.CONDITION_EXCELLENT_INDEX:
+                case DbValues.CONDITION_EXCELLENT:
                     conditionIndex = R.string.prefs_condition_excellent;
                     break;
-                case PatinoiresDbAdapter.CONDITION_GOOD_INDEX:
+                case DbValues.CONDITION_GOOD:
                     conditionIndex = R.string.prefs_condition_good;
                     break;
-                case PatinoiresDbAdapter.CONDITION_BAD_INDEX:
+                case DbValues.CONDITION_BAD:
                     conditionIndex = R.string.prefs_condition_bad;
                     break;
                 default:

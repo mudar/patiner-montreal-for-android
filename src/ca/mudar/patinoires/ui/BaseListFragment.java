@@ -25,7 +25,6 @@ package ca.mudar.patinoires.ui;
 
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
-//import ca.mudar.patinoires.custom.CustomSimpleCursorAdapter;
 import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
