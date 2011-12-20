@@ -27,7 +27,7 @@
     <string name="hello">Hello World, Patinoires!</string>
     <string name="app_name">Patiner Montréal</string>
     <string name="app_version">1.0.0</string>
-    <string name="google_map_api_key">0by9LaJqmkVJy7MyRTuhzBYmLCb0IEhbCNDggQw</string>
+    <string name="google_map_api_key">0glAHGvFHL0gAEDm5bMNdruBtKReUb1qDlpZSlA</string>
     <string name="google_map_api_key_debug">0glAHGvFHL0gAEDm5bMNdruBtKReUb1qDlpZSlA</string>
     <string name="app_name_map">Carte de Patiner Montréal</string>
     <string name="app_name_details">Informations de la patinoire</string>

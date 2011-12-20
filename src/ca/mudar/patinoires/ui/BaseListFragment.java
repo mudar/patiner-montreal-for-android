@@ -28,6 +28,7 @@ import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
+import ca.mudar.patinoires.ui.widgets.RinksCursorAdapter;
 import ca.mudar.patinoires.utils.ActivityHelper;
 import ca.mudar.patinoires.utils.Helper;
 import ca.mudar.patinoires.utils.NotifyingAsyncQueryHandler;
@@ -40,7 +41,6 @@ import android.os.Handler;
 import android.provider.BaseColumns;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.MenuItem;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -63,7 +63,7 @@ public abstract class BaseListFragment extends ListFragment implements
     protected int QUERY_TOKEN;
 
     protected NotifyingAsyncQueryHandler mHandler;
-    protected SimpleCursorAdapter mAdapter;
+    protected RinksCursorAdapter mAdapter;
     protected Cursor mCursor;
 
     public BaseListFragment(Uri contentUri) {
@@ -100,10 +100,10 @@ public abstract class BaseListFragment extends ListFragment implements
 
         mCursor = getActivity().getContentResolver().query(
                 mContentUri,
-                RINKS_SUMMARY_PROJECTION, null, null, null);
+                RINKS_SUMMARY_PROJECTION, null, null, Rinks.DEFAULT_SORT);
         getActivity().startManagingCursor(mCursor);
 
-        mAdapter = new SimpleCursorAdapter(getActivity(),
+        mAdapter = new RinksCursorAdapter(getActivity(),
                 R.layout.fragment_list_item_rinks,
                 mCursor,
                 new String[] {
@@ -170,8 +170,6 @@ public abstract class BaseListFragment extends ListFragment implements
         if (mCursor != null) {
             mCursor.requery();
         }
-
-        getListView().setFastScrollEnabled(true);
     }
 
     @Override
