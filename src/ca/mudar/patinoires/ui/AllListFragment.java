@@ -29,7 +29,6 @@ public class AllListFragment extends BaseListFragment {
 
     public AllListFragment() {
         super(Rinks.CONTENT_ALL_URI);
-        super.QUERY_TOKEN = 0x3;
     }
 
 }

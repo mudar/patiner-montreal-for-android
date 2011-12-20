@@ -29,7 +29,6 @@ public class HockeyListFragment extends BaseListFragment {
 
     public HockeyListFragment() {
         super(Rinks.CONTENT_HOCKEY_URI);
-        super.QUERY_TOKEN = 0x2;
     }
 
 }

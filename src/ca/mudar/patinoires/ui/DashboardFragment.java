@@ -64,7 +64,7 @@ public class DashboardFragment extends Fragment {
         root.findViewById(R.id.home_btn_map).setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View view) {
-                        mActivityHelper.goMap();
+                        mActivityHelper.goMap(null);
                     }
                 });
         root.findViewById(R.id.home_btn_favorites).setOnClickListener(

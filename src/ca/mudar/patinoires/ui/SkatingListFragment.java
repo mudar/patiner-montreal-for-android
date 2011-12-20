@@ -29,7 +29,6 @@ public class SkatingListFragment extends BaseListFragment {
 
     public SkatingListFragment() {
         super(Rinks.CONTENT_SKATING_URI);
-        super.QUERY_TOKEN = 0x1;
     }
 
 }

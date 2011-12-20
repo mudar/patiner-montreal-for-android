@@ -25,34 +25,38 @@ package ca.mudar.patinoires.ui;
 
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.providers.RinksContract;
+import ca.mudar.patinoires.providers.RinksContract.Favorites;
+import ca.mudar.patinoires.providers.RinksContract.FavoritesColumns;
 import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
 import ca.mudar.patinoires.ui.widgets.RinksCursorAdapter;
 import ca.mudar.patinoires.utils.ActivityHelper;
 import ca.mudar.patinoires.utils.Helper;
-import ca.mudar.patinoires.utils.NotifyingAsyncQueryHandler;
 
-import android.database.ContentObserver;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.BaseColumns;
 import android.support.v4.app.ListFragment;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.view.MenuInflater;
 import android.support.v4.view.MenuItem;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
-public abstract class BaseListFragment extends ListFragment implements
-        NotifyingAsyncQueryHandler.AsyncQueryListener {
+public abstract class BaseListFragment extends ListFragment implements LoaderCallbacks<Cursor> {
+
     protected static final String TAG = "BaseListFragment";
 
     protected ActivityHelper mActivityHelper;
@@ -60,26 +64,13 @@ public abstract class BaseListFragment extends ListFragment implements
 
     protected Uri mContentUri;
 
-    protected int QUERY_TOKEN;
-
-    protected NotifyingAsyncQueryHandler mHandler;
     protected RinksCursorAdapter mAdapter;
-    protected Cursor mCursor;
+
+    protected Cursor cursor = null;
 
     public BaseListFragment(Uri contentUri) {
         mContentUri = contentUri;
-        QUERY_TOKEN = 0x1;
     }
-
-    static final String[] RINKS_SUMMARY_PROJECTION = new String[] {
-            BaseColumns._ID,
-            RinksColumns.RINK_ID,
-            RinksColumns.RINK_NAME,
-            RinksColumns.RINK_DESC_EN,
-            RinksColumns.RINK_DESC_FR,
-            ParksColumns.PARK_PHONE,
-            RinksColumns.RINK_IS_FAVORITE
-    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,67 +79,33 @@ public abstract class BaseListFragment extends ListFragment implements
         mActivityHelper = ActivityHelper.createInstance(getActivity());
         mAppHelper = ((PatinoiresApp) getActivity().getApplicationContext());
 
-        mHandler = new NotifyingAsyncQueryHandler(getActivity().getContentResolver(), this);
-
-        if (mCursor != null) {
-            getActivity().stopManagingCursor(mCursor);
-            mCursor = null;
-        }
-
         setListAdapter(null);
-        mHandler.cancelOperation(QUERY_TOKEN);
 
-        mCursor = getActivity().getContentResolver().query(
-                mContentUri,
-                RINKS_SUMMARY_PROJECTION, null, null, Rinks.DEFAULT_SORT);
-        getActivity().startManagingCursor(mCursor);
+        final String RINK_DESC = (mAppHelper.getLanguage().equals("fr") ? RinksColumns.RINK_DESC_FR
+                : RinksColumns.RINK_DESC_EN);
 
         mAdapter = new RinksCursorAdapter(getActivity(),
                 R.layout.fragment_list_item_rinks,
-                mCursor,
+                cursor,
                 new String[] {
-                        RinksColumns.RINK_NAME,
-                        (mAppHelper.getLanguage().equals("fr") ? RinksColumns.RINK_DESC_FR
-                                : RinksColumns.RINK_DESC_EN),
-                        RinksColumns.RINK_ID
-                }, new int[] {
+                        RinksColumns.RINK_NAME, RINK_DESC, RinksColumns.RINK_ID
+                },
+                new int[] {
                         R.id.rink_name, R.id.rink_address
-                }, 0);
+                },
+                0);
 
         setListAdapter(mAdapter);
 
-        /**
-         * Filter rinks by conditions.
-         */
-        String filter = Helper.getSqliteConditionsFilter(mAppHelper.getConditionsFilter());
-
-        mHandler.startQuery(QUERY_TOKEN, null,
-                mContentUri,
-                RINKS_SUMMARY_PROJECTION, filter, null,
-                Rinks.DEFAULT_SORT);
-
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.v(TAG, "onCreateView");
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_list_rinks, null);
-        // View root = inflater.inflate(R.layout.fragment_list_rinks, container,
-        // false);
 
-        // if ( root.findViewById(R.id.rink_list_item) == null) {
-        // Log.v(TAG, "null");
-        // }
-        // else {
-        // Log.v(TAG, "not null");
-        // }
-        // registerForContextMenu( root.findViewById(R.id.rink_list_item) );
-        // Get the list header - to be added later in the lifecycle
-        // during onActivityCreated()
-        // mheaderView = inflater.inflate(R.layout.list_header, null);
         return root;
-
     }
 
     @Override
@@ -159,51 +116,20 @@ public abstract class BaseListFragment extends ListFragment implements
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        // toggleUpdatesWhenLocationChanges(true);
-
-        getActivity().getContentResolver().registerContentObserver(
-                mContentUri,
-                true, mTransactionsChangesObserver);
-        if (mCursor != null) {
-            mCursor.requery();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        // toggleUpdatesWhenLocationChanges(false);
-
-        getActivity().getContentResolver().unregisterContentObserver(mTransactionsChangesObserver);
-    }
-
-    @Override
-    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
-        if (this == null) {
-            return;
-        }
-
-        getActivity().stopManagingCursor(mCursor);
-        mCursor = cursor;
-        getActivity().startManagingCursor(mCursor);
-        mAdapter.changeCursor(mCursor);
-    }
-
-    @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-        // Log.v(TAG, "onCreateContextMenu");
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        String name = mCursor.getString(mCursor.getColumnIndexOrThrow(Rinks.RINK_NAME));
-        String phone = mCursor.getString(mCursor.getColumnIndexOrThrow(ParksColumns.PARK_PHONE));
-        int isFavorite = mCursor.getInt(mCursor.getColumnIndexOrThrow(Rinks.RINK_IS_FAVORITE));
+        Cursor c = mAdapter.getCursor();
+
+        String name =
+                c.getString(c.getColumnIndexOrThrow(Rinks.RINK_NAME));
+        String phone =
+                c.getString(c.getColumnIndexOrThrow(ParksColumns.PARK_PHONE));
+        int isFavorite =
+                c.getInt(c.getColumnIndexOrThrow(Rinks.RINK_IS_FAVORITE));
 
         menu.setHeaderTitle(name);
-        MenuInflater inflater = getSupportActivity().getMenuInflater();
+        MenuInflater inflater = (MenuInflater) getSupportActivity().getMenuInflater();
         inflater.inflate(R.menu.context_menu_rink, menu);
 
         if (isFavorite == 1) {
@@ -218,41 +144,88 @@ public abstract class BaseListFragment extends ListFragment implements
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Log.v(TAG, "onListItemClick. post = " + position);
+        super.onListItemClick(l, v, position, id);
 
-        int rinkId = mCursor.getInt(mCursor.getColumnIndexOrThrow(Rinks.RINK_ID));
-        String name = mCursor.getString(mCursor.getColumnIndexOrThrow(Rinks.RINK_NAME));
-        Log.v(TAG, "rinkId = " + rinkId + ". name = " + name);
+        Cursor c = mAdapter.getCursor();
+        c.moveToPosition(position);
+
+        int rinkId = c.getInt(c.getColumnIndexOrThrow(Rinks.RINK_ID));
+
         mActivityHelper.goRinkDetails(rinkId);
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        Log.v(TAG, "onContextItemSelected . item = " + item.getItemId());
+        Cursor c = mAdapter.getCursor();
+        ContentResolver contentResolver = getSupportActivity().getContentResolver();
+
+        int rinkId = c.getInt(c.getColumnIndexOrThrow(RinksColumns.RINK_ID));
+        Intent intent;
+
         switch (item.getItemId()) {
-        // case R.id.edit:
-        // editNote(info.id);
-        // return true;
-        // case R.id.delete:
-        // deleteNote(info.id);
-        // return true;
+            case R.id.map_view_rink:
+                mActivityHelper.goMap(null);
+                return true;
+            case R.id.favorites_add:
+                /**
+                 * Add to favorites, and update all ContentResolvers to update
+                 * the context menu for this same item.
+                 */
+                final ContentValues values = new ContentValues();
+                values.put(RinksContract.Favorites.FAVORITE_RINK_ID, rinkId);
+                contentResolver.insert(Favorites.CONTENT_URI, values);
+                mActivityHelper.notifyAllTabs(contentResolver);
+                return true;
+            case R.id.favorites_remove:
+                /**
+                 * Remove from favorites, and update all ContentResolvers to
+                 * update the context menu for this same item.
+                 */
+                String[] args = new String[] {
+                        Integer.toString(rinkId)
+                };
+                contentResolver.delete(Favorites.CONTENT_URI,
+                        FavoritesColumns.FAVORITE_RINK_ID + "=?", args);
+                mActivityHelper.notifyAllTabs(contentResolver);
+                return true;
+            case R.id.call_rink:
+                final String phone = c.getString(c.getColumnIndexOrThrow(ParksColumns.PARK_PHONE));
+
+                intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+                startActivity(intent);
+                return true;
             default:
                 return super.onContextItemSelected(item);
         }
-        // return super.onContextItemSelected(item);
     }
 
-    /**
-     * Content observer, update cursor on changes.
-     */
-    protected ContentObserver mTransactionsChangesObserver = new ContentObserver(new Handler()) {
-        @Override
-        public void onChange(boolean selfChange) {
-            if (mCursor != null) {
-                mAdapter.notifyDataSetChanged();
-                mCursor.requery();
-            }
-        }
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String filter = Helper.getSqliteConditionsFilter(mAppHelper.getConditionsFilter());
+
+        return new CursorLoader(getSupportActivity().getApplicationContext(), mContentUri,
+                RINKS_SUMMARY_PROJECTION, filter, null, Rinks.DEFAULT_SORT);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mAdapter.swapCursor(null);
+    }
+
+    // TODO change this into a query interface with indexes.
+    static final String[] RINKS_SUMMARY_PROJECTION = new String[] {
+            BaseColumns._ID,
+            RinksColumns.RINK_ID,
+            RinksColumns.RINK_NAME,
+            RinksColumns.RINK_DESC_EN,
+            RinksColumns.RINK_DESC_FR,
+            ParksColumns.PARK_PHONE,
+            RinksColumns.RINK_IS_FAVORITE
     };
+
 }

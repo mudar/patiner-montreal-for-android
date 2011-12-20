@@ -25,12 +25,16 @@ package ca.mudar.patinoires.utils;
 
 import ca.mudar.patinoires.MainActivity;
 import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.ui.AboutActivity;
 import ca.mudar.patinoires.ui.MapActivity;
 import ca.mudar.patinoires.ui.RinkDetailsActivity;
 import ca.mudar.patinoires.ui.widgets.MyPreferenceActivity;
 
+import com.google.android.maps.GeoPoint;
+
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.util.Log;
 import android.view.MenuItem;
@@ -81,12 +85,13 @@ public class ActivityHelper {
     /**
      * Display the Map
      */
-    public final void goMap() {
+    public final void goMap(GeoPoint point) {
         if (mActivity instanceof MapActivity) {
             return;
         }
 
         final Intent intent = new Intent(mActivity.getApplicationContext(), MapActivity.class);
+        
         mActivity.startActivity(intent);
     }
 
@@ -132,7 +137,7 @@ public class ActivityHelper {
                 mActivity.startActivity(intent);
                 return true;
             case R.id.menu_map:
-                goMap();
+                goMap(null);
                 return true;
         }
         return false;
@@ -215,4 +220,22 @@ public class ActivityHelper {
     // }
     // return uri;
     // }
+    
+    /**
+     * Notify the ContentResolvers used in the 4 tabs. This will update the
+     * contents of the Favorites ListView. It also updates the context menu of
+     * the added/removed favorite rink to toggle the displayed favorites action.
+     * 
+     * @param resolver
+     */
+    public void notifyAllTabs(ContentResolver resolver) {
+        /**
+         * We start by the favorites!
+         */
+        resolver.notifyChange(Rinks.CONTENT_FAVORITES_URI, null);
+        
+        resolver.notifyChange(Rinks.CONTENT_SKATING_URI, null);
+        resolver.notifyChange(Rinks.CONTENT_HOCKEY_URI, null);
+        resolver.notifyChange(Rinks.CONTENT_ALL_URI, null);
+    }
 }

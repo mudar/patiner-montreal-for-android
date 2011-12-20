@@ -46,10 +46,18 @@ public class RinksCursorAdapter extends SimpleCursorAdapter implements SectionIn
     }
 
     @Override
-    public void changeCursor(Cursor cursor) {
-        super.changeCursor(cursor);
+    public Cursor swapCursor(Cursor cursor) {
+        super.swapCursor(cursor);
 
         mIndexer.setCursor(cursor);
+        
+        return cursor;
+    }
+    
+    @Override
+    public void onContentChanged() {
+        Log.v(TAG, "onContentChanged");
+        super.onContentChanged();
     }
 
     @Override

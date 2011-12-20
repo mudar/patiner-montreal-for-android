@@ -29,7 +29,6 @@ public class FavoritesListFragment extends BaseListFragment {
 
     public FavoritesListFragment() {
         super(Rinks.CONTENT_FAVORITES_URI);
-        super.QUERY_TOKEN = 0x4;
     }
 
 }

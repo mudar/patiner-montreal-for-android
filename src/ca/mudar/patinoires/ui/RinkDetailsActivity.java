@@ -182,6 +182,7 @@ public class RinkDetailsActivity extends FragmentActivity {
 
                 mIsFavorite = (mIsFavorite == 0 ? 1 : 0); // Toggle value
                 getSupportActivity().invalidateOptionsMenu();
+                mActivityHelper.notifyAllTabs(getSupportActivity().getContentResolver());
                 return true;
             }
             else if (item.getItemId() == R.id.menu_gmaps_directions) {
