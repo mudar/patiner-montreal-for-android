@@ -47,7 +47,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.SupportActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +74,8 @@ public class MapFragment extends Fragment {
     protected MapController mMapController;
     protected LocationManager mLocationManager;
     protected OnMyLocationChangedListener mListener;
+
+    protected GeoPoint initGeoPoint = null;
 
     protected GeoPoint mMapCenter = null;
 
@@ -101,6 +105,16 @@ public class MapFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // setHasOptionsMenu(true);
+
+        Integer latitude = getSupportActivity().getIntent().getIntExtra(Const.INTENT_EXTRA_GEO_LAT,
+                Integer.MIN_VALUE);
+        Integer longitude = getSupportActivity().getIntent().getIntExtra(
+                Const.INTENT_EXTRA_GEO_LNG, Integer.MIN_VALUE);
+
+        if (!latitude.equals(Integer.MIN_VALUE) && !longitude.equals(Integer.MIN_VALUE)) {
+            Log.v(TAG, "coords = " + latitude + "," + longitude);
+            initGeoPoint = new GeoPoint(latitude, longitude);
+        }
 
         mActivityHelper = ActivityHelper.createInstance(getActivity());
         mAppHelper = ((PatinoiresApp) getSupportActivity().getApplicationContext());
@@ -203,7 +217,13 @@ public class MapFragment extends Fragment {
             mMapView.getOverlays().add(INDEX_OVERLAY_PLACEMARKS, mItemizedOverlay);
         }
 
-        initialAnimateToPoint();
+        if (initGeoPoint == null) {
+            initialAnimateToPoint();
+        }
+        else {
+            mMapController.setZoom(ZOOM_NEAR);
+            setMapCenter(initGeoPoint);
+        }
     }
 
     /**
@@ -330,7 +350,7 @@ public class MapFragment extends Fragment {
             // cur.getColumnIndexOrThrow(ParksColumns.PARK_GEO_LAT);
             // final int columnGeoLng =
             // cur.getColumnIndexOrThrow(ParksColumns.PARK_GEO_LNG);
-// TODO: put this in a query Interface
+            // TODO: put this in a query Interface
             final int columnId = 0x0;
             final int columnName = 0x1;
             final int columnAddress = 0x2;

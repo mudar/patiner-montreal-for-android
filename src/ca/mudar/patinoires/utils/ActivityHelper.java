@@ -31,8 +31,6 @@ import ca.mudar.patinoires.ui.MapActivity;
 import ca.mudar.patinoires.ui.RinkDetailsActivity;
 import ca.mudar.patinoires.ui.widgets.MyPreferenceActivity;
 
-import com.google.android.maps.GeoPoint;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -52,7 +50,7 @@ public class ActivityHelper {
      * @return
      */
     public static ActivityHelper createInstance(Activity activity) {
-        // System.setProperty("http.keepAlive", "false");
+        System.setProperty("http.keepAlive", "false");
         return new ActivityHelper(activity);
     }
 
@@ -83,15 +81,28 @@ public class ActivityHelper {
     }
 
     /**
-     * Display the Map
+     * Display the Map, centered on the given coordinates.
      */
-    public final void goMap(GeoPoint point) {
+    public final void goMap(double lat, double lng) {
         if (mActivity instanceof MapActivity) {
             return;
         }
 
         final Intent intent = new Intent(mActivity.getApplicationContext(), MapActivity.class);
-        
+        intent.putExtra(Const.INTENT_EXTRA_GEO_LAT, (int) (lat * 1E6));
+        intent.putExtra(Const.INTENT_EXTRA_GEO_LNG, (int) (lng * 1E6));
+        mActivity.startActivity(intent);
+    }
+
+    /**
+     * Display the Map. Center will be user location or city center.
+     */
+    public final void goMap() {
+        if (mActivity instanceof MapActivity) {
+            return;
+        }
+
+        final Intent intent = new Intent(mActivity.getApplicationContext(), MapActivity.class);
         mActivity.startActivity(intent);
     }
 
@@ -109,7 +120,6 @@ public class ActivityHelper {
         mActivity.startActivity(intent);
     }
 
-
     /**
      * @param item The selected menu item
      * @param indexSection The current section
@@ -126,7 +136,6 @@ public class ActivityHelper {
                 intent = new Intent(mActivity, MyPreferenceActivity.class);
                 mActivity.startActivity(intent);
                 return true;
-
                 // case R.id.menu_refresh:
                 // intent = new Intent(Intent.ACTION_SYNC, null, mActivity,
                 // SyncService.class);
@@ -136,91 +145,11 @@ public class ActivityHelper {
                 intent = new Intent(mActivity, AboutActivity.class);
                 mActivity.startActivity(intent);
                 return true;
-            case R.id.menu_map:
-                goMap(null);
-                return true;
+
         }
         return false;
     }
 
-    /**
-     * Get the Resource string title of the current section
-     * 
-     * @param index The current section
-     * @return The Resource ID of the string
-     */
-    public int getActionbarTitle(int index) {
-        int res = R.string.app_name;
-        // switch (index) {
-        // case Const.INDEX_ACTIVITY_FIRE_HALLS:
-        // res = R.string.app_label_fire_halls;
-        // break;
-        // case Const.INDEX_ACTIVITY_SPVM_STATIONS:
-        // res = R.string.app_label_spvm_stations;
-        // break;
-        // case Const.INDEX_ACTIVITY_WATER_SUPPLIES:
-        // res = R.string.app_label_water_supplies;
-        // break;
-        // case Const.INDEX_ACTIVITY_EMERGENCY_HOSTELS:
-        // res = R.string.app_label_emergency_hostels;
-        // break;
-        // }
-
-        return res;
-    }
-
-    /**
-     * Show the explanatory confirmation dialog before openning the remote KML
-     * file using GMaps.
-     * 
-     * @param index The current section
-     */
-    // private void showAttachmentDownloadDialog(int index) {
-    // final int indexSection = index;
-    // AlertDialog.Builder alert = new AlertDialog.Builder(mActivity);
-    //
-    // alert.setTitle(R.string.dialog_remote_kml_title);
-    // alert.setMessage(R.string.dialog_remote_kml_summary);
-    //
-    // alert.setPositiveButton(R.string.dialog_btn_ok, new
-    // DialogInterface.OnClickListener() {
-    // public void onClick(DialogInterface dialog, int whichButton) {
-    // goWebView(indexSection);
-    // }
-    // });
-    // alert.setNegativeButton(R.string.dialog_btn_cancel, null);
-    // // TODO Handle rotation by saving the activity instance
-    // alert.show();
-    // }
-
-    /**
-     * Get the URI of the current section
-     * 
-     * @param index The current section
-     * @return Section's URI
-     */
-    // public Uri getContentUri(int index) {
-    // Uri uri;
-    // switch (index) {
-    // case Const.INDEX_ACTIVITY_FIRE_HALLS:
-    // uri = FireHalls.CONTENT_URI;
-    // break;
-    // case Const.INDEX_ACTIVITY_SPVM_STATIONS:
-    // uri = SpvmStations.CONTENT_URI;
-    // break;
-    // case Const.INDEX_ACTIVITY_WATER_SUPPLIES:
-    // uri = WaterSupplies.CONTENT_URI;
-    // break;
-    // case Const.INDEX_ACTIVITY_EMERGENCY_HOSTELS:
-    // uri = EmergencyHostels.CONTENT_URI;
-    // break;
-    // default:
-    // uri = Uri.parse("");
-    // break;
-    // }
-    // return uri;
-    // }
-    
     /**
      * Notify the ContentResolvers used in the 4 tabs. This will update the
      * contents of the Favorites ListView. It also updates the context menu of
@@ -233,7 +162,7 @@ public class ActivityHelper {
          * We start by the favorites!
          */
         resolver.notifyChange(Rinks.CONTENT_FAVORITES_URI, null);
-        
+
         resolver.notifyChange(Rinks.CONTENT_SKATING_URI, null);
         resolver.notifyChange(Rinks.CONTENT_HOCKEY_URI, null);
         resolver.notifyChange(Rinks.CONTENT_ALL_URI, null);

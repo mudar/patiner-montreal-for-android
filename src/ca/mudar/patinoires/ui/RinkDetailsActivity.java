@@ -126,8 +126,9 @@ public class RinkDetailsActivity extends FragmentActivity {
 
         protected View mRootView;
         protected int mIsFavorite;
+        protected double mGeoLat = 0;
+        protected double mGeoLng = 0;
         protected String mRinkName;
-        protected String sGeoCoordinates;
 
         public static RinkDetailsFragment newInstance() {
             RinkDetailsFragment rink = new RinkDetailsFragment();
@@ -186,7 +187,8 @@ public class RinkDetailsActivity extends FragmentActivity {
                 return true;
             }
             else if (item.getItemId() == R.id.menu_gmaps_directions) {
-                if (sGeoCoordinates != null) {
+
+                if ((mGeoLat != 0) && (mGeoLng != 0)) {
                     /**
                      * Get directions using Intents.
                      */
@@ -194,13 +196,18 @@ public class RinkDetailsActivity extends FragmentActivity {
                     String sAddr = Double.toString(userLocation.getLatitude()) + ","
                             + Double.toString(userLocation.getLongitude());
                     String urlGmaps = String.format(Const.URL_GMAPS_DIRECTIONS, sAddr,
-                            sGeoCoordinates);
+                            mGeoLat + "," + mGeoLng);
 
                     Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                             Uri.parse(urlGmaps));
                     startActivity(Intent.createChooser(intent,
                             getResources().getString(R.string.dialog_title_maps_chooser)));
                 }
+            }
+            else if (item.getItemId() == R.id.menu_map) {
+
+                mActivityHelper.goMap(mGeoLat, mGeoLng);
+                return true;
             }
 
             return mActivityHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
@@ -243,8 +250,8 @@ public class RinkDetailsActivity extends FragmentActivity {
             final int isResurfaced = cursor.getInt(RinksQuery.RINK_IS_RESURFACED);
             int condition = cursor.getInt(RinksQuery.RINK_CONDITION);
             mIsFavorite = cursor.getInt(RinksQuery.RINK_IS_FAVORITE);
-            sGeoCoordinates = cursor.getString(RinksQuery.PARK_GEO_LAT) + ","
-                    + cursor.getString(RinksQuery.PARK_GEO_LNG);
+            mGeoLat = cursor.getDouble(RinksQuery.PARK_GEO_LAT);
+            mGeoLng = cursor.getDouble(RinksQuery.PARK_GEO_LNG);
 
             ((TextView) mRootView.findViewById(R.id.l_rink_name)).setText(mRinkName);
             ((TextView) mRootView.findViewById(R.id.l_rink_desc)).setText(desc);
@@ -381,7 +388,7 @@ public class RinkDetailsActivity extends FragmentActivity {
                 values.put(RinksContract.Favorites.FAVORITE_RINK_ID, mRinkId);
                 mHandler.startInsert(Favorites.CONTENT_URI, values);
             }
-            
+
             mAppHelper.showToastText(String.format(getResources().getString(message), mRinkName),
                     Toast.LENGTH_LONG);
         }

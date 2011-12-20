@@ -23,56 +23,79 @@
 
 package ca.mudar.patinoires.ui.widgets;
 
+import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
+import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
+import ca.mudar.patinoires.utils.Helper;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.InputFilter.LengthFilter;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AlphabetIndexer;
 import android.widget.SectionIndexer;
+import android.widget.TextView;
 
 public class RinksCursorAdapter extends SimpleCursorAdapter implements SectionIndexer {
     protected static final String TAG = "RinksCursorAdapter";
 
     private AlphabetIndexer mIndexer;
+    private boolean hasIndexer;
 
     public RinksCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to,
-            int flags) {
+            int flags, boolean hasIndexer) {
         super(context, layout, c, from, to, flags);
-        Log.v(TAG, "RinksCursorAdapter");
+        this.hasIndexer = hasIndexer;
+// TODO Fix the columnIndex issue
+        if (hasIndexer) {
+            mIndexer = new AlphabetIndexer(null, 0x2,
+                    " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        }
+    }
 
-        final int columnName = 0x2;
+    @Override
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        return super.newView(context, cursor, parent);
+    }
 
-        mIndexer = new AlphabetIndexer(null, columnName, " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    @Override
+    public void bindView(View view, Context context, Cursor cursor) {
+        super.bindView(view, context, cursor);
+
+        int distance = cursor.getInt(cursor
+                .getColumnIndexOrThrow(ParksColumns.PARK_GEO_DISTANCE));
+        String sDistance = (distance > 0 ? Helper.getDistanceDisplay(context, distance) : "");
+
+        ((TextView) view.findViewById(R.id.rink_distance)).setText(sDistance);
     }
 
     @Override
     public Cursor swapCursor(Cursor cursor) {
         super.swapCursor(cursor);
 
-        mIndexer.setCursor(cursor);
-        
+        if (hasIndexer) {
+            mIndexer.setCursor(cursor);
+        }
+
         return cursor;
-    }
-    
-    @Override
-    public void onContentChanged() {
-        Log.v(TAG, "onContentChanged");
-        super.onContentChanged();
     }
 
     @Override
     public int getPositionForSection(int section) {
-        return mIndexer.getPositionForSection(section);
+        return (hasIndexer ? mIndexer.getPositionForSection(section) : 0);
     }
 
     @Override
     public int getSectionForPosition(int position) {
-        return mIndexer.getSectionForPosition(position);
+        return (hasIndexer ? mIndexer.getSectionForPosition(position) : 0);
     }
 
     @Override
     public Object[] getSections() {
-        return mIndexer.getSections();
+        return (hasIndexer ? mIndexer.getSections() : null);
     }
 
 }

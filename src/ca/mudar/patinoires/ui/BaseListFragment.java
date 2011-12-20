@@ -28,17 +28,26 @@ import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.providers.RinksContract;
 import ca.mudar.patinoires.providers.RinksContract.Favorites;
 import ca.mudar.patinoires.providers.RinksContract.FavoritesColumns;
+import ca.mudar.patinoires.providers.RinksContract.Parks;
 import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
 import ca.mudar.patinoires.ui.widgets.RinksCursorAdapter;
 import ca.mudar.patinoires.utils.ActivityHelper;
+import ca.mudar.patinoires.utils.Const;
+import ca.mudar.patinoires.utils.Const.PrefsValues;
 import ca.mudar.patinoires.utils.Helper;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -53,7 +62,9 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AlphabetIndexer;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public abstract class BaseListFragment extends ListFragment implements LoaderCallbacks<Cursor> {
 
@@ -67,6 +78,13 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
     protected RinksCursorAdapter mAdapter;
 
     protected Cursor cursor = null;
+    protected View rootView;
+    protected String mSort;
+
+    protected LocationManager locationManager;
+    protected LocationListener locationListener;
+    protected Criteria criteria;
+    boolean hasFollowLocationChanges = false;
 
     public BaseListFragment(Uri contentUri) {
         mContentUri = contentUri;
@@ -79,6 +97,33 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
         mActivityHelper = ActivityHelper.createInstance(getActivity());
         mAppHelper = ((PatinoiresApp) getActivity().getApplicationContext());
 
+        locationManager = (LocationManager) getSupportActivity().getSystemService(
+                Context.LOCATION_SERVICE);
+        locationListener = new MyLocationListener();
+        criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+
+        SharedPreferences prefs = getSupportActivity().getSharedPreferences(Const.APP_PREFS_NAME,
+                Context.MODE_PRIVATE);
+        hasFollowLocationChanges = prefs
+                .getBoolean(Const.PrefsNames.FOLLOW_LOCATION_CHANGES, false);
+
+        Location myLocation = mAppHelper.getLocation();
+
+        /**
+         * By default, sort by name with AlphabetIndexer.
+         */
+        mSort = Rinks.DEFAULT_SORT;
+        boolean hasIndexer = true;
+
+        if (mAppHelper.getListSort().equals(PrefsValues.LIST_SORT_DISTANCE) && (myLocation != null)) {
+            mSort = Parks.PARK_GEO_DISTANCE + " ASC ";
+            /**
+             * If sorting bydistance, disable the AlphabetIndexer.
+             */
+            hasIndexer = false;
+        }
+
         setListAdapter(null);
 
         final String RINK_DESC = (mAppHelper.getLanguage().equals("fr") ? RinksColumns.RINK_DESC_FR
@@ -88,12 +133,13 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
                 R.layout.fragment_list_item_rinks,
                 cursor,
                 new String[] {
-                        RinksColumns.RINK_NAME, RINK_DESC, RinksColumns.RINK_ID
+                        RinksColumns.RINK_NAME, RINK_DESC, RinksColumns.RINK_ID,
+                        ParksColumns.PARK_GEO_DISTANCE
                 },
                 new int[] {
-                        R.id.rink_name, R.id.rink_address
+                        R.id.rink_name, R.id.rink_address, R.id.rink_distance
                 },
-                0);
+                0, hasIndexer);
 
         setListAdapter(mAdapter);
 
@@ -103,9 +149,9 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View root = inflater.inflate(R.layout.fragment_list_rinks, null);
+        rootView = inflater.inflate(R.layout.fragment_list_rinks, null);
 
-        return root;
+        return rootView;
     }
 
     @Override
@@ -164,7 +210,9 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
 
         switch (item.getItemId()) {
             case R.id.map_view_rink:
-                mActivityHelper.goMap(null);
+                double lat = c.getDouble(c.getColumnIndexOrThrow(ParksColumns.PARK_GEO_LAT));
+                double lng = c.getDouble(c.getColumnIndexOrThrow(ParksColumns.PARK_GEO_LNG));
+                mActivityHelper.goMap(lat, lng);
                 return true;
             case R.id.favorites_add:
                 /**
@@ -204,12 +252,21 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
         String filter = Helper.getSqliteConditionsFilter(mAppHelper.getConditionsFilter());
 
         return new CursorLoader(getSupportActivity().getApplicationContext(), mContentUri,
-                RINKS_SUMMARY_PROJECTION, filter, null, Rinks.DEFAULT_SORT);
+                RINKS_SUMMARY_PROJECTION, filter, null, mSort);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mAdapter.swapCursor(data);
+        if (!data.moveToFirst()) {
+            /**
+             * In the XML layout, `android.R.id.empty` is the ProgressBar. If
+             * the list is empty (no rinks), hide the ProgressBar and display
+             * `rinks_empty_list` TextView instead.
+             */
+            rootView.findViewById(android.R.id.empty).setVisibility(View.GONE);
+            getListView().setEmptyView(rootView.findViewById(R.id.rinks_empty_list));
+        }
     }
 
     @Override
@@ -225,7 +282,34 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
             RinksColumns.RINK_DESC_EN,
             RinksColumns.RINK_DESC_FR,
             ParksColumns.PARK_PHONE,
+            ParksColumns.PARK_GEO_LAT,
+            ParksColumns.PARK_GEO_LNG,
+            ParksColumns.PARK_GEO_DISTANCE,
             RinksColumns.RINK_IS_FAVORITE
     };
+
+    /**
+     * The location listener. Doesn't do anything but listening, DB updates are
+     * handled by the app's passive listener.
+     */
+    protected class MyLocationListener implements LocationListener {
+
+        @Override
+        public void onLocationChanged(Location location) {
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+
+    }
 
 }

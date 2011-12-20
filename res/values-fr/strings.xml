@@ -138,6 +138,10 @@
     <string name="toast_favorites_added">Ajoutée aux favoris : %s</string>
     <string name="toast_favorites_removed">Supprimée des favoris : %s</string>
     <string name="toast_prefs_conditions_error">Veuillez cocher au moins une condition…</string>
+    <string name="eula_assets_filename">gpl-3.0-standalone.html</string>
+    <string name="eula_title">GNU General Public License v3.0</string>
+    <string name="dialog_btn_eula_accept">Accepter</string>
+    <string name="dialog_btn_eula_decline">Refuser</string>
     <!-- Prefs -->
     <string name="prefs_category_general">Paramètres généraux</string>
     <string name="prefs_category_performance">Performance</string>

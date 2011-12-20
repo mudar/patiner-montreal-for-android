@@ -114,21 +114,21 @@
         <service android:name=".services.SyncService" />
         <service android:name=".services.DistanceUpdateService" />
 
-<!--         <receiver android:name=".receivers.LocationChangedReceiver" /> -->
-<!--         <receiver android:name=".receivers.PassiveLocationChangedReceiver" /> -->
-<!--         <receiver -->
-<!--             android:name=".receivers.ConnectivityChangedReceiver" -->
-<!--             enabled="false" > -->
-<!--             <intent-filter> -->
-<!--                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> -->
-<!--             </intent-filter> -->
-<!--         </receiver> -->
-<!--         <receiver android:name=".receivers.PowerStateChangedReceiver" > -->
-<!--             <intent-filter> -->
-<!--                 <action android:name="android.intent.action.BATTERY_LOW" /> -->
-<!--                 <action android:name="android.intent.action.BATTERY_OKAY" /> -->
-<!--             </intent-filter> -->
-<!--         </receiver> -->
+        <receiver android:name=".receivers.LocationChangedReceiver" />
+        <receiver android:name=".receivers.PassiveLocationChangedReceiver" />
+        <receiver
+            android:name=".receivers.ConnectivityChangedReceiver"
+            enabled="false" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receivers.PowerStateChangedReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_LOW" />
+                <action android:name="android.intent.action.BATTERY_OKAY" />
+            </intent-filter>
+        </receiver>
 
         <provider
             android:name=".providers.RinksProvider"
