@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-    Patiner Montréal for Android. 
+/*
+    Patiner Montréal for Android.
     Information about outdoor rinks in the city of Montréal: conditions,
     services, contact, map, etc.
 
@@ -20,19 +19,39 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
+ */
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="wrap_content"
-	android:orientation="horizontal">
+package ca.mudar.patinoires.ui.widgets;
 
-	<ImageView android:id="@+id/l_rink_kind_id"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:layout_gravity="center_vertical" android:layout_marginRight="6dp"
-		android:src="@drawable/ic_rink_skating_3" />
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.OverlayItem;
 
-	<TextView android:id="@+id/l_rink_desc" android:layout_width="wrap_content"
-		android:layout_height="fill_parent" android:gravity="center_vertical"
-        android:textColor="#000000"
-		android:textAppearance="?android:attr/textAppearanceMedium" />
-</LinearLayout>
+public class MyOverlayItem extends OverlayItem {
+
+    protected int itemId;
+    protected String extra;
+
+    public MyOverlayItem(GeoPoint point, String title, String snippet, int itemId, String extra) {
+        super(point, title, snippet);
+
+        this.itemId = itemId;
+        this.extra = extra;
+    }
+
+    public int getItemId() {
+        return this.itemId;
+    }
+
+    public void setItemId(int id) {
+        this.itemId = id;
+    }
+
+    public String getExtra() {
+        return this.extra;
+    }
+
+    public void setItemId(String extra) {
+        this.extra = extra;
+    }
+    
+}

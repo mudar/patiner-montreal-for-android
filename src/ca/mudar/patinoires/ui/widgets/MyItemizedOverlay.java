@@ -1,55 +1,81 @@
-/***
- * Copyright (c) 2010 readyState Software Ltd
- * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may
- * not use this file except in compliance with the License. You may obtain
- * a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * 
- */
+/*
+    Patiner Montréal for Android.
+    Information about outdoor rinks in the city of Montréal: conditions,
+    services, contact, map, etc.
 
-/**
- * Modifications:
- * - Copied from MapViewBalloons 
- * - Renamed package
- * - Removed the unused Context and onBalloonTap()
- * - Replace boundCenter() by boundCenterBottom()
+    Copyright (C) 2010 Mudar Noufal <mn@mudar.ca>
+
+    This file is part of Patiner Montréal for Android.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package ca.mudar.patinoires.ui.widgets;
 
-import java.util.ArrayList;
+import ca.mudar.patinoires.PatinoiresApp;
+import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.providers.RinksContract;
+import ca.mudar.patinoires.providers.RinksContract.Rinks;
+import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
+import ca.mudar.patinoires.ui.RinkDetailsActivity;
+import ca.mudar.patinoires.utils.Const;
+import ca.mudar.patinoires.utils.Helper;
 
-import android.graphics.drawable.Drawable;
 import com.google.android.maps.MapView;
-import com.google.android.maps.OverlayItem;
-
 import com.readystatesoftware.mapviewballoons.BalloonItemizedOverlay;
+import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
 
-public class MyItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.drawable.Drawable;
+import android.provider.BaseColumns;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-    private ArrayList<OverlayItem> m_overlays = new ArrayList<OverlayItem>();
+import java.util.ArrayList;
+import java.util.List;
 
-    // private Context c;
+public class MyItemizedOverlay extends BalloonItemizedOverlay<MyOverlayItem> {
+    private static final String TAG = "MyItemizedOverlay";
+
+    private ArrayList<MyOverlayItem> m_overlays = new ArrayList<MyOverlayItem>();
+
+    private Context context;
+    private PatinoiresApp mAppHelper;
 
     public MyItemizedOverlay(Drawable defaultMarker, MapView mapView) {
         super(boundCenterBottom(defaultMarker), mapView);
-        // super(boundCenter(defaultMarker), mapView);
-        // c = mapView.getContext();
+
+        context = mapView.getContext();
+        mAppHelper = (PatinoiresApp) context.getApplicationContext();
     }
 
-    public void addOverlay(OverlayItem overlay) {
+    public void addOverlay(MyOverlayItem overlay) {
         m_overlays.add(overlay);
         populate();
     }
 
     @Override
-    protected OverlayItem createItem(int i) {
+    protected MyOverlayItem createItem(int i) {
         return m_overlays.get(i);
     }
 
@@ -58,16 +84,136 @@ public class MyItemizedOverlay extends BalloonItemizedOverlay<OverlayItem> {
         return m_overlays.size();
     }
 
-    // @Override
-    // protected boolean onBalloonTap(int index, OverlayItem item) {
-    // Toast.makeText(c, "onBalloonTap for overlay index " + index,
-    // Toast.LENGTH_LONG).show();
-    // return true;
-    // }
-    //
-    // public void hideBalloon() {
-    // Log.e("MyItemizedOverlay", "hideBalloon()");
-    // super.hideBalloon();
-    // }
+    @Override
+    protected boolean onBalloonTap(int index, MyOverlayItem item) {
+
+        String parkId = Integer.toString(item.getItemId());
+        String filter = Helper.getSqliteConditionsFilter(mAppHelper.getConditionsFilter());
+
+        String uri = RinksContract.Parks.buildRinksUri(parkId).toString();
+        Log.v(TAG, "uri = " + uri);
+
+        Cursor cur = context.getContentResolver()
+                .query(RinksContract.Parks.buildRinksUri(parkId), ParkRinksQuery.PROJECTION,
+                        filter,
+                        null, Rinks.DEFAULT_SORT);
+
+        ArrayList<DialogListItemRink> rinksArrayList = new ArrayList<DialogListItemRink>();
+        if (cur.moveToFirst()) {
+            DialogListItemRink rink;
+
+            do {
+                String description = cur.getString(mAppHelper.getLanguage().equals("fr") ?
+                        ParkRinksQuery.DESC_FR : ParkRinksQuery.DESC_EN);
+                int image = Helper.getRinkImage(cur.getInt(ParkRinksQuery.KIND_ID),
+                        cur.getInt(ParkRinksQuery.CONDITION));
+
+                rink = new DialogListItemRink(cur.getInt(ParkRinksQuery.RINK_ID),
+                        description,
+                        image);
+                rinksArrayList.add(rink);
+
+            } while (cur.moveToNext());
+        }
+        cur.close();
+
+        displayDialog(item, rinksArrayList);
+
+        return true;
+    }
+
+    @Override
+    protected BalloonOverlayView<MyOverlayItem> createBalloonOverlayView() {
+        return new MyBalloonOverlayView<MyOverlayItem>(getMapView().getContext(),
+                getBalloonBottomOffset());
+    }
+
+    private void displayDialog(MyOverlayItem item,
+            final ArrayList<DialogListItemRink> rinksArrayList) {
+        RinksDialogAdapter parkRinksAdapter = new RinksDialogAdapter(context,
+                R.layout.maps_parks_rink_item, rinksArrayList);
+        Log.v(TAG, "nb items = " + rinksArrayList.size());
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder.setTitle(item.getTitle())
+                .setAdapter(
+                        parkRinksAdapter,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int item) {
+                                DialogListItemRink rink = rinksArrayList.get(item);
+                                Intent intent = new Intent(context, RinkDetailsActivity.class);
+                                intent.putExtra(Const.INTENT_EXTRA_ID_RINK, rink.rinkId);
+                                context.startActivity(intent);
+                            }
+                        }
+                )
+                .setNegativeButton(android.R.string.cancel, null);
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private static class DialogListItemRink {
+        public final int rinkId;
+        public final String description;
+        public final int image;
+
+        public DialogListItemRink(int rinkId, String description, int resourceImage) {
+            this.rinkId = rinkId;
+            this.description = description;
+            this.image = resourceImage;
+        }
+    }
+
+    private class RinksDialogAdapter extends ArrayAdapter<DialogListItemRink> {
+        // protected static final String TAG = "RinksDialogAdapter";
+
+        private Context context;
+        private int textViewResourceId;
+
+        public RinksDialogAdapter(Context context, int textViewResourceId,
+                List<DialogListItemRink> objects) {
+            super(context, textViewResourceId, objects);
+
+            this.context = context;
+            this.textViewResourceId = textViewResourceId;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(context);
+                convertView = inflater.inflate(textViewResourceId, null);
+            }
+
+            DialogListItemRink item = getItem(position);
+
+            if (item != null) {
+                ((TextView) convertView.findViewById(R.id.l_rink_desc)).setText(item.description);
+                ((ImageView) convertView.findViewById(R.id.l_rink_kind_id))
+                        .setImageResource(item.image);
+            }
+
+            return convertView;
+        }
+    }
+
+    private static interface ParkRinksQuery {
+        final String[] PROJECTION = new String[] {
+                BaseColumns._ID,
+                RinksColumns.RINK_ID,
+                RinksColumns.RINK_KIND_ID,
+                RinksColumns.RINK_DESC_FR,
+                RinksColumns.RINK_DESC_EN,
+                RinksColumns.RINK_CONDITION
+        };
+
+        // final int _ID = 0x0;
+        final int RINK_ID = 0x1;
+        final int KIND_ID = 0x2;
+        final int DESC_FR = 0x3;
+        final int DESC_EN = 0x4;
+        final int CONDITION = 0x5;
+    }
 
 }

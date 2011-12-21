@@ -18,8 +18,7 @@
  * Modifications:
  * - Copied from IOSched
  * - Renamed package
- * - Replaced original content by SecurityServices
- * - Merged buildSimpleSelection() and buildExpandedSelection()
+ * - Replaced original content by Rinks
  */
 
 package ca.mudar.patinoires.providers;
@@ -27,6 +26,7 @@ package ca.mudar.patinoires.providers;
 import ca.mudar.patinoires.providers.RinksContract.Boroughs;
 import ca.mudar.patinoires.providers.RinksContract.Favorites;
 import ca.mudar.patinoires.providers.RinksContract.Parks;
+import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.providers.RinksDatabase.Tables;
 import ca.mudar.patinoires.services.SyncService;
@@ -68,6 +68,7 @@ public class RinksProvider extends ContentProvider {
 
     private static final int PARKS = 120;
     private static final int PARKS_ID = 121;
+    private static final int PARKS_ID_RINKS = 122;    
 
     private static final int RINKS = 130;
     private static final int RINKS_FAVORITES = 131;
@@ -88,6 +89,7 @@ public class RinksProvider extends ContentProvider {
 
         matcher.addURI(authority, "parks", PARKS);
         matcher.addURI(authority, "parks/*", PARKS_ID);
+        matcher.addURI(authority, "parks/*/rinks", PARKS_ID_RINKS);
 
         matcher.addURI(authority, "rinks", RINKS);
         matcher.addURI(authority, "rinks/favorites", RINKS_FAVORITES);
@@ -121,6 +123,8 @@ public class RinksProvider extends ContentProvider {
                 return Parks.CONTENT_TYPE;
             case PARKS_ID:
                 return Parks.CONTENT_ITEM_TYPE;
+            case PARKS_ID_RINKS:
+                return Rinks.CONTENT_ITEM_TYPE;
             case RINKS:
                 return Rinks.CONTENT_TYPE;
             case RINKS_FAVORITES:
@@ -145,15 +149,24 @@ public class RinksProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
             String sortOrder) {
+
+        // TODO Replace this by Readable. Requires local JSON asset to initate
+        // DB update.
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        // final SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 
         final int match = sUriMatcher.match(uri);
         final SelectionBuilder builder = buildExpandedSelection(uri, match);
-
-        Cursor c = builder.where(selection, selectionArgs).query(db, projection, sortOrder);
-        c.setNotificationUri(getContext().getContentResolver(), uri);
-
-        return c;
+        switch (match) {
+            case PARKS: {
+                String groupBy = ParksColumns.PARK_ID;
+                return builder.where(selection, selectionArgs).query(db, projection, groupBy,
+                        null, sortOrder, null);
+            }
+            default: {
+                return builder.where(selection, selectionArgs).query(db, projection, sortOrder);
+            }
+        }
     }
 
     @Override
@@ -279,11 +292,18 @@ public class RinksProvider extends ContentProvider {
             }
             case PARKS: {
                 return builder.table(Tables.PARKS_JOIN_RINKS)
-                        .mapToTable(Parks._ID, Tables.PARKS);
+                        .mapToTable(Parks._ID, Tables.PARKS)
+                        .map(Parks.PARK_TOTAL_RINKS, Parks.PARK_TOTAL_RINKS_MAPPED);
             }
             case PARKS_ID: {
                 final String parkId = Parks.getParkId(uri);
                 return builder.table(Tables.PARKS).where(BaseColumns._ID + "=?", parkId);
+            }
+            case PARKS_ID_RINKS: {
+                final String parkId = Parks.getParkId(uri);
+                return builder.table(Tables.PARKS_JOIN_RINKS)
+                        .mapToTable(Parks._ID, Tables.PARKS)
+                        .where(Parks.PARK_ID + "=?", parkId);
             }
             case RINKS_ALL:
             case RINKS: {
@@ -291,14 +311,14 @@ public class RinksProvider extends ContentProvider {
                         .mapToTable(Rinks._ID, Tables.RINKS)
                         .mapToTable(Rinks.RINK_ID, Tables.RINKS)
                         .mapToTable(Favorites.FAVORITE_RINK_ID, Tables.FAVORITES)
-                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_ALIAS_IS_FAVORITE);
+                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_IS_FAVORITE_MAPPED);
             }
             case RINKS_FAVORITES: {
                 return builder.table(Tables.BOROUGHS_JOIN_PARKS_RINKS_FAVORITES)
                         .mapToTable(Rinks._ID, Tables.RINKS)
                         .mapToTable(Rinks.RINK_ID, Tables.RINKS)
                         .mapToTable(Favorites.FAVORITE_RINK_ID, Tables.FAVORITES)
-                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_ALIAS_IS_FAVORITE)
+                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_IS_FAVORITE_MAPPED)
                         .where(Rinks.RINK_IS_FAVORITE + "=1");
             }
             case RINKS_SKATING: {
@@ -309,7 +329,7 @@ public class RinksProvider extends ContentProvider {
                         .mapToTable(Rinks._ID, Tables.RINKS)
                         .mapToTable(Rinks.RINK_ID, Tables.RINKS)
                         .mapToTable(Favorites.FAVORITE_RINK_ID, Tables.FAVORITES)
-                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_ALIAS_IS_FAVORITE)
+                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_IS_FAVORITE_MAPPED)
                         .where(Rinks.RINK_KIND_ID + "=? OR " + Rinks.RINK_KIND_ID + "=?", args);
             }
             case RINKS_HOCKEY: {
@@ -317,7 +337,7 @@ public class RinksProvider extends ContentProvider {
                         .mapToTable(Rinks._ID, Tables.RINKS)
                         .mapToTable(Rinks.RINK_ID, Tables.RINKS)
                         .mapToTable(Favorites.FAVORITE_RINK_ID, Tables.FAVORITES)
-                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_ALIAS_IS_FAVORITE)
+                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_IS_FAVORITE_MAPPED)
                         .where(Rinks.RINK_KIND_ID + "=?", Integer.toString(DbValues.KIND_PSE));
             }
             case RINKS_ID: {
@@ -326,7 +346,7 @@ public class RinksProvider extends ContentProvider {
                         .mapToTable(Rinks._ID, Tables.RINKS)
                         .mapToTable(Rinks.RINK_ID, Tables.RINKS)
                         .mapToTable(Favorites.FAVORITE_RINK_ID, Tables.FAVORITES)
-                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_ALIAS_IS_FAVORITE)
+                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_IS_FAVORITE_MAPPED)
                         .where(Qualified.RINKS_RINK_ID + "=?", rinkId);
             }
             case FAVORITES: {

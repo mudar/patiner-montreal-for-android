@@ -78,6 +78,9 @@ public class RinksContract {
         final String PARK_IS_CHALET = "park_is_chalet";
         final String PARK_IS_CARAVAN = "park_is_caravan";
         final String PARK_CREATED_AT = "park_updated_at";
+        final String PARK_TOTAL_RINKS = "park_total_rinks";
+// TODO Cleanup, goes into Provider or Parks
+        final String PARK_TOTAL_RINKS_MAPPED = "COUNT( rinks.rink_rink_id )";
     }
 
     public static interface RinksColumns {
@@ -100,7 +103,8 @@ public class RinksContract {
     public static interface FavoritesColumns {
         final String FAVORITE_ID = "rink_id";
         final String FAVORITE_RINK_ID = "rink_id";
-        final String FAVORITE_ALIAS_IS_FAVORITE = "( favorites.rink_id IS NOT NULL )";
+// TODO Cleanup, goes into Provider or Favorites
+        final String FAVORITE_IS_FAVORITE_MAPPED = "( favorites.rink_id IS NOT NULL )";
     }
 
     public static final String CONTENT_AUTHORITY = "ca.mudar.patinoires";
@@ -143,6 +147,8 @@ public class RinksContract {
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.patinoires.park";
 
         public static final String DEFAULT_SORT = ParksColumns.PARK_NAME + " ASC ";
+        
+        public static final String GROUP_BY_JOIN_TABLE = " GROUP BY " + ParksColumns.PARK_ID ;
 
         public static Uri buildParkUri(String id) {
             return CONTENT_URI.buildUpon().appendPath(id).build();
@@ -150,6 +156,10 @@ public class RinksContract {
 
         public static String getParkId(Uri uri) {
             return uri.getPathSegments().get(1);
+        }
+        
+        public static Uri buildRinksUri(String parkId) {
+            return CONTENT_URI.buildUpon().appendPath(parkId).appendPath(PATH_RINKS).build();
         }
     }
 

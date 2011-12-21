@@ -39,7 +39,7 @@ public class RinksDatabase extends SQLiteOpenHelper {
     private static final String TAG = "RinksDatabase";
 
     private static final String DATABASE_NAME = "patinoires_mtl";
-    private static final int DATABASE_VERSION = 21;
+    private static final int DATABASE_VERSION = 27;
 
     public static interface Tables {
         final String BOROUGHS = "boroughs";

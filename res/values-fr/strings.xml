@@ -142,6 +142,8 @@
     <string name="eula_title">GNU General Public License v3.0</string>
     <string name="dialog_btn_eula_accept">Accepter</string>
     <string name="dialog_btn_eula_decline">Refuser</string>
+    <string name="park_total_rinks">1 patinoire</string>
+    <string name="park_total_rinks_plural">%s patinoires</string>
     <!-- Prefs -->
     <string name="prefs_category_general">Paramètres généraux</string>
     <string name="prefs_category_performance">Performance</string>

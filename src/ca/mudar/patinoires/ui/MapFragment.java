@@ -27,7 +27,9 @@ import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.providers.RinksContract.Parks;
 import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
+import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
 import ca.mudar.patinoires.ui.widgets.MyItemizedOverlay;
+import ca.mudar.patinoires.ui.widgets.MyOverlayItem;
 import ca.mudar.patinoires.utils.ActivityHelper;
 import ca.mudar.patinoires.utils.Const;
 import ca.mudar.patinoires.utils.Helper;
@@ -38,7 +40,6 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MyLocationOverlay;
 import com.google.android.maps.Overlay;
-import com.google.android.maps.OverlayItem;
 
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -47,7 +48,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.SupportActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -210,8 +210,9 @@ public class MapFragment extends Fragment {
 
         if (arMapMarker.size() > 0) {
             for (MapMarker marker : arMapMarker) {
-                OverlayItem overlayitem = new OverlayItem(marker.geoPoint, marker.name,
-                        marker.address);
+
+                MyOverlayItem overlayitem = new MyOverlayItem(marker.geoPoint, marker.name,
+                        marker.address, marker.id, marker.extra);
                 mItemizedOverlay.addOverlay(overlayitem);
             }
             mMapView.getOverlays().add(INDEX_OVERLAY_PLACEMARKS, mItemizedOverlay);
@@ -313,10 +314,14 @@ public class MapFragment extends Fragment {
      */
     static final String[] MAP_MARKER_PROJECTION = new String[] {
             BaseColumns._ID,
+            ParksColumns.PARK_ID,
             ParksColumns.PARK_NAME,
             ParksColumns.PARK_ADDRESS,
             ParksColumns.PARK_GEO_LAT,
-            ParksColumns.PARK_GEO_LNG
+            ParksColumns.PARK_GEO_LNG,
+            ParksColumns.PARK_TOTAL_RINKS,
+            RinksColumns.RINK_DESC_FR,
+            RinksColumns.RINK_DESC_EN,
     };
 
     /**
@@ -336,34 +341,48 @@ public class MapFragment extends Fragment {
 
         Cursor cur = getActivity().getApplicationContext().getContentResolver()
                 .query(Parks.CONTENT_URI, MAP_MARKER_PROJECTION, filter, null, null);
+        // .query(Parks.CONTENT_URI, MAP_MARKER_PROJECTION, filter, null, null,
+        // null, null, null);
+
+        // public Cursor query(Uri uri, String[] projection, String selection,
+        // String[] selectionArgs,
+        // String groupBy, String having, String sortOrder, String limit) {
+
         if (cur.moveToFirst()) {
 
-            /**
-             * Values are Hardcoded for performance!
-             */
-            // final int columnId = cur.getColumnIndexOrThrow(BaseColumns._ID);
-            // final int columnName =
-            // cur.getColumnIndexOrThrow(ParksColumns.PARK_NAME);
-            // final int columnAddress =
-            // cur.getColumnIndexOrThrow(ParksColumns.PARK_ADDRESS);
-            // final int columnGeoLat =
-            // cur.getColumnIndexOrThrow(ParksColumns.PARK_GEO_LAT);
-            // final int columnGeoLng =
-            // cur.getColumnIndexOrThrow(ParksColumns.PARK_GEO_LNG);
             // TODO: put this in a query Interface
             final int columnId = 0x0;
-            final int columnName = 0x1;
-            final int columnAddress = 0x2;
-            final int columnGeoLat = 0x3;
-            final int columnGeoLng = 0x4;
+            final int columnParkId = 0x1;
+            final int columnName = 0x2;
+            final int columnAddress = 0x3;
+            final int columnGeoLat = 0x4;
+            final int columnGeoLng = 0x5;
+            final int columnRinksTotal = 0x6;
+            final int columnDescFr = 0x7;
+            final int columnDescEn = 0x8;
 
             String prefixParcName = getResources().getString(R.string.rink_details_park_name);
 
             do {
-                mMapMarker = new MapMarker(cur.getInt(columnId), String.format(
+                String extra = "";
+                /**
+                 * Display the name of the rink or the total number of rinks.
+                 */
+                int nbRinks = cur.getInt(columnRinksTotal);
+                if (nbRinks > 1) {
+                    extra = String.format(
+                            getResources().getString(R.string.park_total_rinks_plural),
+                            nbRinks);
+                }
+                else {
+                    extra = cur.getString(mAppHelper.getLanguage().equals("fr") ?
+                            columnDescFr : columnDescEn);
+                }
+
+                mMapMarker = new MapMarker(cur.getInt(columnParkId), String.format(
                         cur.getString(columnName), prefixParcName),
                         cur.getString(columnAddress), cur.getDouble(columnGeoLat),
-                        cur.getDouble(columnGeoLng));
+                        cur.getDouble(columnGeoLng), extra);
                 alLocations.add(mMapMarker);
 
             } while (cur.moveToNext());
@@ -386,12 +405,15 @@ public class MapFragment extends Fragment {
         public final String name;
         public final String address;
         public final GeoPoint geoPoint;
+        public final String extra;
 
-        public MapMarker(int id, String name, String address, double geoLat, double geoLng) {
+        public MapMarker(int id, String name, String address, double geoLat, double geoLng,
+                String extra) {
             this.id = id;
             this.name = name;
             this.address = address;
             this.geoPoint = new GeoPoint((int) (geoLat * 1E6), (int) (geoLng * 1E6));
+            this.extra = extra;
         }
     }
 
