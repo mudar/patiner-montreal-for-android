@@ -205,7 +205,8 @@ public class MyItemizedOverlay extends BalloonItemizedOverlay<MyOverlayItem> {
                 RinksColumns.RINK_KIND_ID,
                 RinksColumns.RINK_DESC_FR,
                 RinksColumns.RINK_DESC_EN,
-                RinksColumns.RINK_CONDITION
+                RinksColumns.RINK_CONDITION,
+                RinksColumns.RINK_IS_FAVORITE
         };
 
         // final int _ID = 0x0;
@@ -214,6 +215,7 @@ public class MyItemizedOverlay extends BalloonItemizedOverlay<MyOverlayItem> {
         final int DESC_FR = 0x3;
         final int DESC_EN = 0x4;
         final int CONDITION = 0x5;
+        final int IS_FAVORITE = 0x6;
     }
 
 }

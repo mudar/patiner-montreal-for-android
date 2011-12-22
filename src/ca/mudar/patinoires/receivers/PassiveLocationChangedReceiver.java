@@ -74,7 +74,7 @@ public class PassiveLocationChangedReceiver extends BroadcastReceiver {
                     Context.MODE_PRIVATE);
 
             // Get the last location we used to get a listing.
-            long lastTime = prefs.getLong(Const.PrefsNames.LAST_UPDATE_TIME, Long.MIN_VALUE);
+            long lastTime = prefs.getLong(Const.PrefsNames.LAST_UPDATE_TIME_GEO, Long.MIN_VALUE);
             Float lastLat = prefs.getFloat(Const.PrefsNames.LAST_UPDATE_LAT, Float.NaN);
             Float lastLng = prefs.getFloat(Const.PrefsNames.LAST_UPDATE_LNG, Float.NaN);
 

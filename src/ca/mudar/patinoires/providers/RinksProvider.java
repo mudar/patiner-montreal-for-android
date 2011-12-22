@@ -68,7 +68,7 @@ public class RinksProvider extends ContentProvider {
 
     private static final int PARKS = 120;
     private static final int PARKS_ID = 121;
-    private static final int PARKS_ID_RINKS = 122;    
+    private static final int PARKS_ID_RINKS = 122;
 
     private static final int RINKS = 130;
     private static final int RINKS_FAVORITES = 131;
@@ -152,19 +152,23 @@ public class RinksProvider extends ContentProvider {
 
         // TODO Replace this by Readable. Requires local JSON asset to initate
         // DB update.
-        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        // final SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+        // final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 
         final int match = sUriMatcher.match(uri);
         final SelectionBuilder builder = buildExpandedSelection(uri, match);
         switch (match) {
             case PARKS: {
                 String groupBy = ParksColumns.PARK_ID;
-                return builder.where(selection, selectionArgs).query(db, projection, groupBy,
+                Cursor c = builder.where(selection, selectionArgs).query(db, projection, groupBy,
                         null, sortOrder, null);
+                c.setNotificationUri(getContext().getContentResolver(), uri);
+                return c;
             }
             default: {
-                return builder.where(selection, selectionArgs).query(db, projection, sortOrder);
+                Cursor c = builder.where(selection, selectionArgs).query(db, projection, sortOrder);
+                c.setNotificationUri(getContext().getContentResolver(), uri);
+                return c;
             }
         }
     }
@@ -196,7 +200,7 @@ public class RinksProvider extends ContentProvider {
                     db.insertOrThrow(Tables.FAVORITES, null, values);
                     getContext().getContentResolver().notifyChange(uri, null);
                 } catch (SQLiteConstraintException e) {
-                    Log.v(TAG, "Hmmm... seems like a bug: rink is already a favorite!");
+                    Log.v(TAG, "Rink is already a favorite");
                 }
                 return Favorites.buildFavoriteUri(values.getAsString(BaseColumns._ID));
             }
@@ -291,9 +295,10 @@ public class RinksProvider extends ContentProvider {
                 return builder.table(Tables.BOROUGHS).where(BaseColumns._ID + "=?", boroughId);
             }
             case PARKS: {
-                return builder.table(Tables.PARKS_JOIN_RINKS)
+                return builder.table(Tables.PARKS_JOIN_RINKS_FAVORITES)
                         .mapToTable(Parks._ID, Tables.PARKS)
-                        .map(Parks.PARK_TOTAL_RINKS, Parks.PARK_TOTAL_RINKS_MAPPED);
+                        .map(Parks.PARK_TOTAL_RINKS, Parks.PARK_TOTAL_RINKS_MAPPED)
+                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_IS_FAVORITE_MAPPED);
             }
             case PARKS_ID: {
                 final String parkId = Parks.getParkId(uri);
@@ -301,8 +306,9 @@ public class RinksProvider extends ContentProvider {
             }
             case PARKS_ID_RINKS: {
                 final String parkId = Parks.getParkId(uri);
-                return builder.table(Tables.PARKS_JOIN_RINKS)
+                return builder.table(Tables.PARKS_JOIN_RINKS_FAVORITES)
                         .mapToTable(Parks._ID, Tables.PARKS)
+                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_IS_FAVORITE_MAPPED)
                         .where(Parks.PARK_ID + "=?", parkId);
             }
             case RINKS_ALL:

@@ -26,6 +26,7 @@ package ca.mudar.patinoires.utils;
 import ca.mudar.patinoires.MainActivity;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
+import ca.mudar.patinoires.services.SyncService;
 import ca.mudar.patinoires.ui.AboutActivity;
 import ca.mudar.patinoires.ui.MapActivity;
 import ca.mudar.patinoires.ui.RinkDetailsActivity;
@@ -34,8 +35,10 @@ import ca.mudar.patinoires.ui.widgets.MyPreferenceActivity;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class ActivityHelper {
 
@@ -121,6 +124,26 @@ public class ActivityHelper {
     }
 
     /**
+     * Start refresh.
+     */
+    public void triggerRefresh(Parcelable receiver, boolean forceUpdate) {
+
+        if (!ConnectionHelper.hasConnection(mActivity.getApplicationContext())) {
+            ConnectionHelper.showDialogNoConnection(mActivity);
+            return;
+        }
+
+        final Intent intent = new Intent(Intent.ACTION_SYNC, null,
+                mActivity.getApplicationContext(),
+                SyncService.class);
+        intent.putExtra(Const.INTENT_EXTRA_FORCE_UPDATE, forceUpdate);
+        if (receiver != null) {
+            intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, receiver);
+        }
+        mActivity.startService(intent);
+    }
+
+    /**
      * @param item The selected menu item
      * @param indexSection The current section
      * @return boolean
@@ -136,11 +159,17 @@ public class ActivityHelper {
                 intent = new Intent(mActivity, MyPreferenceActivity.class);
                 mActivity.startActivity(intent);
                 return true;
-                // case R.id.menu_refresh:
-                // intent = new Intent(Intent.ACTION_SYNC, null, mActivity,
-                // SyncService.class);
-                // mActivity.startService(intent);
-                // return true;
+            case R.id.menu_map:
+                goMap();
+                return true;
+            case R.id.menu_refresh:
+                triggerRefresh(null, true);
+                return true;
+            case R.id.menu_search:
+                // TODO Handle search
+                Toast.makeText(mActivity.getApplicationContext(), "Coming soon!",
+                        Toast.LENGTH_SHORT).show();
+                return true;
             case R.id.menu_about:
                 intent = new Intent(mActivity, AboutActivity.class);
                 mActivity.startActivity(intent);

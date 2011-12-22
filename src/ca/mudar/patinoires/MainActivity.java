@@ -26,6 +26,7 @@ package ca.mudar.patinoires;
 import ca.mudar.patinoires.providers.RinksDatabase;
 import ca.mudar.patinoires.services.SyncService;
 import ca.mudar.patinoires.utils.ActivityHelper;
+import ca.mudar.patinoires.utils.ConnectionHelper;
 import ca.mudar.patinoires.utils.Const;
 import ca.mudar.patinoires.receivers.DetachableResultReceiver;
 import ca.mudar.patinoires.utils.EulaHelper;
@@ -113,7 +114,10 @@ public class MainActivity extends LocationFragmentActivity {
          * receiver to the service.
          */
         // TODO Move this to a sync service listener.
-        if (!hasLoadedData && (mSyncStatusUpdaterFragment != null)) {
+        if (!hasLoadedData
+                && (mSyncStatusUpdaterFragment != null)
+                && ConnectionHelper.hasConnection(this)) {
+
             Intent intent = new Intent(Intent.ACTION_SYNC, null, getApplicationContext(),
                     SyncService.class);
             intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mSyncStatusUpdaterFragment.mReceiver);

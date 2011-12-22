@@ -55,8 +55,9 @@ public class RinksDatabase extends SQLiteOpenHelper {
                 + "LEFT OUTER JOIN parks ON boroughs.borough_id=parks.park_borough_id "
                 + "LEFT OUTER JOIN rinks ON parks.park_id=rinks.rink_park_id "
                 + "LEFT OUTER JOIN favorites ON rinks.rink_rink_id=favorites.rink_id ";
-        final String PARKS_JOIN_RINKS = "parks "
-                + "LEFT OUTER JOIN rinks ON parks.park_id=rinks.rink_park_id ";
+        final String PARKS_JOIN_RINKS_FAVORITES = "parks "
+                + "LEFT OUTER JOIN rinks ON parks.park_id=rinks.rink_park_id "
+                + "LEFT OUTER JOIN favorites ON rinks.rink_rink_id=favorites.rink_id ";
     }
 
     public RinksDatabase(Context context) {

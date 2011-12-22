@@ -144,6 +144,7 @@
     <string name="dialog_btn_eula_decline">Decline</string>
     <string name="park_total_rinks">1 rink</string>
     <string name="park_total_rinks_plural">%s rinks</string>
+    <string name="menu_map_mylocation">My Location</string>
     <!-- Prefs -->
     <string name="prefs_category_general">General Preferences</string>
     <string name="prefs_category_performance">Performance</string>

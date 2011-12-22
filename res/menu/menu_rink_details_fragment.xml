@@ -25,7 +25,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/menu_map"
+        android:id="@+id/map_view_rink"
         android:icon="@drawable/ic_actionbar_compass"
         android:orderInCategory="1"
         android:showAsAction="always"

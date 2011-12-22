@@ -30,13 +30,20 @@ import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.ui.MapFragment.OnMyLocationChangedListener;
 import ca.mudar.patinoires.utils.ActivityHelper;
 import ca.mudar.patinoires.utils.ConnectionHelper;
+import ca.mudar.patinoires.utils.Const;
 import ca.mudar.patinoires.utils.Helper;
 
 import android.app.ProgressDialog;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentMapActivity;
+import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
+import android.util.Log;
+import android.view.MenuInflater;
 import android.view.View;
 
 public class MapActivity extends FragmentMapActivity implements OnMyLocationChangedListener {
@@ -45,6 +52,7 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
     // protected MenuItem btnActionbarToggleList;
     private String postalCode;
     private ProgressDialog pd;
+    private PatinoiresApp mAppHelper;
 
     @Override
     protected boolean isRouteDisplayed() {
@@ -56,7 +64,8 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-         ((PatinoiresApp) getApplicationContext()).updateUiLanguage();
+        mAppHelper = (PatinoiresApp) getApplicationContext();
+        mAppHelper.updateUiLanguage();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             getActionBar().setHomeButtonEnabled(true);
@@ -86,7 +95,37 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_map, menu);
+
+        /**
+         * Disable the My Location button if the user location is not known yet.
+         */
+        if (mAppHelper.getLocation() == null) {
+            menu.findItem(R.id.menu_map_mylocation).setEnabled(false);
+        }
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.v(TAG, "onOptionsItemSelected");
+        
+
+        if (item.getItemId() == R.id.menu_map_mylocation) {
+            Log.v(TAG, "menu_map_mylocation");
+            Location location = mAppHelper.getLocation();
+            if (location != null) {
+                FragmentManager fm = getSupportFragmentManager();
+                MapFragment fragmentMap = (MapFragment)fm.findFragmentById(R.id.fragment_map);
+                fragmentMap.setMapCenterOnLocation(location );
+            }
+            return true;
+        }
+
         ActivityHelper mActivityHelper = ActivityHelper.createInstance(this);
         return mActivityHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }

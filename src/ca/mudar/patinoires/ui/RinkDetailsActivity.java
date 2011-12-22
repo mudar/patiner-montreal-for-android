@@ -166,13 +166,17 @@ public class RinkDetailsActivity extends FragmentActivity {
 
         @Override
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
             inflater.inflate(R.menu.menu_rink_details_fragment, menu);
 
             int resIcon = (mIsFavorite == 1 ? R.drawable.ic_actionbar_favorite_on
                     : R.drawable.ic_actionbar_favorite_off);
 
             menu.findItem(R.id.menu_favorites_toggle).setIcon(resIcon);
+
+            if ((mGeoLat == 0) || (mGeoLng == 0)) {
+                menu.findItem(R.id.menu_gmaps_directions).setVisible(false);
+                menu.findItem(R.id.map_view_rink).setVisible(false);
+            }
         }
 
         @Override
@@ -204,7 +208,7 @@ public class RinkDetailsActivity extends FragmentActivity {
                             getResources().getString(R.string.dialog_title_maps_chooser)));
                 }
             }
-            else if (item.getItemId() == R.id.menu_map) {
+            else if (item.getItemId() == R.id.map_view_rink) {
 
                 mActivityHelper.goMap(mGeoLat, mGeoLng);
                 return true;

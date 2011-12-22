@@ -322,6 +322,7 @@ public class MapFragment extends Fragment {
             ParksColumns.PARK_TOTAL_RINKS,
             RinksColumns.RINK_DESC_FR,
             RinksColumns.RINK_DESC_EN,
+            RinksColumns.RINK_IS_FAVORITE
     };
 
     /**
@@ -341,12 +342,6 @@ public class MapFragment extends Fragment {
 
         Cursor cur = getActivity().getApplicationContext().getContentResolver()
                 .query(Parks.CONTENT_URI, MAP_MARKER_PROJECTION, filter, null, null);
-        // .query(Parks.CONTENT_URI, MAP_MARKER_PROJECTION, filter, null, null,
-        // null, null, null);
-
-        // public Cursor query(Uri uri, String[] projection, String selection,
-        // String[] selectionArgs,
-        // String groupBy, String having, String sortOrder, String limit) {
 
         if (cur.moveToFirst()) {
 
@@ -360,6 +355,7 @@ public class MapFragment extends Fragment {
             final int columnRinksTotal = 0x6;
             final int columnDescFr = 0x7;
             final int columnDescEn = 0x8;
+            final int columnRinkIsFavorite = 0x9;
 
             String prefixParcName = getResources().getString(R.string.rink_details_park_name);
 
@@ -387,11 +383,6 @@ public class MapFragment extends Fragment {
 
             } while (cur.moveToNext());
         }
-        /**
-         * Note: using startManagingCursor() crashed the application when
-         * running on Honeycomb! So we don't manage the cursor and close it
-         * manually here.
-         */
         cur.close();
 
         return alLocations;

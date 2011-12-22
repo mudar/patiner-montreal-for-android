@@ -35,6 +35,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.location.Location;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.Locale;
@@ -45,12 +46,91 @@ public class PatinoiresApp extends Application {
     // TODO Verify need for a global variable for mLocation since it's mainly in
     // the preferences.
     private Location mLocation;
+    private long mLastUpdateLocations;
+    private long mLastUpdateConditions;
     private String mUnits;
     private String mListSort;
     private String mLanguage;
     private Toast mToast;
-    private SharedPreferences prefs;
     private boolean[] conditionsFilter = new boolean[4];
+
+    private SharedPreferences prefs;
+    private Editor prefsEditor;
+
+    // TODO: verify possible memory leakage of the following code
+    private static PatinoiresApp instance = null;
+
+    public static PatinoiresApp getInstance() {
+        checkInstance();
+        return instance;
+    }
+
+    private static void checkInstance() {
+        if (instance == null)
+            throw new IllegalStateException("Application not created yet!");
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        instance = this;
+
+        prefs = getSharedPreferences(Const.APP_PREFS_NAME, Context.MODE_PRIVATE);
+        prefsEditor = prefs.edit();
+
+        /**
+         * Initialize UI settings based on preferences.
+         */
+        mUnits = prefs.getString(PrefsNames.UNITS_SYSTEM, PrefsValues.UNITS_ISO);
+
+        mListSort = prefs.getString(PrefsNames.LIST_SORT, PrefsValues.LIST_SORT_DISTANCE);
+
+        mLanguage = prefs.getString(PrefsNames.LANGUAGE, Locale.getDefault().getLanguage());
+        if (!mLanguage.equals(PrefsValues.LANG_EN) && !mLanguage.equals(PrefsValues.LANG_FR)) {
+            mLanguage = PrefsValues.LANG_EN;
+        }
+
+        /**
+         * Display/hide rinks based on their condition
+         */
+        conditionsFilter[Const.INDEX_PREFS_EXCELLENT] = prefs.getBoolean(
+                PrefsNames.CONDITIONS_SHOW_EXCELLENT, true);
+        conditionsFilter[Const.INDEX_PREFS_GOOD] = prefs.getBoolean(
+                PrefsNames.CONDITIONS_SHOW_GOOD, true);
+        conditionsFilter[Const.INDEX_PREFS_BAD] = prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_BAD,
+                true);
+        conditionsFilter[Const.INDEX_PREFS_CLOSED] = prefs.getBoolean(
+                PrefsNames.CONDITIONS_SHOW_CLOSED, true);
+
+        mLastUpdateLocations = prefs.getLong(PrefsNames.LAST_UPDATE_TIME_LOCATIONS,
+                System.currentTimeMillis() - Const.MILLISECONDS_FIVE_DAYS);
+        mLastUpdateConditions = prefs.getLong(PrefsNames.LAST_UPDATE_TIME_CONDITIONS,
+                System.currentTimeMillis() - Const.MILLISECONDS_FOUR_HOURS);
+
+        /**
+         * Having a single Toast instance allows overriding (replacing) the
+         * messages and avoiding Toast stack delays.
+         */
+        mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
+        mLocation = null;
+
+        updateUiLanguage();
+    }
+
+    /**
+     * Used to force distance calculations. Mainly on first launch where an
+     * empty or partial DB cursor receives the location update, ends up doing
+     * partial distance updates.
+     */
+    public void initializeLocation() {
+        // TODO replace this by a listener or synch tasks
+        mLocation = null;
+
+        prefsEditor.putFloat(PrefsNames.LAST_UPDATE_LAT, Float.NaN);
+        prefsEditor.putFloat(PrefsNames.LAST_UPDATE_LNG, Float.NaN);
+        prefsEditor.putLong(PrefsNames.LAST_UPDATE_TIME_GEO, System.currentTimeMillis());
+        prefsEditor.commit();
+    }
 
     public Location getLocation() {
         /**
@@ -71,10 +151,12 @@ public class PatinoiresApp extends Application {
     }
 
     public void setLocation(Location location) {
+        Log.v(TAG, "setLocation");
         if (location == null) {
             return;
         }
         else {
+            Log.v(TAG, "new location = " + location.getLatitude() + "," + location.getLongitude());
             if ((mLocation == null) || (this.mLocation.distanceTo(location) > Const.MAX_DISTANCE)) {
                 Intent intent = new Intent(this.getApplicationContext(),
                         DistanceUpdateService.class);
@@ -91,21 +173,27 @@ public class PatinoiresApp extends Application {
         }
     }
 
-    /**
-     * Used to force distance calculations. Mainly on first launch where an
-     * empty or partial DB cursor receives the location update, ends up doing
-     * partial distance updates.
-     */
-    public void initializeLocation() {
-        // TODO replace this by a listener or synch tasks
-        mLocation = null;
+    public long getLastUpdateLocations() {
+        return mLastUpdateLocations;
+    }
 
-        SharedPreferences prefs = getSharedPreferences(Const.APP_PREFS_NAME, Context.MODE_PRIVATE);
-        Editor prefsEditor = prefs.edit();
+    public void setLastUpdateLocations() {
+        mLastUpdateLocations = System.currentTimeMillis();
+        mLastUpdateConditions = System.currentTimeMillis();
 
-        prefsEditor.putFloat(PrefsNames.LAST_UPDATE_LAT, Float.NaN);
-        prefsEditor.putFloat(PrefsNames.LAST_UPDATE_LNG, Float.NaN);
-        prefsEditor.putLong(PrefsNames.LAST_UPDATE_TIME, System.currentTimeMillis());
+        prefsEditor.putLong(PrefsNames.LAST_UPDATE_TIME_LOCATIONS, mLastUpdateLocations);
+        prefsEditor.putLong(PrefsNames.LAST_UPDATE_TIME_CONDITIONS, mLastUpdateConditions);
+        prefsEditor.commit();
+    }
+
+    public long getLastUpdateConditions() {
+        return mLastUpdateConditions;
+    }
+
+    public void setLastUpdateConditions() {
+        mLastUpdateConditions = System.currentTimeMillis();
+
+        prefsEditor.putLong(PrefsNames.LAST_UPDATE_TIME_CONDITIONS, mLastUpdateConditions);
         prefsEditor.commit();
     }
 
@@ -142,48 +230,6 @@ public class PatinoiresApp extends Application {
         mToast.show();
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        instance = this;
-
-        prefs = getSharedPreferences(Const.APP_PREFS_NAME, Context.MODE_PRIVATE);
-
-        /**
-         * Initialize UI settings based on preferences.
-         */
-        mUnits = prefs.getString(PrefsNames.UNITS_SYSTEM, PrefsValues.UNITS_ISO);
-
-        mListSort = prefs.getString(PrefsNames.LIST_SORT, PrefsValues.LIST_SORT_DISTANCE);
-
-        mLanguage = prefs.getString(PrefsNames.LANGUAGE, Locale.getDefault().getLanguage());
-        if (!mLanguage.equals(PrefsValues.LANG_EN) && !mLanguage.equals(PrefsValues.LANG_FR)) {
-            mLanguage = PrefsValues.LANG_EN;
-        }
-
-        /**
-         * Display/hide rinks based on their condition
-         */
-        conditionsFilter[Const.INDEX_PREFS_EXCELLENT] = prefs.getBoolean(
-                PrefsNames.CONDITIONS_SHOW_EXCELLENT, true);
-        conditionsFilter[Const.INDEX_PREFS_GOOD] = prefs.getBoolean(
-                PrefsNames.CONDITIONS_SHOW_GOOD, true);
-        conditionsFilter[Const.INDEX_PREFS_BAD] = prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_BAD,
-                true);
-        conditionsFilter[Const.INDEX_PREFS_CLOSED] = prefs.getBoolean(
-                PrefsNames.CONDITIONS_SHOW_CLOSED, true);
-        
-        
-        /**
-         * Having a single Toast instance allows overriding (replacing) the
-         * messages and avoiding Toast stack delays.
-         */
-        mToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
-        mLocation = null;
-
-        updateUiLanguage();
-    }
-
     public String getListSort() {
         return mListSort;
     }
@@ -214,19 +260,6 @@ public class PatinoiresApp extends Application {
 
     public void setConditionsFilter(boolean condition, int index) {
         this.conditionsFilter[index] = condition;
-    }
-
-    // TODO: verify possible memory leakage of the following code
-    private static PatinoiresApp instance = null;
-
-    public static PatinoiresApp getInstance() {
-        checkInstance();
-        return instance;
-    }
-
-    private static void checkInstance() {
-        if (instance == null)
-            throw new IllegalStateException("Application not created yet!");
     }
 
 }

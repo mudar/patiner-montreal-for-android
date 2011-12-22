@@ -48,7 +48,6 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Random;
 
 public class RemoteRinksHandler extends JsonHandler {
     private static final String TAG = "RemoteRinksHandler";
@@ -62,19 +61,17 @@ public class RemoteRinksHandler extends JsonHandler {
     @Override
     public ArrayList<ContentProviderOperation> parse(JSONTokener jsonTokener,
             ContentResolver resolver) throws JSONException, IOException {
-
         final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
 
         /**
-         * Using 3 different builders for readability! 
+         * Using 3 different builders for readability!
          */
         ContentProviderOperation.Builder builderBoroughs;
         ContentProviderOperation.Builder builderParks;
         ContentProviderOperation.Builder builderRinks;
 
         boolean importResult = true;
-//        Random rand = new Random();
-        
+
         CharSequence createdAt = DateFormat.format(DbValues.DATE_FORMAT, new Date());
 
         JSONArray rinks = new JSONArray(jsonTokener);
@@ -87,7 +84,7 @@ public class RemoteRinksHandler extends JsonHandler {
             dialog.setProgress(0);
             dialog.setMax(totalRinks);
         }
-        
+
         String rinkName;
         String rinkDesc;
         String rinkDescEnglish;
@@ -118,7 +115,7 @@ public class RemoteRinksHandler extends JsonHandler {
             // ) + ") : " + rink.optString("name"));
 
             builderRinks = ContentProviderOperation.newInsert(Rinks.CONTENT_URI);
-            
+
             splitName = rink.optString(RemoteTags.RINK_NAME).split(",");
             rinkName = splitName[1].replace(RemoteValues.RINK_TYPE_PSE, "")
                     .replace(RemoteValues.RINK_TYPE_PPL, "").replace(RemoteValues.RINK_TYPE_PP, "")
@@ -145,7 +142,6 @@ public class RemoteRinksHandler extends JsonHandler {
                     RinksColumns.RINK_CONDITION,
                     ApiStringHelper.getConditionIndex(rink.optString(RemoteTags.RINK_IS_OPEN),
                             rink.optString(RemoteTags.RINK_CONDITION)));
-//            builderRinks.withValue(RinksColumns.RINK_CONDITION,rand.nextInt(4));
             builderRinks.withValue(RinksColumns.RINK_CREATED_AT, createdAt);
 
             batch.add(builderRinks.build());
@@ -203,12 +199,13 @@ public class RemoteRinksHandler extends JsonHandler {
             /**
              * Get Geocoding info of the park
              */
+
             try {
                 geocoding = (JSONObject) park.get(RemoteTags.OBJECT_GEOCODING);
             } catch (JSONException e) {
-                Log.d(TAG, e.toString());
+                Log.v(TAG, e.toString());
                 importResult = false;
-                continue;
+                geocoding = new JSONObject();
             }
             // Log.i(TAG, "Geocoding n." + i + ". parks.geocoding_id = " +
             // geocoding.optInt("id") + ", parks.geo_lat " +
@@ -220,13 +217,16 @@ public class RemoteRinksHandler extends JsonHandler {
             builderParks.withValue(ParksColumns.PARK_ID, park.optString(RemoteTags.PARK_ID));
             builderParks.withValue(ParksColumns.PARK_BOROUGH_ID,
                     borough.optString(RemoteTags.BOROUGH_ID));
-            builderParks.withValue(ParksColumns.PARK_NAME, "%s " + park.optString(RemoteTags.PARK_NAME));
-            builderParks.withValue(ParksColumns.PARK_GEO_ID,
-                    geocoding.optString(RemoteTags.GEOCODING_ID));
-            builderParks.withValue(ParksColumns.PARK_GEO_LAT,
-                    geocoding.optString(RemoteTags.GEOCODING_LAT));
-            builderParks.withValue(ParksColumns.PARK_GEO_LNG,
-                    geocoding.optString(RemoteTags.GEOCODING_LNG));
+            builderParks.withValue(ParksColumns.PARK_NAME,
+                    "%s " + park.optString(RemoteTags.PARK_NAME));
+            if (geocoding != null) {
+                builderParks.withValue(ParksColumns.PARK_GEO_ID,
+                        geocoding.optString(RemoteTags.GEOCODING_ID));
+                builderParks.withValue(ParksColumns.PARK_GEO_LAT,
+                        geocoding.optString(RemoteTags.GEOCODING_LAT));
+                builderParks.withValue(ParksColumns.PARK_GEO_LNG,
+                        geocoding.optString(RemoteTags.GEOCODING_LNG));
+            }
             if (park.optString(RemoteTags.PARK_ADDRESS).trim().toLowerCase() != RemoteValues.STRING_NULL) {
                 builderParks.withValue(ParksColumns.PARK_ADDRESS,
                         Helper.capitalize(park.optString(RemoteTags.PARK_ADDRESS)));

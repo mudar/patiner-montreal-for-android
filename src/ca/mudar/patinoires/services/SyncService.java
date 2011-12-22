@@ -25,6 +25,7 @@
 
 package ca.mudar.patinoires.services;
 
+import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.io.LocalExecutor;
 import ca.mudar.patinoires.io.RemoteConditionsUpdatesHandler;
 import ca.mudar.patinoires.io.RemoteExecutor;
@@ -88,6 +89,8 @@ public class SyncService extends IntentService {
     private LocalExecutor mLocalExecutor;
     private RemoteExecutor mRemoteExecutor;
 
+    private PatinoiresApp mAppHelper;
+
     public SyncService() {
         super(TAG);
     }
@@ -101,11 +104,16 @@ public class SyncService extends IntentService {
 
         mLocalExecutor = new LocalExecutor(getResources(), resolver);
         mRemoteExecutor = new RemoteExecutor(httpClient, resolver);
+
+        mAppHelper = (PatinoiresApp) getApplicationContext();
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-//        Log.v(TAG, "onHandleIntent");
+        // Log.v(TAG, "onHandleIntent");
+        
+        boolean doUpdate = intent.getBooleanExtra(Const.INTENT_EXTRA_FORCE_UPDATE, false);
+        
         final ResultReceiver receiver = intent.getParcelableExtra(EXTRA_STATUS_RECEIVER);
         if (receiver != null) {
             receiver.send(STATUS_RUNNING, Bundle.EMPTY);
@@ -140,10 +148,23 @@ public class SyncService extends IntentService {
             // Always hit remote SecurityServices for any updates
             final long startRemote = System.currentTimeMillis();
 
-            mRemoteExecutor.executeGet(Const.URL_JSON_INITIAL_IMPORT, new RemoteRinksHandler(
-                    RinksContract.CONTENT_AUTHORITY));
-            // mRemoteExecutor.executeGet(Const.URL_JSON_CONDITIONS_UPDATES, new
-            // RemoteConditionsUpdatesHandler(RinksContract.CONTENT_AUTHORITY));
+            if (mAppHelper.getLastUpdateLocations() < System.currentTimeMillis()
+                    - Const.MILLISECONDS_FIVE_DAYS) {
+                mRemoteExecutor.executeGet(Const.URL_JSON_INITIAL_IMPORT,
+                        new RemoteRinksHandler(RinksContract.CONTENT_AUTHORITY));
+                
+                mAppHelper.setLastUpdateLocations();
+                
+                Intent updateIntent = new Intent(context, DistanceUpdateService.class);
+                context.startService(updateIntent);
+            }
+            else if (doUpdate || (mAppHelper.getLastUpdateConditions() < System.currentTimeMillis()
+                    - Const.MILLISECONDS_FOUR_HOURS)) {
+                mRemoteExecutor.executeGet(Const.URL_JSON_CONDITIONS_UPDATES,
+                        new RemoteConditionsUpdatesHandler(RinksContract.CONTENT_AUTHORITY));
+                mAppHelper.setLastUpdateConditions();
+            }
+            
 
             Log.v(TAG, "Remote sync took " + (System.currentTimeMillis() - startRemote) + "ms");
 

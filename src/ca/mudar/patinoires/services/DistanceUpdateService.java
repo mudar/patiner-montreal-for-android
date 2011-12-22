@@ -80,15 +80,30 @@ public class DistanceUpdateService extends IntentService {
         Double latitude = intent.getDoubleExtra(Const.INTENT_EXTRA_GEO_LAT, Double.NaN);
         Double longitude = intent.getDoubleExtra(Const.INTENT_EXTRA_GEO_LNG, Double.NaN);
 
-        if (latitude.equals(Double.NaN) || longitude.equals(Double.NaN)) {
-            return;
-        }
-
         /**
          * Check to see if this is a forced update. Currently not in use in the
          * UI.
          */
         boolean doUpdate = intent.getBooleanExtra(Const.INTENT_EXTRA_FORCE_UPDATE, false);
+
+        if (latitude.equals(Double.NaN) || longitude.equals(Double.NaN)) {
+
+            /**
+             * Intent extras are empty, force update if we have lat/lng in
+             * Prefs.
+             */
+
+            Float lastLat = prefs.getFloat(PrefsNames.LAST_UPDATE_LAT, Float.NaN);
+            Float lastLng = prefs.getFloat(PrefsNames.LAST_UPDATE_LNG, Float.NaN);
+
+            if (lastLat.equals(Float.NaN) || lastLng.equals(Float.NaN)) {
+                return;
+            }
+
+            doUpdate = true;
+            latitude = lastLat.doubleValue();
+            longitude = lastLng.doubleValue();
+        }
 
         /**
          * If it's not a forced update then check to see if we've moved far
@@ -103,7 +118,7 @@ public class DistanceUpdateService extends IntentService {
             /**
              * Retrieve the last update time and place.
              */
-            long lastTime = prefs.getLong(PrefsNames.LAST_UPDATE_TIME, Long.MIN_VALUE);
+            long lastTime = prefs.getLong(PrefsNames.LAST_UPDATE_TIME_GEO, Long.MIN_VALUE);
             Float lastLat = prefs.getFloat(PrefsNames.LAST_UPDATE_LAT, Float.NaN);
             Float lastLng = prefs.getFloat(PrefsNames.LAST_UPDATE_LNG, Float.NaN);
 
@@ -141,7 +156,7 @@ public class DistanceUpdateService extends IntentService {
              */
             prefsEditor.putFloat(PrefsNames.LAST_UPDATE_LAT, latitude.floatValue());
             prefsEditor.putFloat(PrefsNames.LAST_UPDATE_LNG, longitude.floatValue());
-            prefsEditor.putLong(PrefsNames.LAST_UPDATE_TIME, System.currentTimeMillis());
+            prefsEditor.putLong(PrefsNames.LAST_UPDATE_TIME_GEO, System.currentTimeMillis());
             prefsEditor.commit();
         }
         Log.v(TAG, "Distance calculation took " + (System.currentTimeMillis()
@@ -182,6 +197,11 @@ public class DistanceUpdateService extends IntentService {
                 };
                 double endLat = queuedParks.getDouble(indexLat);
                 double endLng = queuedParks.getDouble(indexLng);
+
+                if ((endLat == 0.0) || (endLng == 0.0)) {
+                    continue;
+                }
+
                 int oldDistance = queuedParks.getInt(indexDistance);
 
                 /**

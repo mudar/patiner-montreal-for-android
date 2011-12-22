@@ -62,9 +62,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AlphabetIndexer;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public abstract class BaseListFragment extends ListFragment implements LoaderCallbacks<Cursor> {
 
@@ -173,19 +171,18 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
                 c.getString(c.getColumnIndexOrThrow(ParksColumns.PARK_PHONE));
         int isFavorite =
                 c.getInt(c.getColumnIndexOrThrow(Rinks.RINK_IS_FAVORITE));
+        double geoLat = c.getDouble(c.getColumnIndexOrThrow(Parks.PARK_GEO_LAT));
+        double geoLng = c.getDouble(c.getColumnIndexOrThrow(Parks.PARK_GEO_LAT));
 
         menu.setHeaderTitle(name);
         MenuInflater inflater = (MenuInflater) getSupportActivity().getMenuInflater();
         inflater.inflate(R.menu.context_menu_rink, menu);
 
-        if (isFavorite == 1) {
-            menu.findItem(R.id.favorites_add).setVisible(false);
-            menu.findItem(R.id.favorites_remove).setVisible(true);
-        }
+        menu.findItem(R.id.favorites_add).setVisible(isFavorite == 0);
+        menu.findItem(R.id.favorites_remove).setVisible(isFavorite == 1);
+        menu.findItem(R.id.map_view_rink).setVisible((geoLat != 0) && (geoLng != 0));
+        menu.findItem(R.id.call_rink).setVisible(phone != null);
 
-        if (phone == null) {
-            menu.findItem(R.id.call_rink).setVisible(false);
-        }
     }
 
     @Override
@@ -250,6 +247,13 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String filter = Helper.getSqliteConditionsFilter(mAppHelper.getConditionsFilter());
+
+        /**
+         * Favorite rinks are not filtered by Conditions.
+         */
+        if (mContentUri == Rinks.CONTENT_FAVORITES_URI) {
+            filter = null;
+        }
 
         return new CursorLoader(getSupportActivity().getApplicationContext(), mContentUri,
                 RINKS_SUMMARY_PROJECTION, filter, null, mSort);

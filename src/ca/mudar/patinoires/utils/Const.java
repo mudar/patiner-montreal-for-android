@@ -73,7 +73,9 @@ public class Const {
         final String UNITS_SYSTEM = "prefs_units_system";
         final String LIST_SORT = "prefs_list_sort_by";
         final String FOLLOW_LOCATION_CHANGES = "prefs_follow_location_changes";
-        final String LAST_UPDATE_TIME = "prefs_last_update_time";
+        final String LAST_UPDATE_TIME_LOCATIONS = "prefs_last_update_time_locations";
+        final String LAST_UPDATE_TIME_CONDITIONS = "prefs_last_update_time_conditions";
+        final String LAST_UPDATE_TIME_GEO = "prefs_last_update_time_geo";
         final String LAST_UPDATE_LAT = "prefs_last_update_lat";
         final String LAST_UPDATE_LNG = "prefs_last_update_lng";
 
@@ -150,6 +152,9 @@ public class Const {
 
     public static final String LOCATION_PROVIDER = "my_default_provider";
 
+    public static final long MILLISECONDS_FOUR_HOURS = 14400000; // 1000*60*60*24*7
+    public static final long MILLISECONDS_FIVE_DAYS = 432000000; // 1000*60*60*24*7 
+    
     public static boolean SUPPORTS_HONEYCOMB = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB;
     public static boolean SUPPORTS_GINGERBREAD = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.GINGERBREAD;
     public static boolean SUPPORTS_FROYO = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.FROYO;

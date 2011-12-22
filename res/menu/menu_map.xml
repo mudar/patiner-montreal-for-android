@@ -24,15 +24,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/refresh_map"
-        android:title="@string/menu_refresh_map"/>
-
+        android:id="@+id/menu_search"
+        android:icon="@drawable/ic_actionbar_search"
+        android:showAsAction="always"
+        android:title="@string/menu_search"/>
     <item
-        android:id="@+id/select_conditions"
-        android:title="@string/menu_select_conditions"/>
-
-    <item
-        android:id="@+id/share_map"
-        android:title="@string/menu_share_map"/>
+        android:id="@+id/menu_map_mylocation"
+        android:icon="@drawable/ic_menu_mylocation"
+        android:title="@string/menu_map_mylocation"/>
 
 </menu>

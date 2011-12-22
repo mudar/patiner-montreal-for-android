@@ -25,12 +25,10 @@ package ca.mudar.patinoires.ui;
 
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.utils.ActivityHelper;
-import ca.mudar.patinoires.utils.Const;
 import ca.mudar.patinoires.receivers.DetachableResultReceiver;
 import ca.mudar.patinoires.services.SyncService;
-
-import java.util.ArrayList;
+import ca.mudar.patinoires.utils.ActivityHelper;
+import ca.mudar.patinoires.utils.Const;
 
 import android.content.Context;
 import android.content.Intent;
@@ -45,15 +43,15 @@ import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.Window;
-
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TabHost;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class TabsPagerActivity extends FragmentActivity {
     private static final String TAG = "TabsPagerActivity";
@@ -65,7 +63,6 @@ public class TabsPagerActivity extends FragmentActivity {
     private TabsAdapter mTabsAdapter;
 
     private PatinoiresApp mAppHelper;
-    private ActivityHelper mActivityHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +70,12 @@ public class TabsPagerActivity extends FragmentActivity {
 
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
-        ((PatinoiresApp) getApplicationContext()).updateUiLanguage();
+        mAppHelper = (PatinoiresApp) getApplicationContext();
+
+        mAppHelper.updateUiLanguage();
 
         setContentView(R.layout.tabs_pager_fragment);
         setProgressBarIndeterminateVisibility(Boolean.FALSE);
-
-        PatinoiresApp mAppHelper = (PatinoiresApp) getApplicationContext();
 
         mTabHost = (TabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup();
@@ -148,12 +145,12 @@ public class TabsPagerActivity extends FragmentActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+        ActivityHelper mActivityHelper = ActivityHelper.createInstance(this);
         if (item.getItemId() == R.id.menu_refresh) {
-            triggerRefresh();
+            mActivityHelper.triggerRefresh(mSyncStatusUpdaterFragment.mReceiver, true);
             return true;
         }
 
-        ActivityHelper mActivityHelper = ActivityHelper.createInstance(this);
         return mActivityHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
@@ -274,14 +271,6 @@ public class TabsPagerActivity extends FragmentActivity {
         }
     }
 
-    private void triggerRefresh() {
-        Log.v(TAG, "triggerRefresh");
-        final Intent intent = new Intent(Intent.ACTION_SYNC, null, getApplicationContext(), SyncService.class);
-        intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mSyncStatusUpdaterFragment.mReceiver);
-        // intent.putExtra(Const.INTENT_EXTRA_SYNC_PARTIAL, true);
-        startService(intent);
-    }
-
     private void updateRefreshStatus(boolean refreshing) {
         Log.v(TAG, "updateRefreshStatus");
         // mActivityHelper.setRefreshActionButtonState(refreshing);
@@ -306,7 +295,6 @@ public class TabsPagerActivity extends FragmentActivity {
         /** {@inheritDoc} */
         public void onReceiveResult(int resultCode, Bundle resultData) {
 
-            Log.v(TAG, "onReceiveResult. resultCode = " + resultCode);
             TabsPagerActivity activity = (TabsPagerActivity) getActivity();
             if (activity == null) {
                 return;
@@ -315,13 +303,11 @@ public class TabsPagerActivity extends FragmentActivity {
 
             switch (resultCode) {
                 case SyncService.STATUS_RUNNING: {
-                    Log.v(TAG, "STATUS_RUNNING");
                     activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
                     mSyncing = true;
                     break;
                 }
                 case SyncService.STATUS_FINISHED: {
-                    Log.v(TAG, "STATUS_FINISHED");
                     activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
                     mSyncing = false;
                     Toast.makeText(activity, R.string.toast_sync_finished, Toast.LENGTH_SHORT)
@@ -329,7 +315,6 @@ public class TabsPagerActivity extends FragmentActivity {
                     break;
                 }
                 case SyncService.STATUS_ERROR: {
-                    Log.v(TAG, "STATUS_ERROR");
                     activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
                     // Error happened down in SyncService, show as toast.
                     mSyncing = false;

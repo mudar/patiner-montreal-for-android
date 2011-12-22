@@ -48,8 +48,47 @@ import java.util.List;
 public class Helper {
     private static final String TAG = "Helper";
 
+    public static int getRinkImage(int kindId, int condition) {
+
+        int imageResource;
+        if (kindId == DbValues.KIND_PSE) {
+            switch (condition) {
+                case DbValues.CONDITION_EXCELLENT:
+                    imageResource = R.drawable.ic_rink_hockey_0;
+                    break;
+                case DbValues.CONDITION_GOOD:
+                    imageResource = R.drawable.ic_rink_hockey_1;
+                    break;
+                case DbValues.CONDITION_BAD:
+                    imageResource = R.drawable.ic_rink_hockey_2;
+                    break;
+                default:
+                    imageResource = R.drawable.ic_rink_hockey_3;
+                    break;
+            }
+        }
+        else {
+            switch (condition) {
+                case DbValues.CONDITION_EXCELLENT:
+                    imageResource = R.drawable.ic_rink_skating_0;
+                    break;
+                case DbValues.CONDITION_GOOD:
+                    imageResource = R.drawable.ic_rink_skating_1;
+                    break;
+                case DbValues.CONDITION_BAD:
+                    imageResource = R.drawable.ic_rink_skating_2;
+                    break;
+                default:
+                    imageResource = R.drawable.ic_rink_skating_3;
+                    break;
+            }
+        }
+
+        return imageResource;
+    }
+
     public static String getSqliteConditionsFilter(boolean[] conditionsFilter) {
-        String filter = " 0 ";
+        String filter = RinksColumns.RINK_IS_FAVORITE + " = 1 " ;
 
         int totalEnabled = 0;
         if (conditionsFilter[Const.INDEX_PREFS_EXCELLENT]) {

@@ -30,15 +30,11 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.ContentResolver;
-import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,13 +58,11 @@ public class RemoteExecutor {
      * {@link XmlHandler#parseAndApply(XmlPullParser, ContentResolver)}.
      */
     public void executeGet(String url, XmlHandler handler) throws HandlerException {
-        Log.v(TAG, "executeGet XML");
         final HttpUriRequest request = new HttpGet(url);
         execute(request, handler);
     }
 
     public void executeGet(String url, JsonHandler handler) throws HandlerException {
-        Log.v(TAG, "executeGet JSON");
         final HttpUriRequest request = new HttpGet(url);
         execute(request, handler);
     }
