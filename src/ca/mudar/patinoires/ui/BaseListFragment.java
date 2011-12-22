@@ -285,6 +285,7 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
             RinksColumns.RINK_NAME,
             RinksColumns.RINK_DESC_EN,
             RinksColumns.RINK_DESC_FR,
+            RinksColumns.RINK_CONDITION,
             ParksColumns.PARK_PHONE,
             ParksColumns.PARK_GEO_LAT,
             ParksColumns.PARK_GEO_LNG,
