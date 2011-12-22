@@ -80,6 +80,7 @@ public class SyncService extends IntentService {
     public static final int STATUS_RUNNING = 0x1;
     public static final int STATUS_ERROR = 0x2;
     public static final int STATUS_FINISHED = 0x3;
+    public static final int STATUS_IGNORED = 0x4;
 
     private static final int SECOND_IN_MILLIS = (int) DateUtils.SECOND_IN_MILLIS;
 
@@ -111,9 +112,10 @@ public class SyncService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         // Log.v(TAG, "onHandleIntent");
-        
+
         boolean doUpdate = intent.getBooleanExtra(Const.INTENT_EXTRA_FORCE_UPDATE, false);
-        
+        boolean isIgnored = false;
+
         final ResultReceiver receiver = intent.getParcelableExtra(EXTRA_STATUS_RECEIVER);
         if (receiver != null) {
             receiver.send(STATUS_RUNNING, Bundle.EMPTY);
@@ -152,9 +154,9 @@ public class SyncService extends IntentService {
                     - Const.MILLISECONDS_FIVE_DAYS) {
                 mRemoteExecutor.executeGet(Const.URL_JSON_INITIAL_IMPORT,
                         new RemoteRinksHandler(RinksContract.CONTENT_AUTHORITY));
-                
+
                 mAppHelper.setLastUpdateLocations();
-                
+
                 Intent updateIntent = new Intent(context, DistanceUpdateService.class);
                 context.startService(updateIntent);
             }
@@ -164,7 +166,9 @@ public class SyncService extends IntentService {
                         new RemoteConditionsUpdatesHandler(RinksContract.CONTENT_AUTHORITY));
                 mAppHelper.setLastUpdateConditions();
             }
-            
+            else {
+                isIgnored = true;
+            }
 
             Log.v(TAG, "Remote sync took " + (System.currentTimeMillis() - startRemote) + "ms");
 
@@ -182,7 +186,7 @@ public class SyncService extends IntentService {
         }
 
         if (receiver != null) {
-            receiver.send(STATUS_FINISHED, Bundle.EMPTY);
+            receiver.send((isIgnored ? STATUS_IGNORED : STATUS_FINISHED), Bundle.EMPTY);
         }
     }
 

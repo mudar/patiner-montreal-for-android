@@ -70,8 +70,8 @@ public class MainActivity extends LocationFragmentActivity {
 
         if (!hasLoadedData || RinksDatabase.getDatabaseVersion() > dbVersionPrefs) {
             hasLoadedData = false;
-            createServiceFragment();
         }
+        createServiceFragment();
 
         /**
          * Display the GPLv3 licence
@@ -122,7 +122,9 @@ public class MainActivity extends LocationFragmentActivity {
                     SyncService.class);
             intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mSyncStatusUpdaterFragment.mReceiver);
             startService(intent);
-
+        }
+        else {
+            mActivityHelper.triggerRefresh(mSyncStatusUpdaterFragment.mReceiver, false);
         }
     }
 
@@ -194,29 +196,29 @@ public class MainActivity extends LocationFragmentActivity {
                 return;
             }
             activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
-            activity.setProgressBarVisibility(true);
+//            activity.setProgressBarVisibility(true);
 
-            final ProgressBar progressHorizontal = (ProgressBar) getSupportActivity().findViewById(
-                    R.id.progress_horizontal);
-            progressHorizontal.setVisibility(View.VISIBLE);
+//            final ProgressBar progressHorizontal = (ProgressBar) getSupportActivity().findViewById(
+//                    R.id.progress_horizontal);
+//            progressHorizontal.setVisibility(View.VISIBLE);
 
             switch (resultCode) {
                 case SyncService.STATUS_RUNNING: {
                     activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
 
-                    progressHorizontal.incrementProgressBy(resultData.getInt(
-                            Const.KEY_BUNDLE_PROGRESS_INCREMENT, 0));
+//                    progressHorizontal.incrementProgressBy(resultData.getInt(
+//                            Const.KEY_BUNDLE_PROGRESS_INCREMENT, 0));
                     /**
                      * Title progress is in range 0..100
                      */
-                    getSupportActivity().setProgress(100 * progressHorizontal.getProgress());
+//                    getSupportActivity().setProgress(100 * progressHorizontal.getProgress());
 
                     break;
                 }
                 case SyncService.STATUS_FINISHED: {
                     activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
-                    activity.setProgressBarVisibility(false);
-                    progressHorizontal.setVisibility(View.INVISIBLE);
+//                    activity.setProgressBarVisibility(false);
+//                    progressHorizontal.setVisibility(View.INVISIBLE);
 
                     // TODO put this in an activity listener
                     if (EulaHelper.hasAcceptedEula(getSupportActivity().getApplicationContext()))
@@ -228,14 +230,21 @@ public class MainActivity extends LocationFragmentActivity {
 
                     break;
                 }
+                case SyncService.STATUS_IGNORED: {
+                    activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
+//                    activity.setProgressBarVisibility(false);
+//                    progressHorizontal.setVisibility(View.INVISIBLE);
+                    
+                    break;
+                }
                 case SyncService.STATUS_ERROR: {
                     /**
                      * Error happened down in SyncService: hide progressbars and
                      * show Toast error message.
                      */
                     activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
-                    activity.setProgressBarVisibility(false);
-                    progressHorizontal.setVisibility(View.INVISIBLE);
+//                    activity.setProgressBarVisibility(false);
+//                    progressHorizontal.setVisibility(View.INVISIBLE);
 
                     final String errorText = getString(R.string.toast_sync_error,
                             resultData.getString(Intent.EXTRA_TEXT));
