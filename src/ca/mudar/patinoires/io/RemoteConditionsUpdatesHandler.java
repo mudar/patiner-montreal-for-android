@@ -27,7 +27,7 @@ import ca.mudar.patinoires.providers.RinksContract.Boroughs;
 import ca.mudar.patinoires.providers.RinksContract.BoroughsColumns;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
-import ca.mudar.patinoires.utils.Const;
+import ca.mudar.patinoires.utils.ApiStringHelper;
 import ca.mudar.patinoires.utils.Const.DbValues;
 import ca.mudar.patinoires.utils.Lists;
 
@@ -44,7 +44,6 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Random;
 
 public class RemoteConditionsUpdatesHandler extends JsonHandler {
     private static final String TAG = "RemoteConditionsUpdatesHandler";
@@ -57,7 +56,7 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
     public ArrayList<ContentProviderOperation> parse(JSONTokener jsonTokener,
             ContentResolver resolver) throws JSONException, IOException {
 
-        Random rand = new Random();
+        // Random rand = new Random();
 
         final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
 
@@ -141,16 +140,16 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
                 builderRinks.withValue(RinksColumns.RINK_IS_RESURFACED,
                         rink.optString(RemoteTags.RINK_IS_RESURFACED)
                                 .equals(RemoteValues.BOOLEAN_TRUE));
-                // builderRinks.withValue(
-                // RinksColumns.RINK_CONDITION,
-                // ApiStringHelper.getConditionIndex(rink.optString(RemoteTags.RINK_IS_OPEN),
-                // rink.optString(RemoteTags.RINK_CONDITION)));
-                int condition = rand.nextInt(4);
-                builderRinks.withValue(RinksColumns.RINK_CONDITION, condition);
-                if ((condition == Const.DbValues.CONDITION_EXCELLENT)
-                        || (condition == Const.DbValues.CONDITION_GOOD)) {
-                    Log.v(TAG, "condition = " + condition);
-                }
+                builderRinks.withValue(RinksColumns.RINK_CONDITION, ApiStringHelper
+                        .getConditionIndex(rink.optString(RemoteTags.RINK_IS_OPEN),
+                                rink.optString(RemoteTags.RINK_CONDITION)));
+                // int condition = rand.nextInt(4);
+                // builderRinks.withValue(RinksColumns.RINK_CONDITION,
+                // condition);
+                // if ((condition == Const.DbValues.CONDITION_EXCELLENT)
+                // || (condition == Const.DbValues.CONDITION_GOOD)) {
+                // Log.v(TAG, "condition = " + condition);
+                // }
 
                 builderRinks.withValue(RinksColumns.RINK_CREATED_AT, createdAt);
 

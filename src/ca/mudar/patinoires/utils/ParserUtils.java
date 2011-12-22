@@ -29,7 +29,6 @@ import ca.mudar.patinoires.providers.RinksContract;
 import ca.mudar.patinoires.providers.RinksContract.SyncColumns;
 
 import org.apache.http.util.ByteArrayBuffer;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONTokener;
 import org.xmlpull.v1.XmlPullParser;
@@ -41,7 +40,6 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.text.format.Time;
-import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -118,7 +116,6 @@ public class ParserUtils {
      * @throws JSONException
      */
     public static JSONTokener newJsonTokenerParser(InputStream input) throws IOException {
-        Log.v(TAG, "newJsonObjectParser");
         String queryResult = "";
 
         BufferedInputStream bis = new BufferedInputStream(input);
@@ -136,7 +133,7 @@ public class ParserUtils {
         }
         queryResult = new String(baf.toByteArray());
 
-        JSONTokener data = new JSONTokener (queryResult);
+        JSONTokener data = new JSONTokener(queryResult);
         return data;
     }
 
