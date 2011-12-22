@@ -44,6 +44,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+//import java.util.Random;
 
 public class RemoteConditionsUpdatesHandler extends JsonHandler {
     private static final String TAG = "RemoteConditionsUpdatesHandler";
@@ -55,8 +56,7 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
     @Override
     public ArrayList<ContentProviderOperation> parse(JSONTokener jsonTokener,
             ContentResolver resolver) throws JSONException, IOException {
-
-        // Random rand = new Random();
+//        Random rand = new Random();
 
         final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
 
@@ -96,7 +96,9 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
             // ") : "+ borough.optString("name"));
 
             builderBoroughs = ContentProviderOperation.newUpdate(Boroughs.CONTENT_URI);
-
+            builderBoroughs.withSelection(BoroughsColumns.BOROUGH_ID + "=?", new String[] {
+                    borough.optString(RemoteTags.BOROUGH_ID)
+            });
             builderBoroughs.withValue(BoroughsColumns.BOROUGH_REMARKS,
                     borough.optString(RemoteTags.BOROUGH_REMARKS));
             builderBoroughs.withValue(BoroughsColumns.BOROUGH_UPDATED_AT,
@@ -130,7 +132,9 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
                 }
 
                 builderRinks = ContentProviderOperation.newUpdate(Rinks.CONTENT_URI);
-
+                builderRinks.withSelection(RinksColumns.RINK_ID + "=?", new String[] {
+                        rink.optString(RemoteTags.RINK_ID)
+                });
                 builderRinks.withValue(RinksColumns.RINK_IS_CLEARED,
                         rink.optString(RemoteTags.RINK_IS_CLEARED)
                                 .equals(RemoteValues.BOOLEAN_TRUE));
@@ -140,16 +144,13 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
                 builderRinks.withValue(RinksColumns.RINK_IS_RESURFACED,
                         rink.optString(RemoteTags.RINK_IS_RESURFACED)
                                 .equals(RemoteValues.BOOLEAN_TRUE));
-                builderRinks.withValue(RinksColumns.RINK_CONDITION, ApiStringHelper
-                        .getConditionIndex(rink.optString(RemoteTags.RINK_IS_OPEN),
+                builderRinks.withValue(RinksColumns.RINK_CONDITION,
+                        ApiStringHelper.getConditionIndex(
+                                rink.optString(RemoteTags.RINK_IS_OPEN),
                                 rink.optString(RemoteTags.RINK_CONDITION)));
                 // int condition = rand.nextInt(4);
                 // builderRinks.withValue(RinksColumns.RINK_CONDITION,
                 // condition);
-                // if ((condition == Const.DbValues.CONDITION_EXCELLENT)
-                // || (condition == Const.DbValues.CONDITION_GOOD)) {
-                // Log.v(TAG, "condition = " + condition);
-                // }
 
                 builderRinks.withValue(RinksColumns.RINK_CREATED_AT, createdAt);
 
@@ -165,12 +166,14 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
         final String OBJECT_BOROUGH = "borough";
         final String ARRAY_RINKS = "rinks";
 
+        final String RINK_ID = "id";
         final String RINK_IS_CLEARED = "cleared";
         final String RINK_IS_FLOODED = "flooded";
         final String RINK_IS_RESURFACED = "resurfaced";
         final String RINK_IS_OPEN = "open";
         final String RINK_CONDITION = "condition";
 
+        final String BOROUGH_ID = "id";
         final String BOROUGH_REMARKS = "remarks";
         // Following field name may be confusing!
         final String BOROUGH_UPDATED_AT = "posted_at";
