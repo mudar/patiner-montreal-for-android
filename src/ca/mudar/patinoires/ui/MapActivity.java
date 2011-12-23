@@ -34,15 +34,15 @@ import ca.mudar.patinoires.utils.Const;
 import ca.mudar.patinoires.utils.Helper;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentMapActivity;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
-import android.util.Log;
+//import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 
@@ -53,6 +53,7 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
     private String postalCode;
     private ProgressDialog pd;
     private PatinoiresApp mAppHelper;
+    private GeoPoint initGeoPoint;
 
     @Override
     protected boolean isRouteDisplayed() {
@@ -72,6 +73,31 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
         }
 
         setContentView(R.layout.activity_map);
+
+        initGeoPoint = null;
+
+        Integer latitude = getIntent().getIntExtra(Const.INTENT_EXTRA_GEO_LAT,
+                Integer.MIN_VALUE);
+        Integer longitude = getIntent().getIntExtra(
+                Const.INTENT_EXTRA_GEO_LNG, Integer.MIN_VALUE);
+
+        if (!latitude.equals(Integer.MIN_VALUE) && !longitude.equals(Integer.MIN_VALUE)) {
+            initGeoPoint = new GeoPoint(latitude, longitude);
+        }
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        initGeoPoint = null;
+
+        Integer latitude = intent.getIntExtra(Const.INTENT_EXTRA_GEO_LAT,
+                Integer.MIN_VALUE);
+        Integer longitude = intent.getIntExtra(
+                Const.INTENT_EXTRA_GEO_LNG, Integer.MIN_VALUE);
+
+        if (!latitude.equals(Integer.MIN_VALUE) && !longitude.equals(Integer.MIN_VALUE)) {
+            initGeoPoint = new GeoPoint(latitude, longitude);
+        }
     }
 
     @Override
@@ -84,15 +110,20 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
 
         View root = findViewById(R.id.map_root_landscape);
         boolean isTablet = (root != null);
+
+        FragmentManager fm = getSupportFragmentManager();
+        MapFragment fragmentMap = (MapFragment)
+                fm.findFragmentById(R.id.fragment_map);
+        fragmentMap.setMapCenter(initGeoPoint);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        getWindow().setBackgroundDrawable(null);
-        System.gc();
-    }
+    // @Override
+    // protected void onDestroy() {
+    // super.onDestroy();
+    //
+    // getWindow().setBackgroundDrawable(null);
+    // System.gc();
+    // }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -112,16 +143,13 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.v(TAG, "onOptionsItemSelected");
-        
-
         if (item.getItemId() == R.id.menu_map_mylocation) {
-            Log.v(TAG, "menu_map_mylocation");
             Location location = mAppHelper.getLocation();
             if (location != null) {
                 FragmentManager fm = getSupportFragmentManager();
-                MapFragment fragmentMap = (MapFragment)fm.findFragmentById(R.id.fragment_map);
-                fragmentMap.setMapCenterOnLocation(location );
+                MapFragment fragmentMap = (MapFragment) fm.findFragmentById(R.id.fragment_map);
+                GeoPoint geoPoint = Helper.locationToGeoPoint(location);
+                fragmentMap.setMapCenterZoomed(geoPoint);
             }
             return true;
         }

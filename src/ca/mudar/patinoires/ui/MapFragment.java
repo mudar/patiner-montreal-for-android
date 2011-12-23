@@ -49,7 +49,6 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.SupportActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +75,7 @@ public class MapFragment extends Fragment {
     protected OnMyLocationChangedListener mListener;
 
     protected GeoPoint initGeoPoint = null;
+    protected int mSavedZoom = ZOOM_DEFAULT;
 
     protected GeoPoint mMapCenter = null;
 
@@ -106,16 +106,6 @@ public class MapFragment extends Fragment {
         super.onCreate(savedInstanceState);
         // setHasOptionsMenu(true);
 
-        Integer latitude = getSupportActivity().getIntent().getIntExtra(Const.INTENT_EXTRA_GEO_LAT,
-                Integer.MIN_VALUE);
-        Integer longitude = getSupportActivity().getIntent().getIntExtra(
-                Const.INTENT_EXTRA_GEO_LNG, Integer.MIN_VALUE);
-
-        if (!latitude.equals(Integer.MIN_VALUE) && !longitude.equals(Integer.MIN_VALUE)) {
-            Log.v(TAG, "coords = " + latitude + "," + longitude);
-            initGeoPoint = new GeoPoint(latitude, longitude);
-        }
-
         mActivityHelper = ActivityHelper.createInstance(getActivity());
         mAppHelper = ((PatinoiresApp) getSupportActivity().getApplicationContext());
     }
@@ -128,14 +118,15 @@ public class MapFragment extends Fragment {
         /**
          * Restore map center and zoom
          */
-        int savedZoom = ZOOM_DEFAULT;
+
+        mSavedZoom = ZOOM_DEFAULT;
         if (savedInstanceState != null) {
             if (savedInstanceState.containsKey(Const.KEY_INSTANCE_COORDS)) {
                 int[] coords = savedInstanceState.getIntArray(Const.KEY_INSTANCE_COORDS);
-                mMapCenter = new GeoPoint(coords[0], coords[1]);
+                initGeoPoint = new GeoPoint(coords[0], coords[1]);
             }
             if (savedInstanceState.containsKey(Const.KEY_INSTANCE_ZOOM)) {
-                savedZoom = savedInstanceState.getInt(Const.KEY_INSTANCE_ZOOM);
+                mSavedZoom = savedInstanceState.getInt(Const.KEY_INSTANCE_ZOOM);
             }
         }
 
@@ -146,7 +137,6 @@ public class MapFragment extends Fragment {
         mMapView.setBuiltInZoomControls(true);
 
         mMapController = mMapView.getController();
-        mMapController.setZoom(savedZoom);
 
         mLocationManager = (LocationManager) getActivity().getApplicationContext()
                 .getSystemService(MapActivity.LOCATION_SERVICE);
@@ -200,7 +190,7 @@ public class MapFragment extends Fragment {
         mLocationOverlay.enableMyLocation();
         mMapView.getOverlays().add(INDEX_OVERLAY_MY_LOCATION, mLocationOverlay);
 
-        ArrayList<MapMarker> arMapMarker = fetchMapMarkers();
+        ArrayList<MapMarker> mapMarkers = fetchMapMarkers();
 
         // Drawable drawable = getActivity().getResources().getDrawable(
         // mActivityHelper.getMapPlacemarkIcon(indexSection));
@@ -208,22 +198,14 @@ public class MapFragment extends Fragment {
         MyItemizedOverlay mItemizedOverlay = new MyItemizedOverlay(drawable,
                 mMapView);
 
-        if (arMapMarker.size() > 0) {
-            for (MapMarker marker : arMapMarker) {
+        if (mapMarkers.size() > 0) {
+            for (MapMarker marker : mapMarkers) {
 
                 MyOverlayItem overlayitem = new MyOverlayItem(marker.geoPoint, marker.name,
                         marker.address, marker.id, marker.extra);
                 mItemizedOverlay.addOverlay(overlayitem);
             }
             mMapView.getOverlays().add(INDEX_OVERLAY_PLACEMARKS, mItemizedOverlay);
-        }
-
-        if (initGeoPoint == null) {
-            initialAnimateToPoint();
-        }
-        else {
-            mMapController.setZoom(ZOOM_NEAR);
-            setMapCenter(initGeoPoint);
         }
     }
 
@@ -234,8 +216,12 @@ public class MapFragment extends Fragment {
      */
     protected void animateToPoint(GeoPoint mapCenter) {
         if (mapCenter != null) {
-            mMapCenter = mapCenter;
+            mMapController.setZoom(ZOOM_NEAR);
             mMapController.animateTo(mapCenter);
+        }
+        else {
+            mMapController.setZoom(ZOOM_DEFAULT);
+            initialAnimateToPoint();
         }
     }
 
@@ -296,7 +282,6 @@ public class MapFragment extends Fragment {
                     if (userGeoPoint != null) {
                         mMapController.animateTo(userGeoPoint);
                     }
-
                 }
             });
         }
@@ -415,22 +400,22 @@ public class MapFragment extends Fragment {
      * @param mapCenter The new location
      */
     public void setMapCenter(GeoPoint mapCenter) {
+        initGeoPoint = mapCenter;
         animateToPoint(mapCenter);
 
-        Overlay overlayPlacemarks = mMapView.getOverlays().get(INDEX_OVERLAY_PLACEMARKS);
-        overlayPlacemarks.onTap(mapCenter, mMapView);
+        if (mapCenter != null) {
+            Overlay overlayPlacemarks = mMapView.getOverlays().get(INDEX_OVERLAY_PLACEMARKS);
+            overlayPlacemarks.onTap(mapCenter, mMapView);
+        }
     }
 
     /**
      * Used for menu's "My Location" and for Postal Code search. Sets the map
      * center on the location with a near zoom.
      */
-    public void setMapCenterOnLocation(Location mapCenter) {
-        GeoPoint geoPoint = new GeoPoint((int) (mapCenter.getLatitude() * 1E6),
-                (int) (mapCenter.getLongitude() * 1E6));
-
+    public void setMapCenterZoomed(GeoPoint mapCenter) {
         mMapController.setZoom(ZOOM_NEAR);
-        setMapCenter(geoPoint);
+        setMapCenter(mapCenter);
     }
 
 }
