@@ -139,7 +139,8 @@ public class Const {
 
     public static final String KEY_INSTANCE_COORDS = "map_coordinates";
     public static final String KEY_INSTANCE_ZOOM = "map_zoom";
-    public static final String KEY_INSTANCE_LIST_IS_HIDDEN = "list_is_hidden";
+    public static final String KEY_INSTANCE_RINK_ID = "rink_id";
+    
     public static final String KEY_BUNDLE_PROGRESS_INCREMENT = "bundle_progress_increment";
 
     public static final String KEY_BUNDLE_SEARCH_ADDRESS = "bundle_search_address";

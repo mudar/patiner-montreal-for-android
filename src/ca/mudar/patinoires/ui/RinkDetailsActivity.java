@@ -74,8 +74,13 @@ public class RinkDetailsActivity extends FragmentActivity {
 
         ((PatinoiresApp) getApplicationContext()).updateUiLanguage();
 
-        mRinkId = getIntent().getIntExtra(Const.INTENT_EXTRA_ID_RINK, -1);
-
+        if ((savedInstanceState != null)
+                && savedInstanceState.containsKey(Const.KEY_INSTANCE_RINK_ID)) {
+            mRinkId = savedInstanceState.getInt(Const.KEY_INSTANCE_RINK_ID);
+        }
+        else {
+            mRinkId = getIntent().getIntExtra(Const.INTENT_EXTRA_ID_RINK, -1);
+        }
         mRinkUri = RinksContract.Rinks.buildRinkUri(Integer.toString(mRinkId));
 
         if (mRinkId == -1) {
@@ -95,8 +100,13 @@ public class RinkDetailsActivity extends FragmentActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public void onNewIntent(Intent intent) {
+        mRinkId = intent.getIntExtra(Const.INTENT_EXTRA_ID_RINK, -1);
+        mRinkUri = RinksContract.Rinks.buildRinkUri(Integer.toString(mRinkId));
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_rink_details_activity, menu);
 
@@ -105,9 +115,22 @@ public class RinkDetailsActivity extends FragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         ActivityHelper mActivityHelper = ActivityHelper.createInstance(this);
         return mActivityHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        getWindow().setBackgroundDrawable(null);
+        System.gc();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(Const.KEY_INSTANCE_RINK_ID, mRinkId);
+        super.onSaveInstanceState(outState);
     }
 
     /**
@@ -119,8 +142,6 @@ public class RinkDetailsActivity extends FragmentActivity {
 
         protected ActivityHelper mActivityHelper;
         protected PatinoiresApp mAppHelper;
-
-        // protected static final int QUERY_TOKEN = 0x2;
 
         protected NotifyingAsyncQueryHandler mHandler;
 
@@ -154,14 +175,18 @@ public class RinkDetailsActivity extends FragmentActivity {
                 return null;
             }
 
-            mIsFavorite = 0;
-
             mRootView = inflater.inflate(R.layout.fragment_rinks_details, container, false);
 
+            return mRootView;
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+
+            mIsFavorite = 0;
             mHandler = new NotifyingAsyncQueryHandler(getActivity().getContentResolver(), this);
             mHandler.startQuery(RinksQuery._TOKEN, mRinkUri, RinksQuery.PROJECTION);
-
-            return mRootView;
         }
 
         @Override

@@ -23,8 +23,6 @@
 
 package ca.mudar.patinoires.ui;
 
-import com.google.android.maps.GeoPoint;
-
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.ui.MapFragment.OnMyLocationChangedListener;
@@ -32,6 +30,8 @@ import ca.mudar.patinoires.utils.ActivityHelper;
 import ca.mudar.patinoires.utils.ConnectionHelper;
 import ca.mudar.patinoires.utils.Const;
 import ca.mudar.patinoires.utils.Helper;
+
+import com.google.android.maps.GeoPoint;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -42,7 +42,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentMapActivity;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
-//import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 
@@ -54,6 +53,7 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
     private ProgressDialog pd;
     private PatinoiresApp mAppHelper;
     private GeoPoint initGeoPoint;
+    private boolean isCenterOnMyLocation;
 
     @Override
     protected boolean isRouteDisplayed() {
@@ -83,6 +83,10 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
 
         if (!latitude.equals(Integer.MIN_VALUE) && !longitude.equals(Integer.MIN_VALUE)) {
             initGeoPoint = new GeoPoint(latitude, longitude);
+            isCenterOnMyLocation = false;
+        }
+        else {
+            isCenterOnMyLocation = true;
         }
     }
 
@@ -97,6 +101,10 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
 
         if (!latitude.equals(Integer.MIN_VALUE) && !longitude.equals(Integer.MIN_VALUE)) {
             initGeoPoint = new GeoPoint(latitude, longitude);
+            isCenterOnMyLocation = false;
+        }
+        else {
+            isCenterOnMyLocation = true;
         }
     }
 
@@ -111,19 +119,28 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
         View root = findViewById(R.id.map_root_landscape);
         boolean isTablet = (root != null);
 
-        FragmentManager fm = getSupportFragmentManager();
-        MapFragment fragmentMap = (MapFragment)
-                fm.findFragmentById(R.id.fragment_map);
-        fragmentMap.setMapCenter(initGeoPoint);
+        if (initGeoPoint != null || isCenterOnMyLocation) {
+            FragmentManager fm = getSupportFragmentManager();
+            MapFragment fragmentMap = (MapFragment)
+                    fm.findFragmentById(R.id.fragment_map);
+            fragmentMap.setMapCenter(initGeoPoint);
+        }
     }
 
-    // @Override
-    // protected void onDestroy() {
-    // super.onDestroy();
-    //
-    // getWindow().setBackgroundDrawable(null);
-    // System.gc();
-    // }
+    @Override
+    public void onPause() {
+        super.onPause();
+        initGeoPoint = null;
+        isCenterOnMyLocation = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        getWindow().setBackgroundDrawable(null);
+        System.gc();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

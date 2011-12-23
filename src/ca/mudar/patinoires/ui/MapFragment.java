@@ -75,8 +75,6 @@ public class MapFragment extends Fragment {
     protected OnMyLocationChangedListener mListener;
 
     protected GeoPoint initGeoPoint = null;
-    protected int mSavedZoom = ZOOM_DEFAULT;
-
     protected GeoPoint mMapCenter = null;
 
     /**
@@ -104,10 +102,11 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // setHasOptionsMenu(true);
 
         mActivityHelper = ActivityHelper.createInstance(getActivity());
         mAppHelper = ((PatinoiresApp) getSupportActivity().getApplicationContext());
+
+        setRetainInstance(true);
     }
 
     /**
@@ -115,24 +114,17 @@ public class MapFragment extends Fragment {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        /**
-         * Restore map center and zoom
-         */
-
-        mSavedZoom = ZOOM_DEFAULT;
-        if (savedInstanceState != null) {
-            if (savedInstanceState.containsKey(Const.KEY_INSTANCE_COORDS)) {
-                int[] coords = savedInstanceState.getIntArray(Const.KEY_INSTANCE_COORDS);
-                initGeoPoint = new GeoPoint(coords[0], coords[1]);
-            }
-            if (savedInstanceState.containsKey(Const.KEY_INSTANCE_ZOOM)) {
-                mSavedZoom = savedInstanceState.getInt(Const.KEY_INSTANCE_ZOOM);
-            }
-        }
+        super.onCreateView(inflater, container, savedInstanceState);
 
         View root = inflater.inflate(R.layout.fragment_map, container, false);
-
         mMapView = (MapView) root.findViewById(R.id.map_view);
+
+        return root;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         mMapView.setBuiltInZoomControls(true);
 
@@ -142,8 +134,6 @@ public class MapFragment extends Fragment {
                 .getSystemService(MapActivity.LOCATION_SERVICE);
 
         initMap();
-
-        return root;
     }
 
     /**
@@ -163,22 +153,6 @@ public class MapFragment extends Fragment {
     public void onPause() {
         mLocationOverlay.disableMyLocation();
         super.onPause();
-    }
-
-    /**
-     * Save map center and zoom. {@inheritDoc}
-     */
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        GeoPoint center = mMapView.getMapCenter();
-        int[] coords = {
-                center.getLatitudeE6(), center.getLongitudeE6()
-        };
-
-        outState.putIntArray(Const.KEY_INSTANCE_COORDS, coords);
-        outState.putInt(Const.KEY_INSTANCE_ZOOM, mMapView.getZoomLevel());
-
-        super.onSaveInstanceState(outState);
     }
 
     /**
