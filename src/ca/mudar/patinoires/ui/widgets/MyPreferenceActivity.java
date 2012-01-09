@@ -161,6 +161,12 @@ public class MyPreferenceActivity extends PreferenceActivity implements
                     Const.INDEX_PREFS_CLOSED);
             needsErrorCheck = true;
         }
+        else if (key.equals(PrefsNames.CONDITIONS_SHOW_UNKNOWN)) {
+            mAppHelper.setConditionsFilter(
+                    prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_UNKNOWN, true),
+                    Const.INDEX_PREFS_UNKNOWN);
+            needsErrorCheck = true;
+        }
 
         if (needsErrorCheck) {
             verifyConditionsError(prefs, key);
@@ -181,6 +187,8 @@ public class MyPreferenceActivity extends PreferenceActivity implements
         hasEnabledCondition = prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_BAD, false)
                 || hasEnabledCondition;
         hasEnabledCondition = prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_CLOSED, false)
+                || hasEnabledCondition;
+        hasEnabledCondition = prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_UNKNOWN, false)
                 || hasEnabledCondition;
 
         if (!hasEnabledCondition) {

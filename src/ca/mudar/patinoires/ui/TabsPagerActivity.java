@@ -43,7 +43,6 @@ import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.Window;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,10 +101,12 @@ public class TabsPagerActivity extends FragmentActivity {
         int mCurrentTab = getIntent().getIntExtra(Const.INTENT_EXTRA_TABS_CURRENT, -1);
         if (mCurrentTab != -1) {
             mTabHost.setCurrentTab(mCurrentTab);
-        } else if (savedInstanceState != null) {
-            Log.v(TAG, "tab from savedInstanceState");
-            mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
         }
+        // TODO Optimize using savedInstanceState
+        // else if (savedInstanceState != null) {
+        // Log.v(TAG, "tab from savedInstanceState");
+        // mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
+        // }
 
         FragmentManager fm = getSupportFragmentManager();
 
@@ -121,21 +122,15 @@ public class TabsPagerActivity extends FragmentActivity {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // Log.w(TAG, "Current tab = " + mTabHost.getCurrentTabTag());
-    }
+    // TODO Optimize using savedInstanceState
+    // @Override
+    // protected void onSaveInstanceState(Bundle outState) {
+    // super.onSaveInstanceState(outState);
+    // // Log.w(TAG, "Current tab = " + mTabHost.getCurrentTabTag());
+    // }
 
     @Override
     protected void onDestroy() {
-        Log.v(TAG, "onDestroy");
         super.onDestroy();
 
         getWindow().setBackgroundDrawable(null);
@@ -271,16 +266,11 @@ public class TabsPagerActivity extends FragmentActivity {
         }
     }
 
-    private void updateRefreshStatus(boolean refreshing) {
-        Log.v(TAG, "updateRefreshStatus");
-        // mActivityHelper.setRefreshActionButtonState(refreshing);
-    }
-
     public static class SyncStatusUpdaterFragment extends Fragment implements
             DetachableResultReceiver.Receiver {
         public static final String TAG = SyncStatusUpdaterFragment.class.getName();
 
-        private boolean mSyncing = false;
+        // private boolean mSyncing = false;
         private DetachableResultReceiver mReceiver;
 
         @Override
@@ -304,34 +294,30 @@ public class TabsPagerActivity extends FragmentActivity {
             switch (resultCode) {
                 case SyncService.STATUS_RUNNING: {
                     activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
-                    mSyncing = true;
+                    // mSyncing = true;
                     break;
                 }
                 case SyncService.STATUS_FINISHED: {
                     activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
-                    mSyncing = false;
+                    // mSyncing = false;
                     Toast.makeText(activity, R.string.toast_sync_finished, Toast.LENGTH_SHORT)
                             .show();
                     break;
                 }
                 case SyncService.STATUS_ERROR: {
+                    /**
+                     * Error happened down in SyncService, show as toast.
+                     */
+
                     activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
-                    // Error happened down in SyncService, show as toast.
-                    mSyncing = false;
+
+                    // mSyncing = false;
                     final String errorText = getString(R.string.toast_sync_error,
                             resultData.getString(Intent.EXTRA_TEXT));
                     Toast.makeText(activity, errorText, Toast.LENGTH_LONG).show();
                     break;
                 }
             }
-
-            activity.updateRefreshStatus(mSyncing);
-        }
-
-        @Override
-        public void onActivityCreated(Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            ((TabsPagerActivity) getActivity()).updateRefreshStatus(mSyncing);
         }
     }
 

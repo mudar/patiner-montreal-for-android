@@ -52,7 +52,7 @@ public class PatinoiresApp extends Application {
     private String mListSort;
     private String mLanguage;
     private Toast mToast;
-    private boolean[] conditionsFilter = new boolean[4];
+    private boolean[] conditionsFilter = new boolean[5];
 
     private SharedPreferences prefs;
     private Editor prefsEditor;
@@ -101,6 +101,8 @@ public class PatinoiresApp extends Application {
                 true);
         conditionsFilter[Const.INDEX_PREFS_CLOSED] = prefs.getBoolean(
                 PrefsNames.CONDITIONS_SHOW_CLOSED, true);
+        conditionsFilter[Const.INDEX_PREFS_UNKNOWN] = prefs.getBoolean(
+                PrefsNames.CONDITIONS_SHOW_UNKNOWN, true);
 
         mLastUpdateLocations = prefs.getLong(PrefsNames.LAST_UPDATE_TIME_LOCATIONS,
                 System.currentTimeMillis() - Const.MILLISECONDS_FIVE_DAYS);

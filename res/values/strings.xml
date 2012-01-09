@@ -29,10 +29,10 @@
     <string name="app_version">1.0.0</string>
     <string name="google_map_api_key">0glAHGvFHL0gAEDm5bMNdruBtKReUb1qDlpZSlA</string>
     <string name="google_map_api_key_debug">0glAHGvFHL0gAEDm5bMNdruBtKReUb1qDlpZSlA</string>
-    <string name="app_name_map">Map of Patiner Montréal</string>
-    <string name="app_name_details">Rink information</string>
-    <string name="app_name_search">Patiner Montréal</string>
-    <string name="app_name_preferences">Patiner Montréal</string>
+    <string name="app_name_map">Patiner Montréal Map</string>
+    <string name="app_name_details">Patiner Montréal Rink</string>
+    <string name="app_name_search">Patiner Montréal Search</string>
+    <string name="app_name_preferences">Patiner Montréal Preferences</string>
     <string name="app_name_manifest">Patiner Montreal</string>
     <string name="menu_about">About</string>
     <string name="menu_preferences">Settings</string>
@@ -73,8 +73,8 @@
     <string name="dialog_links_patiner_mtl"><a href="http://www.patinermontreal.ca/">patinermontreal.ca</a></string>
     <string name="dialog_links_conditions_pdf"><a href="http://ville.montreal.qc.ca/portal/page?_pageid=5977,41729602&amp;_dad=portal&amp;_schema=PORTAL">Conditions at winter activity sites</a></string>
     <string name="dialog_links_rinks_contact"><a href="http://www11.ville.montreal.qc.ca/sherlock2/servlet/template/sherlock%2CAfficherDocumentInternet.vm/nodocument/154">Skating rinks contact information</a></string>
-    <string name="rink_details_conditions">Conditions: </string>
-    <string name="rink_details_surface">Ice surface: </string>
+    <string name="rink_details_conditions">Conditions: %s</string>
+    <string name="rink_details_surface">Ice surface:  %s</string>
     <string name="rink_details_is_cleared">Cleared</string>
     <string name="rink_details_is_flooded">Flooded</string>
     <string name="rink_details_is_resurfaced">Resurfaced</string>
@@ -83,11 +83,12 @@
     <string name="rink_details_is_resurfaced_false">Not resurfaced</string>
     <string name="rink_details_is_favorite">Favorites</string>
     <string name="rink_details_park_name">Parc</string>
-    <string name="rink_details_park_address">Address: </string>
-    <string name="rink_details_park_phone">Phone: </string>
-    <string name="rink_details_borough_name">Borough: </string>
-    <string name="rink_details_borough_updated_at">Last updated by the City: </string>
-    <string name="rink_details_user_updated_at">Your last update: </string>
+    <string name="rink_details_park_address">Address: %s</string>
+    <string name="rink_details_park_distance">Distance: %s</string>
+    <string name="rink_details_park_phone">Phone: %s</string>
+    <string name="rink_details_borough_name">Borough: %s</string>
+    <string name="rink_details_borough_updated_at">Last updated by the City: %s</string>
+    <string name="rink_details_user_updated_at">Your last update: %s</string>
     <string name="rink_details_view_map">Locate on map</string>
     <string name="dialog_updating_conditions">Updating conditions. Please wait…</string>
     <string name="dialog_updating_all_rinks">Daily updates of rinks and conditions. Please wait…</string>
@@ -106,6 +107,7 @@
     <string name="prefs_condition_good">Good</string>
     <string name="prefs_condition_bad">Bad</string>
     <string name="prefs_condition_closed">Closed</string>
+    <string name="prefs_condition_unknown">Unknown</string>
     <!-- <string name="prefs_sort_title">Sort Order</string> -->
     <!-- <string name="prefs_sort_summary">Set the rinks list order</string> -->
     <!-- <string name="prefs_sort_dialog_title">Sort by</string> -->

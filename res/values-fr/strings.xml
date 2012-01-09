@@ -30,8 +30,8 @@
     <string name="google_map_api_key">0glAHGvFHL0gAEDm5bMNdruBtKReUb1qDlpZSlA</string>
     <string name="google_map_api_key_debug">0glAHGvFHL0gAEDm5bMNdruBtKReUb1qDlpZSlA</string>
     <string name="app_name_map">Carte de Patiner Montréal</string>
-    <string name="app_name_details">Informations de la patinoire</string>
-    <string name="app_name_search">Patiner Montréal</string>
+    <string name="app_name_details">Patinoire de Patiner Montréal</string>
+    <string name="app_name_search">Recherche de Patiner Montréal</string>
     <string name="app_name_preferences">Paramètres de Patiner Montréal</string>
     <string name="app_name_manifest">Patiner Montreal</string>
     <string name="menu_about">À propos</string>
@@ -73,8 +73,8 @@
     <string name="dialog_links_patiner_mtl"><a href="http://www.patinermontreal.ca/">patinermontreal.ca</a></string>
     <string name="dialog_links_conditions_pdf"><a href="http://ville.montreal.qc.ca/portal/page?_pageid=5798,40305564&amp;_dad=portal&amp;_schema=PORTAL">Conditions des sites hivernaux</a></string>
     <string name="dialog_links_rinks_contact"><a href="http://www11.ville.montreal.qc.ca/sherlock2/servlet/template/sherlock%2CAfficherDocumentInternet.vm/nodocument/154">Coordonnées des patinoires</a></string>
-    <string name="rink_details_conditions">Conditions : </string>
-    <string name="rink_details_surface">Surface : </string>
+    <string name="rink_details_conditions">Conditions : %s</string>
+    <string name="rink_details_surface">Surface : %s</string>
     <string name="rink_details_is_cleared">Déblayée</string>
     <string name="rink_details_is_flooded">Arrosée</string>
     <string name="rink_details_is_resurfaced">Resurfacée</string>
@@ -83,11 +83,12 @@
     <string name="rink_details_is_resurfaced_false">Pas resurfacée</string>
     <string name="rink_details_is_favorite">Favoris</string>
     <string name="rink_details_park_name">Parc</string>
-    <string name="rink_details_park_address">Adresse : </string>
-    <string name="rink_details_park_phone">Téléphone : </string>
-    <string name="rink_details_borough_name">Arrondissement : </string>
-    <string name="rink_details_borough_updated_at">Dernière mise à jour par la ville : </string>
-    <string name="rink_details_user_updated_at">Votre dernière mise à jour : </string>
+    <string name="rink_details_park_address">Adresse : %s</string>
+    <string name="rink_details_park_distance">Distance : %s</string>
+    <string name="rink_details_park_phone">Téléphone : %s</string>
+    <string name="rink_details_borough_name">Arrondissement : %s</string>
+    <string name="rink_details_borough_updated_at">Dernière mise à jour par la ville : %s</string>
+    <string name="rink_details_user_updated_at">Votre dernière mise à jour : %s</string>
     <string name="rink_details_view_map">Situer sur la carte</string>
     <string name="dialog_updating_conditions">Mise à jour des conditions. Veuillez patienter…</string>
     <string name="dialog_updating_all_rinks">Mise à jour des patinoires et des conditions. Veuillez patienter…</string>
@@ -106,6 +107,7 @@
     <string name="prefs_condition_good">Bonne</string>
     <string name="prefs_condition_bad">Mauvaise</string>
     <string name="prefs_condition_closed">Fermée</string>
+    <string name="prefs_condition_unknown">Inconnue</string>
     <!-- <string name="prefs_sort_title">Ordre d\'affichage</string> -->
     <!-- <string name="prefs_sort_summary">Modifier l\'ordre d\'affichage des patinoires</string> -->
     <!-- <string name="prefs_sort_dialog_title">Trier par</string> -->

@@ -87,7 +87,7 @@ public class MyItemizedOverlay extends BalloonItemizedOverlay<MyOverlayItem> {
     @Override
     protected boolean onBalloonTap(int index, MyOverlayItem item) {
 
-        String parkId = Integer.toString(item.getItemId());
+        String parkId = item.getItemId();
         String filter = Helper.getSqliteConditionsFilter(mAppHelper.getConditionsFilter());
 
         String uri = RinksContract.Parks.buildRinksUri(parkId).toString();
@@ -101,7 +101,6 @@ public class MyItemizedOverlay extends BalloonItemizedOverlay<MyOverlayItem> {
         ArrayList<DialogListItemRink> rinksArrayList = new ArrayList<DialogListItemRink>();
         if (cur.moveToFirst()) {
             DialogListItemRink rink;
-
             do {
                 String description = cur.getString(mAppHelper.getLanguage().equals("fr") ?
                         ParkRinksQuery.DESC_FR : ParkRinksQuery.DESC_EN);
@@ -141,8 +140,10 @@ public class MyItemizedOverlay extends BalloonItemizedOverlay<MyOverlayItem> {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int item) {
                                 DialogListItemRink rink = rinksArrayList.get(item);
+
                                 Intent intent = new Intent(context, RinkDetailsActivity.class);
                                 intent.putExtra(Const.INTENT_EXTRA_ID_RINK, rink.rinkId);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                                 context.startActivity(intent);
                             }
                         }
@@ -166,7 +167,7 @@ public class MyItemizedOverlay extends BalloonItemizedOverlay<MyOverlayItem> {
     }
 
     private class RinksDialogAdapter extends ArrayAdapter<DialogListItemRink> {
-        // protected static final String TAG = "RinksDialogAdapter";
+        protected static final String TAG = "RinksDialogAdapter";
 
         private Context context;
         private int textViewResourceId;
@@ -206,7 +207,7 @@ public class MyItemizedOverlay extends BalloonItemizedOverlay<MyOverlayItem> {
                 RinksColumns.RINK_DESC_FR,
                 RinksColumns.RINK_DESC_EN,
                 RinksColumns.RINK_CONDITION,
-                RinksColumns.RINK_IS_FAVORITE
+                // RinksColumns.RINK_IS_FAVORITE
         };
 
         // final int _ID = 0x0;
@@ -215,7 +216,6 @@ public class MyItemizedOverlay extends BalloonItemizedOverlay<MyOverlayItem> {
         final int DESC_FR = 0x3;
         final int DESC_EN = 0x4;
         final int CONDITION = 0x5;
-        final int IS_FAVORITE = 0x6;
+        // final int IS_FAVORITE = 0x6;
     }
-
 }

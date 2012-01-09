@@ -166,8 +166,6 @@ public class MapFragment extends Fragment {
 
         ArrayList<MapMarker> mapMarkers = fetchMapMarkers();
 
-        // Drawable drawable = getActivity().getResources().getDrawable(
-        // mActivityHelper.getMapPlacemarkIcon(indexSection));
         Drawable drawable = this.getResources().getDrawable(R.drawable.ic_map_default_marker);
         MyItemizedOverlay mItemizedOverlay = new MyItemizedOverlay(drawable,
                 mMapView);
@@ -334,7 +332,7 @@ public class MapFragment extends Fragment {
                             columnDescFr : columnDescEn);
                 }
 
-                mMapMarker = new MapMarker(cur.getInt(columnParkId), String.format(
+                mMapMarker = new MapMarker(cur.getString(columnParkId), String.format(
                         cur.getString(columnName), prefixParcName),
                         cur.getString(columnAddress), cur.getDouble(columnGeoLat),
                         cur.getDouble(columnGeoLng), extra);
@@ -351,13 +349,13 @@ public class MapFragment extends Fragment {
      * Data structure of a Placemark/MapMarker/OverlayItem
      */
     protected static class MapMarker {
-        public final int id;
+        public final String id;
         public final String name;
         public final String address;
         public final GeoPoint geoPoint;
         public final String extra;
 
-        public MapMarker(int id, String name, String address, double geoLat, double geoLng,
+        public MapMarker(String id, String name, String address, double geoLat, double geoLng,
                 String extra) {
             this.id = id;
             this.name = name;

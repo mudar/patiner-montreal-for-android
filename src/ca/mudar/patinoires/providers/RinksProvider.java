@@ -317,7 +317,8 @@ public class RinksProvider extends ContentProvider {
                         .mapToTable(Rinks._ID, Tables.RINKS)
                         .mapToTable(Rinks.RINK_ID, Tables.RINKS)
                         .mapToTable(Favorites.FAVORITE_RINK_ID, Tables.FAVORITES)
-                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_IS_FAVORITE_MAPPED);
+                        .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_IS_FAVORITE_MAPPED)
+                        .where(Rinks.RINK_ID + " IS NOT NULL ");
             }
             case RINKS_FAVORITES: {
                 return builder.table(Tables.BOROUGHS_JOIN_PARKS_RINKS_FAVORITES)
@@ -329,14 +330,17 @@ public class RinksProvider extends ContentProvider {
             }
             case RINKS_SKATING: {
                 String[] args = new String[] {
-                        Integer.toString(DbValues.KIND_PP), Integer.toString(DbValues.KIND_PPL)
+                        Integer.toString(DbValues.KIND_PP), Integer.toString(DbValues.KIND_PPL),
+                        Integer.toString(DbValues.KIND_C)
                 };
-                return builder.table(Tables.BOROUGHS_JOIN_PARKS_RINKS_FAVORITES)
+                return builder
+                        .table(Tables.BOROUGHS_JOIN_PARKS_RINKS_FAVORITES)
                         .mapToTable(Rinks._ID, Tables.RINKS)
                         .mapToTable(Rinks.RINK_ID, Tables.RINKS)
                         .mapToTable(Favorites.FAVORITE_RINK_ID, Tables.FAVORITES)
                         .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_IS_FAVORITE_MAPPED)
-                        .where(Rinks.RINK_KIND_ID + "=? OR " + Rinks.RINK_KIND_ID + "=?", args);
+                        .where(Rinks.RINK_KIND_ID + "=? OR " + Rinks.RINK_KIND_ID + "=? OR "
+                                + Rinks.RINK_KIND_ID + "=?", args);
             }
             case RINKS_HOCKEY: {
                 return builder.table(Tables.BOROUGHS_JOIN_PARKS_RINKS_FAVORITES)

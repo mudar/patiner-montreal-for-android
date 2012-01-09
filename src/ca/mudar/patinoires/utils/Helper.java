@@ -62,8 +62,11 @@ public class Helper {
                 case DbValues.CONDITION_BAD:
                     imageResource = R.drawable.ic_rink_hockey_2;
                     break;
-                default:
+                case DbValues.CONDITION_CLOSED:
                     imageResource = R.drawable.ic_rink_hockey_3;
+                    break;
+                default:
+                    imageResource = R.drawable.ic_rink_hockey_4;
                     break;
             }
         }
@@ -78,8 +81,11 @@ public class Helper {
                 case DbValues.CONDITION_BAD:
                     imageResource = R.drawable.ic_rink_skating_2;
                     break;
-                default:
+                case DbValues.CONDITION_CLOSED:
                     imageResource = R.drawable.ic_rink_skating_3;
+                    break;
+                default:
+                    imageResource = R.drawable.ic_rink_skating_4;
                     break;
             }
         }
@@ -107,8 +113,12 @@ public class Helper {
             filter += " OR " + RinksColumns.RINK_CONDITION + " = " + DbValues.CONDITION_CLOSED;
             totalEnabled++;
         }
+        if (conditionsFilter[Const.INDEX_PREFS_UNKNOWN]) {
+            filter += " OR " + RinksColumns.RINK_CONDITION + " = " + DbValues.CONDITION_UNKNOWN;
+            totalEnabled++;
+        }
 
-        if (totalEnabled == 4) {
+        if (totalEnabled == 5) {
             /**
              * If all conditions are enabled, the sqlite filter is useless.
              */

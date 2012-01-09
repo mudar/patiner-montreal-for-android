@@ -23,6 +23,7 @@
 
 package ca.mudar.patinoires.utils;
 
+import ca.mudar.patinoires.io.RemoteRinksHandler.RemoteValues;
 import ca.mudar.patinoires.utils.Const.DbValues;
 
 public class ApiStringHelper {
@@ -37,22 +38,41 @@ public class ApiStringHelper {
     static public int getConditionIndex(String open, String condition) {
         condition = condition.toLowerCase();
         open = open.toLowerCase();
-        if (open.equals("false")) {
+        if (open.equals(RemoteValues.BOOLEAN_FALSE)) {
             return DbValues.CONDITION_CLOSED;
         }
-        else if (condition.equals("excellent") || condition.equals("excellente")) {
-            return 0;
+        else if (condition.equals(RemoteValues.RINK_CONDITION_EXCELLENT)) {
+            return DbValues.CONDITION_EXCELLENT;
         }
-        else if (condition.equals("good") || condition.equals("bonne")) {
-            return 1;
+        else if (condition.equals(RemoteValues.RINK_CONDITION_GOOD)) {
+            return DbValues.CONDITION_GOOD;
         }
-        else if (condition.equals("bad") || condition.equals("mauvaise")) {
-            return 2;
+        else if (condition.equals(RemoteValues.RINK_CONDITION_BAD)) {
+            return DbValues.CONDITION_BAD;
         }
         else {
-            // Log.e( TAG , "Rink is open (" + open + "). Condition not found ("
-            // + condition + ")." );
-            return DbValues.CONDITION_CLOSED;
+            /**
+             * Default to Unknown condition.
+             */
+            return DbValues.CONDITION_UNKNOWN;
+        }
+    }
+
+    public static int getTypeIndex(String type) {
+        if (type.equals(RemoteValues.RINK_TYPE_PSE)) {
+            return DbValues.KIND_PSE;
+        }
+        else if (type.equals(RemoteValues.RINK_TYPE_PP)) {
+            return DbValues.KIND_PP;
+        }
+        else if (type.equals(RemoteValues.RINK_TYPE_C)) {
+            return DbValues.KIND_C;
+        }
+        else {
+            /**
+             * Default to Free skating.
+             */
+            return DbValues.KIND_PPL;
         }
     }
 
@@ -82,6 +102,9 @@ public class ApiStringHelper {
         else if (descFr.equals("Patinoire de patin libre no 1")) {
             return "Free skating rink #1";
         }
+        else if (descFr.equals("Patinoire de patin libre no 2")) {
+            return "Free skating rink #2";
+        }
         else if (descFr.equals("Patinoire avec bandes no 1")) {
             return "Rink with boards #1";
         }
@@ -97,14 +120,26 @@ public class ApiStringHelper {
         else if (descFr.equals("Patinoire avec bandes sud")) {
             return "Rink with boards South";
         }
-        else if (descFr.equals("Grande patinoire avec bandes")) {
+        else if (descFr.equals("Grande patinoire avec bandes")
+                || descFr.equals("Patinoire avec bandes grande")) {
             return "Big rink with boards";
         }
-        else if (descFr.equals("Petite patinoire avec bandes")) {
+        else if (descFr.equals("Petite patinoire avec bandes")
+                || descFr.equals("Patinoire avec bandes petite")) {
             return "Small rink with boards";
+        }
+        else if (descFr.equals("Patinoire entretenue par les citoyens")) {
+            return "Rink maintained by citizens";
+        }
+        else if (descFr.equals("Pat. avec bandes - près chalet")) {
+            return "Rink with boards - Near Chalet";
+        }
+        else if (descFr.equals("Pat. avec bandes - près 10e Avenue")) {
+            return "Rink with boards - Near 10th Avenue";
         }
         else {
             return descFr;
         }
     }
+
 }

@@ -131,8 +131,8 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
                 R.layout.fragment_list_item_rinks,
                 cursor,
                 new String[] {
-                        RinksColumns.RINK_NAME, RINK_DESC, RinksColumns.RINK_ID,
-                        ParksColumns.PARK_GEO_DISTANCE
+                        RinksColumns.RINK_NAME, RINK_DESC, ParksColumns.PARK_GEO_DISTANCE,
+                        RinksColumns.RINK_ID
                 },
                 new int[] {
                         R.id.rink_name, R.id.rink_address, R.id.rink_distance
@@ -165,14 +165,11 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
 
         Cursor c = mAdapter.getCursor();
 
-        String name =
-                c.getString(c.getColumnIndexOrThrow(Rinks.RINK_NAME));
-        String phone =
-                c.getString(c.getColumnIndexOrThrow(ParksColumns.PARK_PHONE));
-        int isFavorite =
-                c.getInt(c.getColumnIndexOrThrow(Rinks.RINK_IS_FAVORITE));
-        double geoLat = c.getDouble(c.getColumnIndexOrThrow(Parks.PARK_GEO_LAT));
-        double geoLng = c.getDouble(c.getColumnIndexOrThrow(Parks.PARK_GEO_LAT));
+        String name = c.getString(RinksQuery.RINK_NAME);
+        String phone = c.getString(RinksQuery.PARK_PHONE);
+        int isFavorite = c.getInt(RinksQuery.RINK_IS_FAVORITE);
+        double geoLat = c.getDouble(RinksQuery.PARK_GEO_LAT);
+        double geoLng = c.getDouble(RinksQuery.PARK_GEO_LAT);
 
         menu.setHeaderTitle(name);
         MenuInflater inflater = (MenuInflater) getSupportActivity().getMenuInflater();
@@ -192,8 +189,7 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
         Cursor c = mAdapter.getCursor();
         c.moveToPosition(position);
 
-        int rinkId = c.getInt(c.getColumnIndexOrThrow(Rinks.RINK_ID));
-
+        int rinkId = c.getInt(RinksQuery.RINK_ID);
         mActivityHelper.goRinkDetails(rinkId);
     }
 
@@ -202,14 +198,15 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
         Cursor c = mAdapter.getCursor();
         ContentResolver contentResolver = getSupportActivity().getContentResolver();
 
-        int rinkId = c.getInt(c.getColumnIndexOrThrow(RinksColumns.RINK_ID));
+        int rinkId = c.getInt(RinksQuery.RINK_ID);
         Intent intent;
 
         switch (item.getItemId()) {
             case R.id.map_view_rink:
-                double lat = c.getDouble(c.getColumnIndexOrThrow(ParksColumns.PARK_GEO_LAT));
-                double lng = c.getDouble(c.getColumnIndexOrThrow(ParksColumns.PARK_GEO_LNG));
+                double lat = c.getDouble(RinksQuery.PARK_GEO_LAT);
+                double lng = c.getDouble(RinksQuery.PARK_GEO_LNG);
                 mActivityHelper.goMap(lat, lng);
+                
                 return true;
             case R.id.favorites_add:
                 /**
@@ -220,6 +217,7 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
                 values.put(RinksContract.Favorites.FAVORITE_RINK_ID, rinkId);
                 contentResolver.insert(Favorites.CONTENT_URI, values);
                 mActivityHelper.notifyAllTabs(contentResolver);
+                
                 return true;
             case R.id.favorites_remove:
                 /**
@@ -232,12 +230,13 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
                 contentResolver.delete(Favorites.CONTENT_URI,
                         FavoritesColumns.FAVORITE_RINK_ID + "=?", args);
                 mActivityHelper.notifyAllTabs(contentResolver);
+                
                 return true;
             case R.id.call_rink:
-                final String phone = c.getString(c.getColumnIndexOrThrow(ParksColumns.PARK_PHONE));
-
+                final String phone = c.getString(RinksQuery.PARK_PHONE);
                 intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
                 startActivity(intent);
+                
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -256,7 +255,7 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
         }
 
         return new CursorLoader(getSupportActivity().getApplicationContext(), mContentUri,
-                RINKS_SUMMARY_PROJECTION, filter, null, mSort);
+                RinksQuery.RINKS_SUMMARY_PROJECTION, filter, null, mSort);
     }
 
     @Override
@@ -277,21 +276,6 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
     }
-
-    // TODO change this into a query interface with indexes.
-    static final String[] RINKS_SUMMARY_PROJECTION = new String[] {
-            BaseColumns._ID,
-            RinksColumns.RINK_ID,
-            RinksColumns.RINK_NAME,
-            RinksColumns.RINK_DESC_EN,
-            RinksColumns.RINK_DESC_FR,
-            RinksColumns.RINK_CONDITION,
-            ParksColumns.PARK_PHONE,
-            ParksColumns.PARK_GEO_LAT,
-            ParksColumns.PARK_GEO_LNG,
-            ParksColumns.PARK_GEO_DISTANCE,
-            RinksColumns.RINK_IS_FAVORITE
-    };
 
     /**
      * The location listener. Doesn't do anything but listening, DB updates are
@@ -314,7 +298,37 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
         }
+    }
 
+    public static interface RinksQuery {
+        // int _TOKEN = 0x10;
+
+        final String[] RINKS_SUMMARY_PROJECTION = new String[] {
+                BaseColumns._ID,
+                RinksColumns.RINK_ID,
+                RinksColumns.RINK_KIND_ID,
+                RinksColumns.RINK_NAME,
+                RinksColumns.RINK_DESC_FR,
+                RinksColumns.RINK_DESC_EN,
+                RinksColumns.RINK_CONDITION,
+                RinksColumns.RINK_IS_FAVORITE,
+                ParksColumns.PARK_GEO_LAT,
+                ParksColumns.PARK_GEO_LNG,
+                ParksColumns.PARK_GEO_DISTANCE,
+                ParksColumns.PARK_PHONE
+        };
+        final int _ID = 0;
+        final int RINK_ID = 1;
+        final int RINK_KIND_ID = 2;
+        final int RINK_NAME = 3;
+        final int RINK_DESC_FR = 4;
+        final int RINK_DESC_EN = 5;
+        final int RINK_CONDITION = 6;
+        final int RINK_IS_FAVORITE = 7;
+        final int PARK_GEO_LAT = 8;
+        final int PARK_GEO_LNG = 9;
+        final int PARK_GEO_DISTANCE = 10;
+        final int PARK_PHONE = 11;
     }
 
 }

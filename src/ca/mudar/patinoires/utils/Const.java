@@ -29,9 +29,9 @@ public class Const {
 
     public static final String APP_PREFS_NAME = "PatinoiresPrefsFile";
 
-    public static final String URL_JSON_INITIAL_IMPORT = "http://patinoires.heroku.com/fr/rinks/all.json?include=park,geocoding,borough";
-    public static final String URL_JSON_CONDITIONS_UPDATES = "http://patinoires.heroku.com/fr/boroughs.json?include=rinks";
-    
+    public static final String URL_JSON_INITIAL_IMPORT = "http://www.patinermontreal.ca/data.json";
+    public static final String URL_JSON_CONDITIONS_UPDATES = "http://patinermontreal.ca/conditions.json";
+
     public static final String URL_GMAPS_DIRECTIONS = "http://maps.google.com/maps?saddr=%s1&daddr=%s2&dirflg=r";
 
     public static final int TABS_INDEX_SKATING = 0x0;
@@ -48,21 +48,24 @@ public class Const {
     public static final int INDEX_PREFS_GOOD = 0x1;
     public static final int INDEX_PREFS_BAD = 0x2;
     public static final int INDEX_PREFS_CLOSED = 0x3;
-    
+    public static final int INDEX_PREFS_UNKNOWN = 0x4;
+
     public static interface DbValues {
         final int SORT_DISTANCE = 0x0;
         final int SORT_RINK = 0x1;
         final int SORT_PARK = 0x2;
         final int SORT_BOROUGH = 0x3;
 
-        final int KIND_PP = 4; // paysagée
-        final int KIND_PPL = 5; // patin libre
-        final int KIND_PSE = 6; // sport d'équipe
+        final int KIND_PP = 0x4; // paysagée
+        final int KIND_PPL = 0x5; // patin libre
+        final int KIND_PSE = 0x6; // sport d'équipe
+        final int KIND_C = 0xff; // citoyens
 
         final int CONDITION_EXCELLENT = 0x0;
         final int CONDITION_GOOD = 0x1;
         final int CONDITION_BAD = 0x2;
         final int CONDITION_CLOSED = 0x3;
+        final int CONDITION_UNKNOWN = 0x4;
         final String DATE_FORMAT = "yyyy-MM-dd";
     }
 
@@ -83,6 +86,7 @@ public class Const {
         final String CONDITIONS_SHOW_GOOD = "prefs_show_good";
         final String CONDITIONS_SHOW_BAD = "prefs_show_bad";
         final String CONDITIONS_SHOW_CLOSED = "prefs_show_closed";
+        final String CONDITIONS_SHOW_UNKNOWN = "prefs_show_unknown";
 
         final String LAST_FAST_UPDATE = "lastFastUpdateTime";
     }
@@ -129,6 +133,9 @@ public class Const {
     public static final String INTENT_EXTRA_TABS_CURRENT = "tabs_current";
     public static final String INTENT_EXTRA_ID_RINK = "id_rink";
 
+    public static final String INTENT_EXTRA_URL_PATH_FR = "patinoires";
+    public static final String INTENT_EXTRA_URL_PATH_EN = "rinks";
+
     public static final int INDEX_ACTIVITY_FIRE_HALLS = 0x1;
     public static final int INDEX_ACTIVITY_SPVM_STATIONS = 0x2;
     public static final int INDEX_ACTIVITY_WATER_SUPPLIES = 0x3;
@@ -140,7 +147,7 @@ public class Const {
     public static final String KEY_INSTANCE_COORDS = "map_coordinates";
     public static final String KEY_INSTANCE_ZOOM = "map_zoom";
     public static final String KEY_INSTANCE_RINK_ID = "rink_id";
-    
+
     public static final String KEY_BUNDLE_PROGRESS_INCREMENT = "bundle_progress_increment";
 
     public static final String KEY_BUNDLE_SEARCH_ADDRESS = "bundle_search_address";
@@ -154,8 +161,8 @@ public class Const {
     public static final String LOCATION_PROVIDER = "my_default_provider";
 
     public static final long MILLISECONDS_FOUR_HOURS = 14400000; // 1000*60*60*24*7
-    public static final long MILLISECONDS_FIVE_DAYS = 432000000; // 1000*60*60*24*7 
-    
+    public static final long MILLISECONDS_FIVE_DAYS = 432000000; // 1000*60*60*24*7
+
     public static boolean SUPPORTS_HONEYCOMB = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB;
     public static boolean SUPPORTS_GINGERBREAD = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.GINGERBREAD;
     public static boolean SUPPORTS_FROYO = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.FROYO;

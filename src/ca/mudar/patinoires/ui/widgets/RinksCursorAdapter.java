@@ -26,6 +26,7 @@ package ca.mudar.patinoires.ui.widgets;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
+import ca.mudar.patinoires.ui.BaseListFragment.RinksQuery;
 import ca.mudar.patinoires.utils.Helper;
 
 import android.content.Context;
@@ -49,9 +50,8 @@ public class RinksCursorAdapter extends SimpleCursorAdapter implements SectionIn
             int flags, boolean hasIndexer) {
         super(context, layout, c, from, to, flags);
         this.hasIndexer = hasIndexer;
-// TODO Fix the columnIndex issue
         if (hasIndexer) {
-            mIndexer = new AlphabetIndexer(null, 0x2,
+            mIndexer = new AlphabetIndexer(null, RinksQuery.RINK_NAME,
                     " ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         }
     }
@@ -65,8 +65,7 @@ public class RinksCursorAdapter extends SimpleCursorAdapter implements SectionIn
     public void bindView(View view, Context context, Cursor cursor) {
         super.bindView(view, context, cursor);
 
-        int distance = cursor.getInt(cursor
-                .getColumnIndexOrThrow(ParksColumns.PARK_GEO_DISTANCE));
+        int distance = cursor.getInt(RinksQuery.PARK_GEO_DISTANCE);
         String sDistance = (distance > 0 ? Helper.getDistanceDisplay(context, distance) : "");
 
         ((TextView) view.findViewById(R.id.rink_distance)).setText(sDistance);

@@ -58,7 +58,6 @@ public class RinksContract {
     public static interface BoroughsColumns {
         final String BOROUGH_ID = "borough_id";
         final String BOROUGH_NAME = "borough_name";
-        final String BOROUGH_REMARKS = "borough_remarks";
         final String BOROUGH_CREATED_AT = "borough_created_at";
         // Boroughs are the only table with an updated_at column.
         // Conditions update timestamp are logically the same as the borrough's.
@@ -69,17 +68,14 @@ public class RinksContract {
         final String PARK_ID = "park_id";
         final String PARK_BOROUGH_ID = "park_borough_id";
         final String PARK_NAME = "park_name";
-        final String PARK_GEO_ID = "park_geo_id";
         final String PARK_GEO_LAT = "park_geo_lat";
         final String PARK_GEO_LNG = "park_geo_lng";
         final String PARK_GEO_DISTANCE = "park_geo_distance";
         final String PARK_ADDRESS = "park_address";
         final String PARK_PHONE = "park_phone";
-        final String PARK_IS_CHALET = "park_is_chalet";
-        final String PARK_IS_CARAVAN = "park_is_caravan";
         final String PARK_CREATED_AT = "park_updated_at";
         final String PARK_TOTAL_RINKS = "park_total_rinks";
-// TODO Cleanup, goes into Provider or Parks
+        // TODO Cleanup, goes into Provider or Parks
         final String PARK_TOTAL_RINKS_MAPPED = "COUNT( rinks.rink_rink_id )";
     }
 
@@ -103,7 +99,7 @@ public class RinksContract {
     public static interface FavoritesColumns {
         final String FAVORITE_ID = "rink_id";
         final String FAVORITE_RINK_ID = "rink_id";
-// TODO Cleanup, goes into Provider or Favorites
+        // TODO Cleanup, goes into Provider or Favorites
         final String FAVORITE_IS_FAVORITE_MAPPED = "( favorites.rink_id IS NOT NULL )";
     }
 
@@ -147,8 +143,8 @@ public class RinksContract {
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.patinoires.park";
 
         public static final String DEFAULT_SORT = ParksColumns.PARK_NAME + " ASC ";
-        
-        public static final String GROUP_BY_JOIN_TABLE = " GROUP BY " + ParksColumns.PARK_ID ;
+
+        public static final String GROUP_BY_JOIN_TABLE = " GROUP BY " + ParksColumns.PARK_ID;
 
         public static Uri buildParkUri(String id) {
             return CONTENT_URI.buildUpon().appendPath(id).build();
@@ -157,7 +153,7 @@ public class RinksContract {
         public static String getParkId(Uri uri) {
             return uri.getPathSegments().get(1);
         }
-        
+
         public static Uri buildRinksUri(String parkId) {
             return CONTENT_URI.buildUpon().appendPath(parkId).appendPath(PATH_RINKS).build();
         }

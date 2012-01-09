@@ -24,11 +24,11 @@
 package ca.mudar.patinoires;
 
 import ca.mudar.patinoires.providers.RinksDatabase;
+import ca.mudar.patinoires.receivers.DetachableResultReceiver;
 import ca.mudar.patinoires.services.SyncService;
 import ca.mudar.patinoires.utils.ActivityHelper;
 import ca.mudar.patinoires.utils.ConnectionHelper;
 import ca.mudar.patinoires.utils.Const;
-import ca.mudar.patinoires.receivers.DetachableResultReceiver;
 import ca.mudar.patinoires.utils.EulaHelper;
 
 import android.content.Context;
@@ -46,10 +46,10 @@ import android.support.v4.view.Window;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class MainActivity extends LocationFragmentActivity {
+    protected static final String TAG = "MainActivity";
 
     private SyncStatusUpdaterFragment mSyncStatusUpdaterFragment;
     private static boolean hasLoadedData;
@@ -59,7 +59,6 @@ public class MainActivity extends LocationFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        requestWindowFeature(Window.FEATURE_PROGRESS);
 
         /**
          * SharedPreferences are used to verify determine if syncService is
@@ -88,7 +87,6 @@ public class MainActivity extends LocationFragmentActivity {
         setContentView(R.layout.activity_main);
 
         setProgressBarIndeterminateVisibility(Boolean.FALSE);
-        setProgressBarVisibility(false);
 
         /**
          * Android ICS has support for setHomeButtonEnabled() to disable tap on
@@ -196,35 +194,21 @@ public class MainActivity extends LocationFragmentActivity {
                 return;
             }
             activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
-//            activity.setProgressBarVisibility(true);
-
-//            final ProgressBar progressHorizontal = (ProgressBar) getSupportActivity().findViewById(
-//                    R.id.progress_horizontal);
-//            progressHorizontal.setVisibility(View.VISIBLE);
+            
+            PatinoiresApp appHelper = (PatinoiresApp) getSupportActivity().getApplicationContext();
 
             switch (resultCode) {
                 case SyncService.STATUS_RUNNING: {
                     activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
 
-//                    progressHorizontal.incrementProgressBy(resultData.getInt(
-//                            Const.KEY_BUNDLE_PROGRESS_INCREMENT, 0));
-                    /**
-                     * Title progress is in range 0..100
-                     */
-//                    getSupportActivity().setProgress(100 * progressHorizontal.getProgress());
-
                     break;
                 }
                 case SyncService.STATUS_FINISHED: {
                     activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
-//                    activity.setProgressBarVisibility(false);
-//                    progressHorizontal.setVisibility(View.INVISIBLE);
 
                     // TODO put this in an activity listener
-                    if (EulaHelper.hasAcceptedEula(getSupportActivity().getApplicationContext()))
-                    {
-                        Toast.makeText(activity, R.string.toast_sync_finished, Toast.LENGTH_SHORT)
-                                .show();
+                    if (EulaHelper.hasAcceptedEula(getSupportActivity().getApplicationContext())) {
+                        appHelper.showToastText(R.string.toast_sync_finished, Toast.LENGTH_SHORT);
                     }
                     finalizeLoadingData(getSupportActivity().getApplicationContext());
 
@@ -232,9 +216,7 @@ public class MainActivity extends LocationFragmentActivity {
                 }
                 case SyncService.STATUS_IGNORED: {
                     activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
-//                    activity.setProgressBarVisibility(false);
-//                    progressHorizontal.setVisibility(View.INVISIBLE);
-                    
+
                     break;
                 }
                 case SyncService.STATUS_ERROR: {
@@ -243,12 +225,10 @@ public class MainActivity extends LocationFragmentActivity {
                      * show Toast error message.
                      */
                     activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
-//                    activity.setProgressBarVisibility(false);
-//                    progressHorizontal.setVisibility(View.INVISIBLE);
 
                     final String errorText = getString(R.string.toast_sync_error,
                             resultData.getString(Intent.EXTRA_TEXT));
-                    Toast.makeText(activity, errorText, Toast.LENGTH_LONG).show();
+                    appHelper.showToastText(errorText, Toast.LENGTH_LONG);
                     break;
                 }
             }

@@ -36,12 +36,10 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 public class ActivityHelper {
-
     private static final String TAG = "ActivityHelper";
 
     protected Activity mActivity;
@@ -77,10 +75,7 @@ public class ActivityHelper {
         final Intent intent = new Intent(mActivity, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         mActivity.startActivity(intent);
-
-        if (!(mActivity instanceof MainActivity)) {
-            mActivity.overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
-        }
+        mActivity.overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
     }
 
     /**
@@ -94,6 +89,7 @@ public class ActivityHelper {
         final Intent intent = new Intent(mActivity.getApplicationContext(), MapActivity.class);
         intent.putExtra(Const.INTENT_EXTRA_GEO_LAT, (int) (lat * 1E6));
         intent.putExtra(Const.INTENT_EXTRA_GEO_LNG, (int) (lng * 1E6));
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         mActivity.startActivity(intent);
     }
 
@@ -106,6 +102,7 @@ public class ActivityHelper {
         }
 
         final Intent intent = new Intent(mActivity.getApplicationContext(), MapActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         mActivity.startActivity(intent);
     }
 
@@ -120,6 +117,7 @@ public class ActivityHelper {
         final Intent intent = new Intent(mActivity.getApplicationContext(),
                 RinkDetailsActivity.class);
         intent.putExtra(Const.INTENT_EXTRA_ID_RINK, id);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         mActivity.startActivity(intent);
     }
 
@@ -149,7 +147,6 @@ public class ActivityHelper {
      * @return boolean
      */
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.v(TAG, "onOptionsItemSelected");
         Intent intent = new Intent();
         switch (item.getItemId()) {
             case android.R.id.home:

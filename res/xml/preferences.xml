@@ -47,6 +47,10 @@
                 android:defaultValue="true"
                 android:key="prefs_show_closed"
                 android:title="@string/prefs_condition_closed" />
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="prefs_show_unknown"
+                android:title="@string/prefs_condition_unknown" />
         </PreferenceScreen>
 
         <ListPreference

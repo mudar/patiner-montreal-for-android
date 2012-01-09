@@ -28,7 +28,6 @@ import ca.mudar.patinoires.providers.RinksContract.BoroughsColumns;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
 import ca.mudar.patinoires.utils.ApiStringHelper;
-import ca.mudar.patinoires.utils.Const.DbValues;
 import ca.mudar.patinoires.utils.Lists;
 
 import org.json.JSONArray;
@@ -38,13 +37,10 @@ import org.json.JSONTokener;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
-import android.text.format.DateFormat;
 import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
-//import java.util.Random;
 
 public class RemoteConditionsUpdatesHandler extends JsonHandler {
     private static final String TAG = "RemoteConditionsUpdatesHandler";
@@ -56,9 +52,9 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
     @Override
     public ArrayList<ContentProviderOperation> parse(JSONTokener jsonTokener,
             ContentResolver resolver) throws JSONException, IOException {
-//        Random rand = new Random();
-
         final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
+
+        // Random rand = new Random();
 
         /**
          * Using 2 different builders for readability!
@@ -66,75 +62,64 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
         ContentProviderOperation.Builder builderBoroughs;
         ContentProviderOperation.Builder builderRinks;
 
-        boolean importResult = true;
-        CharSequence createdAt = DateFormat.format(DbValues.DATE_FORMAT, new Date());
-
         JSONArray boroughs = new JSONArray(jsonTokener);
         final int totalBoroughs = boroughs.length();
-        int totalRinks = 0;
 
         if (totalBoroughs == 0) {
             return batch;
         }
 
-        JSONObject borough;
-        JSONArray rinks;
         JSONObject rink;
+        JSONObject borough;
 
         for (int i = 0; i < totalBoroughs; i++) {
             /**
-             * Get Borough remarks and update_at
+             * Get Borough info
              */
             try {
-                borough = (JSONObject) boroughs.getJSONObject(i).get(RemoteTags.OBJECT_BOROUGH);
+                borough = (JSONObject) boroughs.getJSONObject(i);
             } catch (JSONException e) {
                 Log.d(TAG, e.toString());
-                importResult = false;
                 continue;
             }
-            // Log.i(TAG,"Borough n." + i + ", (_id = " + borough.optInt("id") +
-            // ") : "+ borough.optString("name"));
 
+            /**
+             * Get Borough key or create one if doesn't exist.
+             */
             builderBoroughs = ContentProviderOperation.newUpdate(Boroughs.CONTENT_URI);
-            builderBoroughs.withSelection(BoroughsColumns.BOROUGH_ID + "=?", new String[] {
-                    borough.optString(RemoteTags.BOROUGH_ID)
+
+            builderBoroughs.withSelection(BoroughsColumns.BOROUGH_NAME + "=?", new String[] {
+                    borough.optString(RemoteTags.BOROUGH_NAME)
             });
-            builderBoroughs.withValue(BoroughsColumns.BOROUGH_REMARKS,
-                    borough.optString(RemoteTags.BOROUGH_REMARKS));
             builderBoroughs.withValue(BoroughsColumns.BOROUGH_UPDATED_AT,
                     borough.optString(RemoteTags.BOROUGH_UPDATED_AT));
 
             batch.add(builderBoroughs.build());
 
             /**
-             * Get the borough's rinks
+             * Get rink info and clean name and description. English description
+             * is translated manually!
              */
-            try {
-                rinks = new JSONArray(borough.optString(RemoteTags.ARRAY_RINKS));
-            } catch (JSONException e) {
-                Log.d(TAG, e.toString());
-                importResult = false;
-                continue;
-            }
+            JSONArray rinks = (JSONArray) borough.get(RemoteTags.OBJECT_RINKS);
+            final int totalRinks = rinks.length();
 
-            totalRinks = rinks.length();
             for (int j = 0; j < totalRinks; j++) {
-                /**
-                 * Get Rink updates: cleared, flooded, resurfaced and condition
-                 * (0.Excellent to 3.Closed)
-                 */
                 try {
                     rink = (JSONObject) rinks.getJSONObject(j);
                 } catch (JSONException e) {
                     Log.d(TAG, e.toString());
-                    importResult = false;
                     continue;
                 }
 
+                /**
+                 * Get Rink info
+                 */
                 builderRinks = ContentProviderOperation.newUpdate(Rinks.CONTENT_URI);
+
                 builderRinks.withSelection(RinksColumns.RINK_ID + "=?", new String[] {
                         rink.optString(RemoteTags.RINK_ID)
                 });
+
                 builderRinks.withValue(RinksColumns.RINK_IS_CLEARED,
                         rink.optString(RemoteTags.RINK_IS_CLEARED)
                                 .equals(RemoteValues.BOOLEAN_TRUE));
@@ -142,17 +127,14 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
                         rink.optString(RemoteTags.RINK_IS_FLOODED)
                                 .equals(RemoteValues.BOOLEAN_TRUE));
                 builderRinks.withValue(RinksColumns.RINK_IS_RESURFACED,
-                        rink.optString(RemoteTags.RINK_IS_RESURFACED)
-                                .equals(RemoteValues.BOOLEAN_TRUE));
+                        rink.optString(RemoteTags.RINK_IS_RESURFACED).equals(
+                                RemoteValues.BOOLEAN_TRUE));
                 builderRinks.withValue(RinksColumns.RINK_CONDITION,
-                        ApiStringHelper.getConditionIndex(
-                                rink.optString(RemoteTags.RINK_IS_OPEN),
+                        ApiStringHelper.getConditionIndex(rink.optString(RemoteTags.RINK_IS_OPEN),
                                 rink.optString(RemoteTags.RINK_CONDITION)));
                 // int condition = rand.nextInt(4);
                 // builderRinks.withValue(RinksColumns.RINK_CONDITION,
                 // condition);
-
-                builderRinks.withValue(RinksColumns.RINK_CREATED_AT, createdAt);
 
                 batch.add(builderRinks.build());
             }
@@ -161,26 +143,32 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
         return batch;
     }
 
-    /** Remote columns */
+    /**
+     * Remote columns
+     */
     private static interface RemoteTags {
-        final String OBJECT_BOROUGH = "borough";
-        final String ARRAY_RINKS = "rinks";
+
+        final String OBJECT_RINKS = "patinoires";
+
+        final String BOROUGH_NAME = "nom_arr";
+        final String BOROUGH_UPDATED_AT = "date_maj";
 
         final String RINK_ID = "id";
-        final String RINK_IS_CLEARED = "cleared";
-        final String RINK_IS_FLOODED = "flooded";
-        final String RINK_IS_RESURFACED = "resurfaced";
-        final String RINK_IS_OPEN = "open";
+        final String RINK_IS_CLEARED = "deblaye";
+        final String RINK_IS_FLOODED = "arrose";
+        final String RINK_IS_RESURFACED = "resurface";
+        final String RINK_IS_OPEN = "ouvert";
         final String RINK_CONDITION = "condition";
-
-        final String BOROUGH_ID = "id";
-        final String BOROUGH_REMARKS = "remarks";
-        // Following field name may be confusing!
-        final String BOROUGH_UPDATED_AT = "posted_at";
     }
 
-    private static interface RemoteValues {
+    public static interface RemoteValues {
+
+        final String RINK_CONDITION_EXCELLENT = "excellente";
+        final String RINK_CONDITION_GOOD = "bonne";
+        final String RINK_CONDITION_BAD = "mauvaise";
+
         final String BOOLEAN_TRUE = "true";
-        // final String BOOLEAN_FALSE = "false";
+        final String BOOLEAN_FALSE = "false";
+        final String STRING_NULL = "null";
     }
 }

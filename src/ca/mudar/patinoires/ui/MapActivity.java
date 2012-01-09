@@ -33,7 +33,6 @@ import ca.mudar.patinoires.utils.Helper;
 
 import com.google.android.maps.GeoPoint;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
@@ -43,21 +42,16 @@ import android.support.v4.app.FragmentMapActivity;
 import android.support.v4.view.Menu;
 import android.support.v4.view.MenuItem;
 import android.view.MenuInflater;
-import android.view.View;
 
 public class MapActivity extends FragmentMapActivity implements OnMyLocationChangedListener {
     protected static final String TAG = "MapActivity";
 
-    // protected MenuItem btnActionbarToggleList;
-    private String postalCode;
-    private ProgressDialog pd;
     private PatinoiresApp mAppHelper;
     private GeoPoint initGeoPoint;
     private boolean isCenterOnMyLocation;
 
     @Override
     protected boolean isRouteDisplayed() {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -76,10 +70,8 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
 
         initGeoPoint = null;
 
-        Integer latitude = getIntent().getIntExtra(Const.INTENT_EXTRA_GEO_LAT,
-                Integer.MIN_VALUE);
-        Integer longitude = getIntent().getIntExtra(
-                Const.INTENT_EXTRA_GEO_LNG, Integer.MIN_VALUE);
+        Integer latitude = getIntent().getIntExtra(Const.INTENT_EXTRA_GEO_LAT, Integer.MIN_VALUE);
+        Integer longitude = getIntent().getIntExtra(Const.INTENT_EXTRA_GEO_LNG, Integer.MIN_VALUE);
 
         if (!latitude.equals(Integer.MIN_VALUE) && !longitude.equals(Integer.MIN_VALUE)) {
             initGeoPoint = new GeoPoint(latitude, longitude);
@@ -94,10 +86,8 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
     public void onNewIntent(Intent intent) {
         initGeoPoint = null;
 
-        Integer latitude = intent.getIntExtra(Const.INTENT_EXTRA_GEO_LAT,
-                Integer.MIN_VALUE);
-        Integer longitude = intent.getIntExtra(
-                Const.INTENT_EXTRA_GEO_LNG, Integer.MIN_VALUE);
+        Integer latitude = intent.getIntExtra(Const.INTENT_EXTRA_GEO_LAT, Integer.MIN_VALUE);
+        Integer longitude = intent.getIntExtra(Const.INTENT_EXTRA_GEO_LNG, Integer.MIN_VALUE);
 
         if (!latitude.equals(Integer.MIN_VALUE) && !longitude.equals(Integer.MIN_VALUE)) {
             initGeoPoint = new GeoPoint(latitude, longitude);
@@ -116,13 +106,9 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
             ConnectionHelper.showDialogNoConnection(this);
         }
 
-        View root = findViewById(R.id.map_root_landscape);
-        boolean isTablet = (root != null);
-
         if (initGeoPoint != null || isCenterOnMyLocation) {
             FragmentManager fm = getSupportFragmentManager();
-            MapFragment fragmentMap = (MapFragment)
-                    fm.findFragmentById(R.id.fragment_map);
+            MapFragment fragmentMap = (MapFragment) fm.findFragmentById(R.id.fragment_map);
             fragmentMap.setMapCenter(initGeoPoint);
         }
     }
@@ -166,6 +152,7 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
                 FragmentManager fm = getSupportFragmentManager();
                 MapFragment fragmentMap = (MapFragment) fm.findFragmentById(R.id.fragment_map);
                 GeoPoint geoPoint = Helper.locationToGeoPoint(location);
+
                 fragmentMap.setMapCenterZoomed(geoPoint);
             }
             return true;
@@ -192,6 +179,5 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
                 invalidateOptionsMenu();
             }
         });
-
     }
 }
