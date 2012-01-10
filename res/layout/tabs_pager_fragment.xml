@@ -46,10 +46,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:orientation="horizontal" />
-            <!-- android:background="@drawable/tab_off_background" -->
 
             <FrameLayout
-                
                 android:id="@android:id/tabcontent"
                 android:layout_width="0dp"
                 android:layout_height="0dp"

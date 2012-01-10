@@ -87,16 +87,18 @@ public class TabsPagerActivity extends FragmentActivity {
 
         mTabsAdapter.addTab(
                 mTabHost.newTabSpec(Const.TABS_TAG_SKATING).setIndicator(
-                        res.getString(R.string.tab_skating)), SkatingListFragment.class, null);
+                        buildIndicator(R.drawable.ic_tab_skating)),
+                SkatingListFragment.class, null);
         mTabsAdapter.addTab(
                 mTabHost.newTabSpec(Const.TABS_TAG_HOCKEY).setIndicator(
-                        res.getString(R.string.tab_hockey)), HockeyListFragment.class, null);
+                        buildIndicator(R.drawable.ic_tab_hockey)), HockeyListFragment.class, null);
         mTabsAdapter.addTab(
                 mTabHost.newTabSpec(Const.TABS_TAG_ALL).setIndicator(
-                        res.getString(R.string.tab_all)), AllListFragment.class, null);
+                        buildIndicator(R.drawable.ic_tab_all)), AllListFragment.class, null);
         mTabsAdapter.addTab(
                 mTabHost.newTabSpec(Const.TABS_TAG_FAVORITES).setIndicator(
-                        res.getString(R.string.tab_favorites)), FavoritesListFragment.class, null);
+                        buildIndicator(R.drawable.ic_tab_favorites)), FavoritesListFragment.class,
+                null);
 
         int mCurrentTab = getIntent().getIntExtra(Const.INTENT_EXTRA_TABS_CURRENT, -1);
         if (mCurrentTab != -1) {
@@ -113,12 +115,9 @@ public class TabsPagerActivity extends FragmentActivity {
         mSyncStatusUpdaterFragment = (SyncStatusUpdaterFragment)
                 fm.findFragmentByTag(SyncStatusUpdaterFragment.TAG);
         if (mSyncStatusUpdaterFragment == null) {
-            // Log.w(TAG, "mSyncStatusUpdaterFragment");
             mSyncStatusUpdaterFragment = new SyncStatusUpdaterFragment();
             fm.beginTransaction().add(mSyncStatusUpdaterFragment,
                     SyncStatusUpdaterFragment.TAG).commit();
-
-            // triggerRefresh();
         }
     }
 
