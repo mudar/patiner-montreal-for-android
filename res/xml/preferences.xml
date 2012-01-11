@@ -68,7 +68,6 @@
             android:key="prefs_units_system"
             android:title="@string/prefs_units_title" />
         <ListPreference
-            android:defaultValue="en"
             android:dialogTitle="@string/prefs_language_dialog_title"
             android:entries="@array/prefs_language_entries"
             android:entryValues="@array/prefs_language_values"

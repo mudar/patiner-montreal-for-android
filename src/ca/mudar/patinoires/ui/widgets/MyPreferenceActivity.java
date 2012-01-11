@@ -34,7 +34,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.DialogPreference;
+import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.widget.Toast;
 
@@ -47,9 +47,9 @@ public class MyPreferenceActivity extends PreferenceActivity implements
     protected SharedPreferences mSharedPrefs;
     protected PatinoiresApp mAppHelper;
 
-    DialogPreference tUnits;
-    DialogPreference tListSort;
-    DialogPreference tLanguage;
+    ListPreference tUnits;
+    ListPreference tListSort;
+    ListPreference tLanguage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +69,9 @@ public class MyPreferenceActivity extends PreferenceActivity implements
 
         mSharedPrefs = getSharedPreferences(Const.APP_PREFS_NAME, MODE_PRIVATE);
 
-        tUnits = (DialogPreference) findPreference(PrefsNames.UNITS_SYSTEM);
-        tListSort = (DialogPreference) findPreference(PrefsNames.LIST_SORT);
-        tLanguage = (DialogPreference) findPreference(PrefsNames.LANGUAGE);
+        tUnits = (ListPreference) findPreference(PrefsNames.UNITS_SYSTEM);
+        tListSort = (ListPreference) findPreference(PrefsNames.LIST_SORT);
+        tLanguage = (ListPreference) findPreference(PrefsNames.LANGUAGE);
     }
 
     @Override
@@ -99,6 +99,11 @@ public class MyPreferenceActivity extends PreferenceActivity implements
             lg = PrefsValues.LANG_EN;
         }
         tLanguage.setSummary(getSummaryByValue(mSharedPrefs.getString(PrefsNames.LANGUAGE, lg)));
+        /**
+         * This is required because language initially defaults to phone
+         * language.
+         */
+        tLanguage.setValue(lg);
 
         /**
          * Set up a listener whenever a key changes
@@ -179,7 +184,7 @@ public class MyPreferenceActivity extends PreferenceActivity implements
      */
     private void verifyConditionsError(SharedPreferences prefs, String key) {
         boolean hasEnabledCondition = false;
-        
+
         hasEnabledCondition = prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_EXCELLENT, false)
                 || hasEnabledCondition;
         hasEnabledCondition = prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_GOOD, false)
