@@ -33,8 +33,8 @@ import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
 import ca.mudar.patinoires.utils.ActivityHelper;
 import ca.mudar.patinoires.utils.Const;
-import ca.mudar.patinoires.utils.Helper;
 import ca.mudar.patinoires.utils.Const.DbValues;
+import ca.mudar.patinoires.utils.Helper;
 import ca.mudar.patinoires.utils.NotifyingAsyncQueryHandler;
 
 import android.content.ContentValues;
@@ -323,7 +323,7 @@ public class RinkDetailsFragment extends Fragment
         int condition = cursor.getInt(RinksQuery.RINK_CONDITION);
 
         ((ImageView) mRootView.findViewById(R.id.l_rink_kind_id))
-                .setImageResource(getImageResource(kindId, condition));
+                .setImageResource(Helper.getRinkImage(kindId, condition));
 
         ((TextView) mRootView.findViewById(R.id.l_rink_condition)).setText(String.format(
                 mResources.getString(R.string.rink_details_conditions),
@@ -479,45 +479,6 @@ public class RinkDetailsFragment extends Fragment
         }
 
         return rinkId;
-    }
-
-    private int getImageResource(int kindId, int condition) {
-        int imageResource = R.drawable.ic_rink_skating_0;
-
-        if (kindId == DbValues.KIND_PSE) {
-            switch (condition) {
-                case 0:
-                    imageResource = R.drawable.ic_rink_hockey_0;
-                    break;
-                case 1:
-                    imageResource = R.drawable.ic_rink_hockey_1;
-                    break;
-                case 2:
-                    imageResource = R.drawable.ic_rink_hockey_2;
-                    break;
-                default:
-                    imageResource = R.drawable.ic_rink_hockey_3;
-                    break;
-            }
-        }
-        else {
-            switch (condition) {
-                case 0:
-                    imageResource = R.drawable.ic_rink_skating_0;
-                    break;
-                case 1:
-                    imageResource = R.drawable.ic_rink_skating_1;
-                    break;
-                case 2:
-                    imageResource = R.drawable.ic_rink_skating_2;
-                    break;
-                default:
-                    imageResource = R.drawable.ic_rink_skating_3;
-                    break;
-            }
-        }
-
-        return imageResource;
     }
 
     private String getConditionText(int condition) {

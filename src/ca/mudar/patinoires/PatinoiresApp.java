@@ -97,8 +97,8 @@ public class PatinoiresApp extends Application {
                 PrefsNames.CONDITIONS_SHOW_EXCELLENT, true);
         conditionsFilter[Const.INDEX_PREFS_GOOD] = prefs.getBoolean(
                 PrefsNames.CONDITIONS_SHOW_GOOD, true);
-        conditionsFilter[Const.INDEX_PREFS_BAD] = prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_BAD,
-                true);
+        conditionsFilter[Const.INDEX_PREFS_BAD] = prefs.getBoolean(
+                PrefsNames.CONDITIONS_SHOW_BAD, true);
         conditionsFilter[Const.INDEX_PREFS_CLOSED] = prefs.getBoolean(
                 PrefsNames.CONDITIONS_SHOW_CLOSED, true);
         conditionsFilter[Const.INDEX_PREFS_UNKNOWN] = prefs.getBoolean(

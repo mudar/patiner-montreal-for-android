@@ -23,17 +23,24 @@
 -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/ListItem"
     android:id="@+id/rink_list_item"
+    style="@style/ListItem"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:layout_height="?android:attr/listPreferredItemHeight" >
+
+    <ImageView
+        android:id="@+id/l_rink_kind_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/ic_rink_skating_4" />
 
     <TextView
         android:id="@+id/rink_name"
         style="@style/ListItemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/l_rink_kind_id"
         android:ellipsize="end"
         android:lines="1"
         android:scrollHorizontally="true" />
@@ -43,8 +50,9 @@
         style="@style/ListItemSummary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_below="@+id/rink_name"
+        android:layout_toLeftOf="@+id/rink_distance"
+        android:layout_toRightOf="@+id/l_rink_kind_id"
         android:ellipsize="end"
         android:lines="1"
         android:scrollHorizontally="true" />
@@ -55,7 +63,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/rink_name"
-        android:layout_toRightOf="@+id/rink_address" />
+        android:layout_below="@+id/rink_name" />
 
 </RelativeLayout>

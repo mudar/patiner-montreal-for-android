@@ -37,6 +37,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AlphabetIndexer;
+import android.widget.ImageView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
@@ -66,9 +67,14 @@ public class RinksCursorAdapter extends SimpleCursorAdapter implements SectionIn
         super.bindView(view, context, cursor);
 
         int distance = cursor.getInt(RinksQuery.PARK_GEO_DISTANCE);
+        int kindId = cursor.getInt(RinksQuery.RINK_KIND_ID);
+        int condition = cursor.getInt(RinksQuery.RINK_CONDITION);
         String sDistance = (distance > 0 ? Helper.getDistanceDisplay(context, distance) : "");
 
         ((TextView) view.findViewById(R.id.rink_distance)).setText(sDistance);
+        
+        int imageResource = Helper.getRinkImage(kindId, condition);
+        ( (ImageView) view.findViewById( R.id.l_rink_kind_id ) ).setImageDrawable( context.getResources().getDrawable(imageResource) );
     }
 
     @Override
