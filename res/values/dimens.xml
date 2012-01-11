@@ -40,5 +40,6 @@
     <!-- <dimen name="tab_side_padding">2dp</dimen> -->
     <dimen name="tab_margin">2dp</dimen>
     <dimen name="tab_padding">2dp</dimen>
+    <dimen name="list_padding">6dp</dimen>
 
 </resources>

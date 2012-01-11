@@ -44,7 +44,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_horizontal</item>
-        <item name="android:drawablePadding">@dimen/paddingSmall</item>
+        <!-- <item name="android:drawablePadding">@dimen/paddingSmall</item> -->
         <item name="android:textSize">@dimen/textSizeLarge</item>
         <item name="android:textColor">@color/dashboard_text</item>
         <item name="android:background">@null</item>
@@ -80,6 +80,10 @@
     <style name="ListItemDistance" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">@color/body_text_2</item>
         <item name="android:gravity">right</item>
+    </style>
+
+    <style name="RinkDetailsTitle" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/body_text_1</item>
     </style>
 
 </resources>
