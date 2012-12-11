@@ -4,9 +4,11 @@ This project has two external library dependencies:
 	(pre-honeycomb).
 	
 		http://actionbarsherlock.com/
+		Version 3.4.2
 
 2. `Android MapView Balloons` to display labels on map
 
        https://github.com/jgilfelt/android-mapviewballoons
+       Version 1.3
 
    
