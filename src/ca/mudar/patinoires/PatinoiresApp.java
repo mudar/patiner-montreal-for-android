@@ -35,7 +35,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.location.Location;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.util.Locale;
@@ -153,12 +152,12 @@ public class PatinoiresApp extends Application {
     }
 
     public void setLocation(Location location) {
-        Log.v(TAG, "setLocation");
+//        Log.v(TAG, "setLocation");
         if (location == null) {
             return;
         }
         else {
-            Log.v(TAG, "new location = " + location.getLatitude() + "," + location.getLongitude());
+//            Log.v(TAG, "new location = " + location.getLatitude() + "," + location.getLongitude());
             if ((mLocation == null) || (this.mLocation.distanceTo(location) > Const.MAX_DISTANCE)) {
                 Intent intent = new Intent(this.getApplicationContext(),
                         DistanceUpdateService.class);

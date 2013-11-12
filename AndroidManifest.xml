@@ -30,7 +30,7 @@
 
     <uses-sdk
         android:minSdkVersion="7"
-        android:targetSdkVersion="14" />
+        android:targetSdkVersion="17" />
 
     <!-- <supports-screens android:anyDensity="true" /> -->
 
@@ -135,7 +135,7 @@
         <receiver android:name=".receivers.PassiveLocationChangedReceiver" />
         <receiver
             android:name=".receivers.ConnectivityChangedReceiver"
-            enabled="false" >
+            android:enabled="false" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>

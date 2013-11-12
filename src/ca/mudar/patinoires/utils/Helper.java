@@ -93,8 +93,50 @@ public class Helper {
         return imageResource;
     }
 
+    public static int getConditionBackground(int condition) {
+        int bgResource;
+        switch (condition) {
+            case DbValues.CONDITION_EXCELLENT:
+                bgResource = R.drawable.background_condition_excellent;
+                break;
+            case DbValues.CONDITION_GOOD:
+                bgResource = R.drawable.background_condition_good;
+                break;
+            case DbValues.CONDITION_BAD:
+                bgResource = R.drawable.background_condition_bad;
+                break;
+            case DbValues.CONDITION_CLOSED:
+                bgResource = R.drawable.background_condition_closed;
+                break;
+            default:
+                bgResource = R.drawable.background_condition_unknown;
+                break;
+        }
+
+        return bgResource;
+    }
+
+    public static int getConditionTextColor(int condition) {
+        int colorResource;
+        switch (condition) {
+            case DbValues.CONDITION_EXCELLENT:
+            case DbValues.CONDITION_GOOD:
+                colorResource = R.color.black;
+                break;
+            case DbValues.CONDITION_BAD:
+            case DbValues.CONDITION_CLOSED:
+                colorResource = R.color.white;
+                break;
+            default:
+                colorResource = R.color.white;
+                break;
+        }
+
+        return colorResource;
+    }
+
     public static String getSqliteConditionsFilter(boolean[] conditionsFilter) {
-        String filter = RinksColumns.RINK_IS_FAVORITE + " = 1 " ;
+        String filter = RinksColumns.RINK_IS_FAVORITE + " = 1 ";
 
         int totalEnabled = 0;
         if (conditionsFilter[Const.INDEX_PREFS_EXCELLENT]) {
@@ -291,34 +333,4 @@ public class Helper {
 
         return location;
     }
-
-    // public static void debugFragment(Fragment fragment) {
-    // if (fragment == null) {
-    // Log.d(TAG, "Fragment is NULL");
-    // return;
-    // }
-    //
-    // Log.d(TAG, "Fragment name = " + fragment.toString());
-    // if (fragment.isAdded()) {
-    // Log.d(TAG, "isAdded");
-    // }
-    // if (fragment.isDetached()) {
-    // Log.d(TAG, "isDetached");
-    // }
-    // if (fragment.isHidden()) {
-    // Log.d(TAG, "isHidden");
-    // }
-    // if (fragment.isInLayout()) {
-    // Log.d(TAG, "isInLayout");
-    // }
-    // if (fragment.isRemoving()) {
-    // Log.d(TAG, "isRemoving");
-    // }
-    // if (fragment.isResumed()) {
-    // Log.d(TAG, "isResumed");
-    // }
-    // if (fragment.isVisible()) {
-    // Log.d(TAG, "isVisible");
-    // }
-    // }
 }

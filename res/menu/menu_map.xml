@@ -23,11 +23,13 @@
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    <!-- TODO enable search -->
     <item
         android:id="@+id/menu_search"
         android:icon="@drawable/ic_actionbar_search"
         android:showAsAction="always"
-        android:title="@string/menu_search"/>
+        android:title="@string/menu_search"
+        android:visible="false"/>
     <item
         android:id="@+id/menu_map_mylocation"
         android:icon="@drawable/ic_menu_mylocation"

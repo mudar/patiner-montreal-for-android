@@ -82,7 +82,7 @@ public class ActivityHelper {
      * Display the Map, centered on the given coordinates.
      */
     public final void goMap(double lat, double lng) {
-        if (mActivity instanceof MapActivity) {
+        if (mActivity instanceof ca.mudar.patinoires.ui.MapActivity) {
             return;
         }
 
@@ -97,7 +97,7 @@ public class ActivityHelper {
      * Display the Map. Center will be user location or city center.
      */
     public final void goMap() {
-        if (mActivity instanceof MapActivity) {
+        if (mActivity instanceof ca.mudar.patinoires.ui.MapActivity) {
             return;
         }
 

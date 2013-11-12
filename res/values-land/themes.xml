@@ -27,7 +27,7 @@
     <style name="Theme" parent="@style/Theme.Sherlock" />
 
     <style name="Theme.Patinoires" parent="@style/Theme.Sherlock">
-        <item name="android:windowBackground">@drawable/background_landscape</item>
+        <item name="android:windowBackground">@drawable/background_portrait</item>
         <item name="selectableItemBackground">@drawable/actionbar_btn_selectable</item>
         <item name="abBackground">@drawable/background_actionbar</item>
         <item name="abDisplayOptions">showHome|useLogo</item>

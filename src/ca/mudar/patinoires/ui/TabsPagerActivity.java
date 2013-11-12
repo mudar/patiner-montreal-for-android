@@ -83,8 +83,6 @@ public class TabsPagerActivity extends FragmentActivity {
 
         mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
 
-        Resources res = getResources();
-
         mTabsAdapter.addTab(
                 mTabHost.newTabSpec(Const.TABS_TAG_SKATING).setIndicator(
                         buildIndicator(R.drawable.ic_tab_skating)),

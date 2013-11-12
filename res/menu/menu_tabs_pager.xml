@@ -34,8 +34,9 @@
         android:id="@+id/menu_map"
         android:icon="@android:drawable/ic_menu_compass"
         android:title="@string/menu_view_map"/>
-
+    <!-- TODO enable search -->
     <item
+        android:visible="false"
         android:id="@+id/menu_search"
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/menu_search"/>

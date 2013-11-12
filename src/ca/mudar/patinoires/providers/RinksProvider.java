@@ -389,7 +389,8 @@ public class RinksProvider extends ContentProvider {
      */
     private interface Qualified {
         String RINKS_RINK_ID = Tables.RINKS + "." + Rinks.RINK_ID;
-        String FAVORITE_RINK_ID = Tables.FAVORITES + "." + Favorites.FAVORITE_RINK_ID;
+        // String FAVORITE_RINK_ID = Tables.FAVORITES + "." +
+        // Favorites.FAVORITE_RINK_ID;
         // String FAVORITE_ID = Tables.FAVORITES + "." + BaseColumns._ID;
     }
 }

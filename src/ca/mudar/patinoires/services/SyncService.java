@@ -31,7 +31,6 @@ import ca.mudar.patinoires.io.RemoteConditionsUpdatesHandler;
 import ca.mudar.patinoires.io.RemoteExecutor;
 import ca.mudar.patinoires.io.RemoteRinksHandler;
 import ca.mudar.patinoires.providers.RinksContract;
-import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.utils.Const;
 
 import org.apache.http.Header;
@@ -133,7 +132,7 @@ public class SyncService extends IntentService {
              * Five Assets files to load, so progress goes by 20%.
              */
             Bundle bundle = new Bundle();
-            bundle.putInt(Const.KEY_BUNDLE_PROGRESS_INCREMENT, 20);
+//            bundle.putInt(Const.KEY_BUNDLE_PROGRESS_INCREMENT, 20);
 
             // Parse values from local cache first, since SecurityServices copy
             // or network might be down.
@@ -144,7 +143,8 @@ public class SyncService extends IntentService {
             // mLocalExecutor.execute(context, KmlLocalAssets.FIRE_HALLS,
             // new RemotePlacemarksHandler(FireHalls.CONTENT_URI, true));
 
-            Log.v(TAG, "Local sync duration: " + (System.currentTimeMillis() - startLocal) + " ms");
+            // Log.v(TAG, "Local sync duration: " + (System.currentTimeMillis()
+            // - startLocal) + " ms");
 
             // TODO: update data from remote source
             // Always hit remote SecurityServices for any updates

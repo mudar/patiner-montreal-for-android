@@ -33,7 +33,7 @@
     <string name="app_name_details">Patiner Montréal Rink</string>
     <string name="app_name_search">Patiner Montréal Search</string>
     <string name="app_name_preferences">Patiner Montréal Preferences</string>
-    <string name="app_name_manifest">Patiner Montreal</string>
+    <string name="app_name_manifest">Patiner Montréal</string>
     <string name="menu_about">About</string>
     <string name="menu_preferences">Settings</string>
     <string name="menu_refresh">Refresh</string>
@@ -62,13 +62,6 @@
     <string name="tab_all">All</string>
     <string name="dialog_about_title">About Patiner Montréal</string>
     <string name="logo_open_data">@drawable/logo_open_data_en</string>
-    <string name="dialog_about_intro">Patiner Montréal for Android is an open source
-		project to promote Open Data in Montréal. The City publishes PDF files
-		with daily information on the conditions and locations of outdoor
-		rinks. Patiner Montréal, with the help of an other Montréal Ouvert
-		project, scrapes the information to bring it to your phone. Enjoy the
-		Winter!</string>
-    <string name="dialog_about_credits">Android app developed by <a href="http://patinoires.mudar.ca/">Mudar Noufal</a>. Source code is released under the GPLv3 license from the Free Software Foundation.\nMany thanks to <a href="http://www.slashpoundbang.com/">James McKinney</a> (open data API), Jonathan Brun &amp; Daniel Mireault.</string>
     <string name="dialog_links_title">Useful links</string>
     <string name="dialog_links_patiner_mtl"><a href="http://www.patinermontreal.ca/">patinermontreal.ca</a></string>
     <string name="dialog_links_conditions_pdf"><a href="http://ville.montreal.qc.ca/portal/page?_pageid=5977,41729602&amp;_dad=portal&amp;_schema=PORTAL">Conditions at winter activity sites</a></string>
@@ -102,27 +95,12 @@
     <string name="prefs_category_conditions">Rink Conditions</string>
     <string name="prefs_condition_title">Conditions</string>
     <string name="prefs_condition_summary">Display or hide rinks based on conditions, in lists and map</string>
-    <string name="prefs_condition_dialog_title">Rink Condition</string>
+    <!-- <string name="prefs_condition_dialog_title">Rink Condition</string> -->
     <string name="prefs_condition_excellent">Excellent</string>
     <string name="prefs_condition_good">Good</string>
     <string name="prefs_condition_bad">Bad</string>
     <string name="prefs_condition_closed">Closed</string>
     <string name="prefs_condition_unknown">Unknown</string>
-    <!-- <string name="prefs_sort_title">Sort Order</string> -->
-    <!-- <string name="prefs_sort_summary">Set the rinks list order</string> -->
-    <!-- <string name="prefs_sort_dialog_title">Sort by</string> -->
-    <!-- <string name="prefs_sort_distance">Distance</string> -->
-    <!-- <string name="prefs_sort_rink">Rink</string> -->
-    <!-- <string name="prefs_sort_park">Park</string> -->
-    <!-- <string name="prefs_sort_borough">Borough</string> -->
-    <!-- <string name="prefs_language_title">Language</string> -->
-    <!-- <string name="prefs_language_summary">Change the interface language</string> -->
-    <!-- <string name="prefs_language_dialog_title">Set language</string> -->
-    <!-- <string name="prefs_language_french">Français</string> -->
-    <!-- <string name="prefs_language_english">English</string> -->
-    <!-- <string name="prefs_category_credits">Credits</string> -->
-    <!-- <string name="prefs_credits_about">About</string> -->
-    <!-- <string name="prefs_credits_links">Useful links</string> -->
     <string name="map_context_park_prefix">Parc </string>
     <!-- NEW -->
     <string name="park_distance_iso">%.1f km</string>
@@ -170,5 +148,19 @@
     <string name="prefs_follow_location_summary">Experimental: Background location updates. Useful if on the move.</string>
     <string name="menu_gmaps_directions">Directions</string>
     <string name="dialog_title_maps_chooser">Get STM itinerary using</string>
+    <string name="accessibility_ic_close">Close</string>
+    <string name="accessibility_ic_rink">Rink icon</string>
+    <string name="accessibility_ic_is_cleared">Cleared</string>
+    <string name="accessibility_ic_is_flooded">Flooded</string>
+    <string name="accessibility_ic_is_resurfaced">Resurfaced</string>
+    <string name="accessibility_ic_dial">Dial phone number</string>
+    <string name="accessibility_ic_tab">Section icon</string>
+    <string name="about_contents_slogan">Enjoy the Winter!</string>
+    <string name="about_contents_intro_1">Patiner Montréal provides you with daily updated information about conditions and services of Montréal\'s outdoor rinks.</string>
+    <string name="about_contents_intro_2">Patiner Montréal for Android is an open source project to promote Open Data in Montréal. With the help of an other Montréal Ouvert project, the app retrieves information published by the city to bring it to your phone.</string>
+    <string name="about_contents_credits_1">Android app developed by <a href="http://www.mudar.ca/">Mudar Noufal</a>. Source code is released under the GPLv3 license from the Free Software Foundation.</string>
+    <string name="about_contents_credits_2">Art Direction and Graphic Design by <a href="http://www.nofolio.com/">Noémie Darveau</a>.</string>
+    <string name="about_contents_credits_3">Project done in collaboration with <a href="http://montrealouvert.net/donnees-ouvertes-questions-frequemment-demandees/?lang=en">Montréal ouvert</a>. Many thanks to <a href="http://www.slashpoundbang.com/">James McKinney</a> (open data API), Jonathan Brun &amp; Daniel Mireault.</string>
+    <string name="about_contents_open_data">This app is powered by The City of Montréal Open Data <a href="http://donnees.ville.montreal.qc.ca/">Portal</a>, in compliance with its Open Data <a href="http://donnees.ville.montreal.qc.ca/licence-texte-complet">license</a>. Additional source: City of Dorval Leisure and culture <a href="http://www.ville.dorval.qc.ca/loisirs/en/default.asp?contentID=807">Portal</a>.</string>
 
 </resources>

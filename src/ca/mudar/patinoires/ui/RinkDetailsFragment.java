@@ -34,6 +34,7 @@ import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
 import ca.mudar.patinoires.utils.ActivityHelper;
 import ca.mudar.patinoires.utils.Const;
 import ca.mudar.patinoires.utils.Const.DbValues;
+import ca.mudar.patinoires.utils.Const.PrefsValues;
 import ca.mudar.patinoires.utils.Helper;
 import ca.mudar.patinoires.utils.NotifyingAsyncQueryHandler;
 
@@ -92,7 +93,7 @@ public class RinkDetailsFragment extends Fragment
         setHasOptionsMenu(true);
 
         mActivityHelper = ActivityHelper.createInstance(getActivity());
-        
+
         mAppHelper = ((PatinoiresApp) getActivity().getApplicationContext());
         mResources = getResources();
     }
@@ -240,7 +241,7 @@ public class RinkDetailsFragment extends Fragment
         int visibility;
 
         mRinkName = cursor.getString(RinksQuery.RINK_NAME);
-        String desc = cursor.getString(lang.equals("fr") ? RinksQuery.RINK_DESC_FR
+        String desc = cursor.getString(lang.equals(PrefsValues.LANG_FR) ? RinksQuery.RINK_DESC_FR
                 : RinksQuery.RINK_DESC_EN);
 
         mIsFavorite = cursor.getInt(RinksQuery.RINK_IS_FAVORITE);
@@ -325,10 +326,17 @@ public class RinkDetailsFragment extends Fragment
         ((ImageView) mRootView.findViewById(R.id.l_rink_kind_id))
                 .setImageResource(Helper.getRinkImage(kindId, condition));
 
-        ((TextView) mRootView.findViewById(R.id.l_rink_condition)).setText(String.format(
+        /**
+         * Display condition on a colored background.
+         */
+        TextView vCondition = (TextView) mRootView.findViewById(R.id.l_rink_condition);
+        vCondition.setText(String.format(
                 mResources.getString(R.string.rink_details_conditions),
                 getConditionText(condition)
                 ));
+
+        vCondition.setBackgroundDrawable(mResources.getDrawable(Helper.getConditionBackground(condition)));
+        vCondition.setTextColor(mResources.getColor(Helper.getConditionTextColor(condition)));
 
         int visibility = View.GONE;
         int visibilitySurface = View.GONE;

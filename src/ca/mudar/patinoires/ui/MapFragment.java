@@ -32,6 +32,7 @@ import ca.mudar.patinoires.ui.widgets.MyItemizedOverlay;
 import ca.mudar.patinoires.ui.widgets.MyOverlayItem;
 import ca.mudar.patinoires.utils.ActivityHelper;
 import ca.mudar.patinoires.utils.Const;
+import ca.mudar.patinoires.utils.Const.PrefsValues;
 import ca.mudar.patinoires.utils.Helper;
 
 import com.google.android.maps.GeoPoint;
@@ -269,18 +270,6 @@ public class MapFragment extends Fragment {
     /**
      * The query selected columns
      */
-    static final String[] MAP_MARKER_PROJECTION = new String[] {
-            BaseColumns._ID,
-            ParksColumns.PARK_ID,
-            ParksColumns.PARK_NAME,
-            ParksColumns.PARK_ADDRESS,
-            ParksColumns.PARK_GEO_LAT,
-            ParksColumns.PARK_GEO_LNG,
-            ParksColumns.PARK_TOTAL_RINKS,
-            RinksColumns.RINK_DESC_FR,
-            RinksColumns.RINK_DESC_EN,
-            RinksColumns.RINK_IS_FAVORITE
-    };
 
     /**
      * Get the list of Placemarks from the database and return them as array to
@@ -298,21 +287,11 @@ public class MapFragment extends Fragment {
         String filter = Helper.getSqliteConditionsFilter(mAppHelper.getConditionsFilter());
 
         Cursor cur = getActivity().getApplicationContext().getContentResolver()
-                .query(Parks.CONTENT_URI, MAP_MARKER_PROJECTION, filter, null, null);
+                .query(Parks.CONTENT_URI, RinksQuery.MAP_MARKER_PROJECTION, filter, null, null);
 
         if (cur.moveToFirst()) {
 
             // TODO: put this in a query Interface
-            final int columnId = 0x0;
-            final int columnParkId = 0x1;
-            final int columnName = 0x2;
-            final int columnAddress = 0x3;
-            final int columnGeoLat = 0x4;
-            final int columnGeoLng = 0x5;
-            final int columnRinksTotal = 0x6;
-            final int columnDescFr = 0x7;
-            final int columnDescEn = 0x8;
-            final int columnRinkIsFavorite = 0x9;
 
             String prefixParcName = getResources().getString(R.string.rink_details_park_name);
 
@@ -321,21 +300,21 @@ public class MapFragment extends Fragment {
                 /**
                  * Display the name of the rink or the total number of rinks.
                  */
-                int nbRinks = cur.getInt(columnRinksTotal);
+                int nbRinks = cur.getInt(RinksQuery.columnRinksTotal);
                 if (nbRinks > 1) {
                     extra = String.format(
                             getResources().getString(R.string.park_total_rinks_plural),
                             nbRinks);
                 }
                 else {
-                    extra = cur.getString(mAppHelper.getLanguage().equals("fr") ?
-                            columnDescFr : columnDescEn);
+                    extra = cur.getString(mAppHelper.getLanguage().equals(PrefsValues.LANG_FR) ?
+                            RinksQuery.columnDescFr : RinksQuery.columnDescEn);
                 }
 
-                mMapMarker = new MapMarker(cur.getString(columnParkId), String.format(
-                        cur.getString(columnName), prefixParcName),
-                        cur.getString(columnAddress), cur.getDouble(columnGeoLat),
-                        cur.getDouble(columnGeoLng), extra);
+                mMapMarker = new MapMarker(cur.getString(RinksQuery.columnParkId), String.format(
+                        cur.getString(RinksQuery.columnName), prefixParcName),
+                        cur.getString(RinksQuery.columnAddress), cur.getDouble(RinksQuery.columnGeoLat),
+                        cur.getDouble(RinksQuery.columnGeoLng), extra);
                 alLocations.add(mMapMarker);
 
             } while (cur.moveToNext());
@@ -388,6 +367,34 @@ public class MapFragment extends Fragment {
     public void setMapCenterZoomed(GeoPoint mapCenter) {
         mMapController.setZoom(ZOOM_NEAR);
         setMapCenter(mapCenter);
+    }
+
+    private static interface RinksQuery {
+        // int _TOKEN = 0x10;
+
+        final String[] MAP_MARKER_PROJECTION = new String[] {
+                BaseColumns._ID,
+                ParksColumns.PARK_ID,
+                ParksColumns.PARK_NAME,
+                ParksColumns.PARK_ADDRESS,
+                ParksColumns.PARK_GEO_LAT,
+                ParksColumns.PARK_GEO_LNG,
+                ParksColumns.PARK_TOTAL_RINKS,
+                RinksColumns.RINK_DESC_FR,
+                RinksColumns.RINK_DESC_EN,
+                RinksColumns.RINK_IS_FAVORITE
+        };
+
+        // final int columnId = 0x0;
+        final int columnParkId = 0x1;
+        final int columnName = 0x2;
+        final int columnAddress = 0x3;
+        final int columnGeoLat = 0x4;
+        final int columnGeoLng = 0x5;
+        final int columnRinksTotal = 0x6;
+        final int columnDescFr = 0x7;
+        final int columnDescEn = 0x8;
+        // final int columnRinkIsFavorite = 0x9;
     }
 
 }

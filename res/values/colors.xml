@@ -24,28 +24,42 @@
 
 <resources>
 
-    <color name="actionbar_text">#eeffffff</color>
+    <!-- <color name="actionbar_text">#eeffffff</color> -->
     <color name="actionbar_background_1">#be1a3a61</color>
     <color name="actionbar_background_2">#be00152e</color>
     <color name="actionbar_focused">#1a3a61</color>
     <color name="actionbar_pressed">#00152e</color>
     <color name="body_text_1">#ff29466b</color>
     <color name="body_text_2">#9929466b</color>
-    <color name="body_text_disabled">#6629466b</color>
+    <!-- <color name="body_text_disabled">#6629466b</color> -->
     <color name="dashboard_text_default">#ff4e667a</color>
     <color name="dashboard_text_focused">#bb4e667a</color>
     <color name="dashboard_text_pressed">#994e667a</color>
     <color name="hyperlink">#c029466b</color>
     <color name="background_1">#40ffffff</color>
     <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
     <color name="listview_color_1">#a4c3de</color>
     <color name="listview_color_2">#6785a5</color>
     <color name="listview_color_3">#29466b</color>
     <color name="listview_colorhint">#00000000</color>
-    <color name="separator_map_list">#e5e5e5</color>
-    <color name="separator_about">#606060</color>
+    <!-- <color name="separator_map_list">#e5e5e5</color> -->
+    <!-- <color name="separator_about">#606060</color> -->
     <color name="progressbar_background">#aaaaaa</color>
     <color name="progressbar_primary">#ffaa00</color>
     <color name="progressbar_secondary">#ff8000</color>
+    <color name="conditions_background_excellent_2">#ff20bd01</color>
+    <color name="conditions_background_good_2">#ffffcc00</color>
+    <color name="conditions_background_bad_2">#ffe20101</color>
+    <color name="conditions_background_closed_2">#ff58595b</color>
+    <color name="conditions_background_excellent_1">#a034d115</color>
+    <color name="conditions_background_good_1">#a0ffe014</color>
+    <color name="conditions_background_bad_1">#a0f61515</color>
+    <color name="conditions_background_closed_1">#a06c6d6f</color>
+    <!-- <color name="conditions_background_excellent_1">#c034d115</color> -->
+    <!-- <color name="conditions_background_good_1">#c0ffe014</color> -->
+    <!-- <color name="conditions_background_bad_1">#c0f61515</color> -->
+    <!-- <color name="conditions_background_closed_1">#c06c6d6f</color> -->
+    <color name="conditions_background_unknown">#20000000</color>
 
 </resources>

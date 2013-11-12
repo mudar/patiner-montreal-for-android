@@ -39,7 +39,7 @@ public class RinksDatabase extends SQLiteOpenHelper {
     private static final String TAG = "RinksDatabase";
 
     private static final String DATABASE_NAME = "patinoires_mtl";
-    private static final int DATABASE_VERSION = 35;
+    private static final int DATABASE_VERSION = 36;
 
     public static interface Tables {
         final String BOROUGHS = "boroughs";
@@ -89,8 +89,8 @@ public class RinksDatabase extends SQLiteOpenHelper {
                 + ParksColumns.PARK_ID + " TEXT NOT NULL , "
                 + ParksColumns.PARK_BOROUGH_ID + " TEXT NOT NULL , "
                 + ParksColumns.PARK_NAME + " TEXT NOT NULL DEFAULT '' COLLATE UNICODE, "
-                + ParksColumns.PARK_GEO_LAT + " TEXT NULL , "
                 + ParksColumns.PARK_GEO_LNG + " TEXT NULL , "
+                + ParksColumns.PARK_GEO_LAT + " TEXT NULL , "
                 + ParksColumns.PARK_GEO_DISTANCE + " INTEGER DEFAULT '0' , "
                 + ParksColumns.PARK_ADDRESS + " TEXT NULL , "
                 + ParksColumns.PARK_PHONE + " TEXT NULL , "

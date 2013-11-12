@@ -106,13 +106,14 @@ public class AboutActivity extends FragmentActivity {
              * Handle web links.
              */
             MovementMethod method = LinkMovementMethod.getInstance();
-            ((TextView) root.findViewById(R.id.dialog_about_credits))
+            ((TextView) root.findViewById(R.id.about_contents_credits_1))
                     .setMovementMethod(method);
-            // ((TextView) root.findViewById(R.id.about_links_contents_credits))
-            // .setMovementMethod(method);
-            // ((TextView)
-            // root.findViewById(R.id.about_links_contents_open_data))
-            // .setMovementMethod(method);
+            ((TextView) root.findViewById(R.id.about_contents_credits_2))
+                    .setMovementMethod(method);
+            ((TextView) root.findViewById(R.id.about_contents_credits_3))
+            .setMovementMethod(method);
+            ((TextView) root.findViewById(R.id.about_contents_open_data))
+                    .setMovementMethod(method);
 
             return root;
         }

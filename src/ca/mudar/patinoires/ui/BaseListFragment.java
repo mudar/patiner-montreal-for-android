@@ -124,7 +124,7 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
 
         setListAdapter(null);
 
-        final String RINK_DESC = (mAppHelper.getLanguage().equals("fr") ? RinksColumns.RINK_DESC_FR
+        final String RINK_DESC = (mAppHelper.getLanguage().equals(PrefsValues.LANG_FR) ? RinksColumns.RINK_DESC_FR
                 : RinksColumns.RINK_DESC_EN);
 
         mAdapter = new RinksCursorAdapter(getActivity(),

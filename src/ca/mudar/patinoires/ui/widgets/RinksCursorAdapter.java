@@ -24,16 +24,12 @@
 package ca.mudar.patinoires.ui.widgets;
 
 import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
-import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
 import ca.mudar.patinoires.ui.BaseListFragment.RinksQuery;
 import ca.mudar.patinoires.utils.Helper;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.text.InputFilter.LengthFilter;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AlphabetIndexer;
@@ -72,9 +68,10 @@ public class RinksCursorAdapter extends SimpleCursorAdapter implements SectionIn
         String sDistance = (distance > 0 ? Helper.getDistanceDisplay(context, distance) : "");
 
         ((TextView) view.findViewById(R.id.rink_distance)).setText(sDistance);
-        
+
         int imageResource = Helper.getRinkImage(kindId, condition);
-        ( (ImageView) view.findViewById( R.id.l_rink_kind_id ) ).setImageDrawable( context.getResources().getDrawable(imageResource) );
+        ((ImageView) view.findViewById(R.id.l_rink_kind_id)).setImageDrawable(context
+                .getResources().getDrawable(imageResource));
     }
 
     @Override

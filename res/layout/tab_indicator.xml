@@ -16,6 +16,7 @@
 -->
 
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:contentDescription="@string/accessibility_ic_tab"
     android:id="@+id/tab_label"
     android:layout_width="0dp"
     android:layout_height="@dimen/tab_height"

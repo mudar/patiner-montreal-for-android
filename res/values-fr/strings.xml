@@ -62,13 +62,6 @@
     <string name="tab_all">Tous</string>
     <string name="dialog_about_title">Patiner Montréal</string>
     <string name="logo_open_data">@drawable/logo_open_data_fr</string>
-    <string name="dialog_about_intro">Patiner Montréal pour Android est un projet libre
-		pour la promotion des données ouvertes à Montréal. La ville publie
-		quotidiennement des fichiers PDF qui recensent les conditions et les
-		emplacements des patinoires extérieures. Patiner Montréal, en
-		collaboration avec un autre projet de Montréal Ouvert, récupère ces
-		informations pour les rendre accessibles dans votre téléphone. Profitez bien de l\'hiver!</string>
-    <string name="dialog_about_credits">Application android réalisée par <a href="http://patinoires.mudar.ca/">Mudar Noufal</a>. Le code source est publié sous la licence GPLv3 de la Free Software Foundation.\nUn grand merci à <a href="http://www.slashpoundbang.com/">James McKinney</a> (API des données), Jonathan Brun et Daniel Mireault.</string>
     <string name="dialog_links_title">Liens utiles</string>
     <string name="dialog_links_patiner_mtl"><a href="http://www.patinermontreal.ca/">patinermontreal.ca</a></string>
     <string name="dialog_links_conditions_pdf"><a href="http://ville.montreal.qc.ca/portal/page?_pageid=5798,40305564&amp;_dad=portal&amp;_schema=PORTAL">Conditions des sites hivernaux</a></string>
@@ -99,30 +92,15 @@
     <string name="search_hint">Rechercher les patinoires</string>
     <string name="search_results">Résultats pour « <xliff:g id="string">%s</xliff:g> »</string>
     <!-- <string name="prefs_category_display">Paramètres de l\'affichage</string> -->
-    <string name="prefs_category_conditions">Condition de la patinoire</string>
-    <string name="prefs_condition_title">Condition</string>
+    <string name="prefs_category_conditions">Conditions de la patinoire</string>
+    <string name="prefs_condition_title">Conditions</string>
     <string name="prefs_condition_summary">Afficher ou cacher les patinoires selon l\'état de la glace, dans les listes et sur la carte</string>
-    <string name="prefs_condition_dialog_title">Rink Condition</string>
-    <string name="prefs_condition_excellent">Excellente</string>
-    <string name="prefs_condition_good">Bonne</string>
-    <string name="prefs_condition_bad">Mauvaise</string>
-    <string name="prefs_condition_closed">Fermée</string>
-    <string name="prefs_condition_unknown">Inconnue</string>
-    <!-- <string name="prefs_sort_title">Ordre d\'affichage</string> -->
-    <!-- <string name="prefs_sort_summary">Modifier l\'ordre d\'affichage des patinoires</string> -->
-    <!-- <string name="prefs_sort_dialog_title">Trier par</string> -->
-    <!-- <string name="prefs_sort_distance">Distance</string> -->
-    <!-- <string name="prefs_sort_rink">Patinoire</string> -->
-    <!-- <string name="prefs_sort_park">Parc</string> -->
-    <!-- <string name="prefs_sort_borough">Arrondissement</string> -->
-    <!-- <string name="prefs_language_title">Langue</string> -->
-    <!-- <string name="prefs_language_summary">Modifier la langue de l\'interface</string> -->
-    <!-- <string name="prefs_language_dialog_title">Langue</string> -->
-    <!-- <string name="prefs_language_french">Français</string> -->
-    <!-- <string name="prefs_language_english">English</string> -->
-    <!-- <string name="prefs_category_credits">Crédits</string> -->
-    <!-- <string name="prefs_credits_about">À propos</string> -->
-    <!-- <string name="prefs_credits_links">Liens utiles</string> -->
+    <!-- <string name="prefs_condition_dialog_title">Rink Condition</string> -->
+    <string name="prefs_condition_excellent">Excellentes</string>
+    <string name="prefs_condition_good">Bonnes</string>
+    <string name="prefs_condition_bad">Mauvaises</string>
+    <string name="prefs_condition_closed">Fermées</string>
+    <string name="prefs_condition_unknown">Inconnues</string>
     <string name="map_context_park_prefix">Parc </string>
     <!-- NEW -->
     <string name="park_distance_iso">%.1f km</string>
@@ -170,5 +148,19 @@
     <string name="prefs_follow_location_summary">Expérimental : actualisation en arrière-plan de la position géographique. Utile en déplacement.</string>
     <string name="menu_gmaps_directions">Itinéraire</string>
     <string name="dialog_title_maps_chooser">Afficher l\'itinéraire STM avec</string>
+    <string name="accessibility_ic_close">Fermer</string>
+    <string name="accessibility_ic_rink">Icône patinoire</string>
+    <string name="accessibility_ic_is_cleared">Déblayée</string>
+    <string name="accessibility_ic_is_flooded">Arrosée</string>
+    <string name="accessibility_ic_is_resurfaced">Resurfacée</string>
+    <string name="accessibility_ic_dial">Composer le numéro de téléphone</string>
+    <string name="accessibility_ic_tab">Icône de section</string>
+    <string name="about_contents_slogan">Profitez bien de l\'hiver!</string>
+    <string name="about_contents_intro_1">Patiner Montréal vous propose des informations quotidiennes sur les conditions et les services des patinoires extérieures à Montréal.</string>
+    <string name="about_contents_intro_2">Patiner Montréal pour Android est un projet libre pour la promotion des données ouvertes à Montréal. En collaboration avec un autre projet de Montréal Ouvert, l\'application récupère les informations publiées par la ville pour les rendre accessibles dans votre téléphone.</string>
+    <string name="about_contents_credits_1">Application Android réalisée par <a href="http://www.mudar.ca/">Mudar Noufal</a>. Le code source est publié sous la licence GPLv3 de la Free Software Foundation.</string>
+    <string name="about_contents_credits_2">Direction artistique et design graphique par <a href="http://www.nofolio.com/">Noémie Darveau</a>.</string>
+    <string name="about_contents_credits_3">Projet réalisé en collaboration avec <a href="http://montrealouvert.net/donnees-ouvertes-questions-frequemment-demandees/?lang=fr">Montréal ouvert</a>. Un grand merci à <a href="http://www.slashpoundbang.com/">James McKinney</a> (API des données), Jonathan Brun et Daniel Mireault.</string>
+    <string name="about_contents_open_data">Cette application est propulsée par le <a href="http://donnees.ville.montreal.qc.ca/">Portail</a> données ouvertes de la Ville de Montréal en conformité avec sa <a href="http://donnees.ville.montreal.qc.ca/licence-texte-complet">licence</a> d\'utilisation des données ouvertes. Source aditionnelle : <a href="http://www.ville.dorval.qc.ca/loisirs/fr/default.asp?contentID=808">Portail</a> des Loisirs et de la culture de la Cité de Dorval.</string>
 
 </resources>

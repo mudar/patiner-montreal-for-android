@@ -29,10 +29,12 @@
         android:icon="@drawable/ic_menu_refresh"
         android:orderInCategory="4"
         android:title="@string/menu_refresh"/>
+    <!-- TODO enable search -->
     <item
         android:id="@+id/menu_search"
         android:icon="@android:drawable/ic_menu_search"
         android:orderInCategory="5"
-        android:title="@string/menu_search"/>
+        android:title="@string/menu_search"
+        android:visible="false"/>
 
 </menu>

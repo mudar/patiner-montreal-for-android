@@ -30,6 +30,7 @@ import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
 import ca.mudar.patinoires.ui.RinkDetailsActivity;
 import ca.mudar.patinoires.utils.Const;
+import ca.mudar.patinoires.utils.Const.PrefsValues;
 import ca.mudar.patinoires.utils.Helper;
 
 import com.google.android.maps.MapView;
@@ -43,12 +44,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.provider.BaseColumns;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -91,7 +90,6 @@ public class MyItemizedOverlay extends BalloonItemizedOverlay<MyOverlayItem> {
         String filter = Helper.getSqliteConditionsFilter(mAppHelper.getConditionsFilter());
 
         String uri = RinksContract.Parks.buildRinksUri(parkId).toString();
-        Log.v(TAG, "uri = " + uri);
 
         Cursor cur = context.getContentResolver()
                 .query(RinksContract.Parks.buildRinksUri(parkId), ParkRinksQuery.PROJECTION,
@@ -102,7 +100,8 @@ public class MyItemizedOverlay extends BalloonItemizedOverlay<MyOverlayItem> {
         if (cur.moveToFirst()) {
             DialogListItemRink rink;
             do {
-                String description = cur.getString(mAppHelper.getLanguage().equals("fr") ?
+                String description = cur.getString(mAppHelper.getLanguage().equals(
+                        PrefsValues.LANG_FR) ?
                         ParkRinksQuery.DESC_FR : ParkRinksQuery.DESC_EN);
                 int image = Helper.getRinkImage(cur.getInt(ParkRinksQuery.KIND_ID),
                         cur.getInt(ParkRinksQuery.CONDITION));
@@ -131,7 +130,6 @@ public class MyItemizedOverlay extends BalloonItemizedOverlay<MyOverlayItem> {
             final ArrayList<DialogListItemRink> rinksArrayList) {
         RinksDialogAdapter parkRinksAdapter = new RinksDialogAdapter(context,
                 R.layout.maps_parks_rink_item, rinksArrayList);
-        Log.v(TAG, "nb items = " + rinksArrayList.size());
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         builder.setTitle(item.getTitle())
@@ -190,9 +188,9 @@ public class MyItemizedOverlay extends BalloonItemizedOverlay<MyOverlayItem> {
             DialogListItemRink item = getItem(position);
 
             if (item != null) {
-                ((TextView) convertView.findViewById(R.id.l_rink_desc)).setText(item.description);
-                ((ImageView) convertView.findViewById(R.id.l_rink_kind_id))
-                        .setImageResource(item.image);
+                TextView rinkDesc = (TextView) convertView.findViewById(R.id.l_rink_desc);
+                rinkDesc.setText(item.description);
+                rinkDesc.setCompoundDrawablesWithIntrinsicBounds(item.image, 0, 0, 0);
             }
 
             return convertView;

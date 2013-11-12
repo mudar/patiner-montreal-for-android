@@ -29,7 +29,7 @@ public class Const {
 
     public static final String APP_PREFS_NAME = "PatinoiresPrefsFile";
 
-    public static final String URL_JSON_INITIAL_IMPORT = "http://www.patinermontreal.ca/data.json";
+    public static final String URL_JSON_INITIAL_IMPORT = "http://patinermontreal.ca/data.json";
     public static final String URL_JSON_CONDITIONS_UPDATES = "http://patinermontreal.ca/conditions.json";
 
     public static final String URL_GMAPS_DIRECTIONS = "http://maps.google.com/maps?saddr=%s1&daddr=%s2&dirflg=r";
@@ -160,8 +160,9 @@ public class Const {
 
     public static final String LOCATION_PROVIDER = "my_default_provider";
 
-    public static final long MILLISECONDS_FOUR_HOURS = 14400000; // 1000*60*60*24*7
-    public static final long MILLISECONDS_FIVE_DAYS = 432000000; // 1000*60*60*24*7
+    public static final long MILLISECONDS_TWO_HOURS = 7200000; // 1000*60*60*2
+    public static final long MILLISECONDS_FOUR_HOURS = 14400000; // 1000*60*60*4
+    public static final long MILLISECONDS_FIVE_DAYS = 432000000; // 1000*60*60*24*5
 
     public static boolean SUPPORTS_HONEYCOMB = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB;
     public static boolean SUPPORTS_GINGERBREAD = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.GINGERBREAD;
