@@ -35,33 +35,35 @@ import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.services.SyncService;
 import ca.mudar.patinoires.ui.AboutActivity;
-//import ca.mudar.patinoires.ui.MapActivity;
 import ca.mudar.patinoires.ui.RinkDetailsActivity;
-import ca.mudar.patinoires.ui.widgets.MyPreferenceActivity;
+import ca.mudar.patinoires.ui.SettingsActivity;
+import ca.mudar.patinoires.ui.SettingsActivityHC;
+
+//import ca.mudar.patinoires.ui.MapActivity;
+
 
 public class ActivityHelper {
     private static final String TAG = "ActivityHelper";
-
     protected Activity mActivity;
 
     /**
+     * The Constructor.
+     *
+     * @param activity
+     */
+    protected ActivityHelper(Activity activity) {
+        mActivity = activity;
+    }
+
+    /**
      * Instance Creator.
-     * 
+     *
      * @param activity
      * @return
      */
     public static ActivityHelper createInstance(Activity activity) {
         System.setProperty("http.keepAlive", "false");
         return new ActivityHelper(activity);
-    }
-
-    /**
-     * The Constructor.
-     * 
-     * @param activity
-     */
-    protected ActivityHelper(Activity activity) {
-        mActivity = activity;
     }
 
     /**
@@ -82,7 +84,7 @@ public class ActivityHelper {
      * Display the Map, centered on the given coordinates.
      */
     public final void goMap(double lat, double lng) {
-// TODO: refactor for gmaps api v2
+        // TODO: refactor for gmaps api v2
 //        if (mActivity instanceof ca.mudar.patinoires.ui.MapActivity) {
 //            return;
 //        }
@@ -98,7 +100,7 @@ public class ActivityHelper {
      * Display the Map. Center will be user location or city center.
      */
     public final void goMap() {
-// TODO: refactor for gmaps api v2
+        // TODO: refactor for gmaps api v2
 //        if (mActivity instanceof ca.mudar.patinoires.ui.MapActivity) {
 //            return;
 //        }
@@ -154,7 +156,11 @@ public class ActivityHelper {
                 goHome();
                 return true;
             case R.id.menu_preferences:
-                intent = new Intent(mActivity, MyPreferenceActivity.class);
+                if (Const.SUPPORTS_HONEYCOMB) {
+                    intent = new Intent(mActivity, SettingsActivityHC.class);
+                } else {
+                    intent = new Intent(mActivity, SettingsActivity.class);
+                }
                 mActivity.startActivity(intent);
                 return true;
             case R.id.menu_map:

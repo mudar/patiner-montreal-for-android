@@ -92,6 +92,7 @@
     <string name="search_hint">Rechercher les patinoires</string>
     <string name="search_results">Résultats pour « <xliff:g id="string">%s</xliff:g> »</string>
     <!-- <string name="prefs_category_display">Paramètres de l\'affichage</string> -->
+    <string name="prefs_breadcrumb">Paramètres</string>
     <string name="prefs_category_conditions">Conditions de la patinoire</string>
     <string name="prefs_condition_title">Conditions</string>
     <string name="prefs_condition_summary">Afficher ou cacher les patinoires selon l\'état de la glace, dans les listes et sur la carte</string>

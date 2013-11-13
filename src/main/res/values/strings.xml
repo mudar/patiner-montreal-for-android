@@ -92,6 +92,7 @@
     <string name="search_hint">Search rinks</string>
     <string name="search_results">Results for \'<xliff:g id="string">%s</xliff:g>\'</string>
     <!-- <string name="prefs_category_display">Display Settings</string> -->
+    <string name="prefs_breadcrumb">Settings</string>
     <string name="prefs_category_conditions">Rink Conditions</string>
     <string name="prefs_condition_title">Conditions</string>
     <string name="prefs_condition_summary">Display or hide rinks based on conditions, in lists and map</string>
