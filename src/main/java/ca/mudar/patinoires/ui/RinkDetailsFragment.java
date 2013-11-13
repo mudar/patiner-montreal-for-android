@@ -23,36 +23,23 @@
 
 package ca.mudar.patinoires.ui;
 
-import ca.mudar.patinoires.PatinoiresApp;
-import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.providers.RinksContract;
-import ca.mudar.patinoires.providers.RinksContract.BoroughsColumns;
-import ca.mudar.patinoires.providers.RinksContract.Favorites;
-import ca.mudar.patinoires.providers.RinksContract.FavoritesColumns;
-import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
-import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
-import ca.mudar.patinoires.utils.ActivityHelper;
-import ca.mudar.patinoires.utils.Const;
-import ca.mudar.patinoires.utils.Const.DbValues;
-import ca.mudar.patinoires.utils.Const.PrefsValues;
-import ca.mudar.patinoires.utils.Helper;
-import ca.mudar.patinoires.utils.NotifyingAsyncQueryHandler;
-
+import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -68,23 +55,34 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ca.mudar.patinoires.PatinoiresApp;
+import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.providers.RinksContract;
+import ca.mudar.patinoires.providers.RinksContract.BoroughsColumns;
+import ca.mudar.patinoires.providers.RinksContract.Favorites;
+import ca.mudar.patinoires.providers.RinksContract.FavoritesColumns;
+import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
+import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
+import ca.mudar.patinoires.utils.ActivityHelper;
+import ca.mudar.patinoires.utils.Const;
+import ca.mudar.patinoires.utils.Const.DbValues;
+import ca.mudar.patinoires.utils.Const.PrefsValues;
+import ca.mudar.patinoires.utils.Helper;
+import ca.mudar.patinoires.utils.NotifyingAsyncQueryHandler;
+
 public class RinkDetailsFragment extends Fragment
         implements NotifyingAsyncQueryHandler.AsyncQueryListener {
     private static final String TAG = "RinkDetailsFragment";
-
-    protected ActivityHelper mActivityHelper;
-    protected PatinoiresApp mAppHelper;
-
-    protected View mRootView;
-
     protected static int mRinkId = -1;
     protected static Uri mRinkUri = null;
+    protected ActivityHelper mActivityHelper;
+    protected PatinoiresApp mAppHelper;
+    protected View mRootView;
     protected int mIsFavorite = 0;
     protected double mGeoLat = 0;
     protected double mGeoLng = 0;
     protected String mRinkName = "";
     protected Resources mResources;
-
     protected NotifyingAsyncQueryHandler mHandler;
 
     @Override
@@ -112,7 +110,7 @@ public class RinkDetailsFragment extends Fragment
 
         mHandler = new NotifyingAsyncQueryHandler(getActivity().getContentResolver(), this);
 
-        Intent intent = getSupportActivity().getIntent();
+        Intent intent = getActivity().getIntent();
 
         // TODO Optimize this using savedInstanceState to avoid reload of
         // identical data onResume
@@ -139,7 +137,7 @@ public class RinkDetailsFragment extends Fragment
             updateRinkInfo(cur);
             updateConditionsInfo(cur);
             updateTimeInfo(cur);
-            getSupportActivity().invalidateOptionsMenu();
+            getActivity().supportInvalidateOptionsMenu();
 
         } finally {
             cur.close();
@@ -173,12 +171,11 @@ public class RinkDetailsFragment extends Fragment
             onCheckedChanged(mIsFavorite == 1 ? true : false);
 
             mIsFavorite = (mIsFavorite == 0 ? 1 : 0); // Toggle value
-            getSupportActivity().invalidateOptionsMenu();
-            mActivityHelper.notifyAllTabs(getSupportActivity().getContentResolver());
+            getActivity().supportInvalidateOptionsMenu();
+            mActivityHelper.notifyAllTabs(getActivity().getContentResolver());
             return true;
             // return false;
-        }
-        else if (item.getItemId() == R.id.menu_gmaps_directions) {
+        } else if (item.getItemId() == R.id.menu_gmaps_directions) {
 
             if ((mGeoLat != 0) && (mGeoLng != 0)) {
                 /**
@@ -195,8 +192,7 @@ public class RinkDetailsFragment extends Fragment
                 startActivity(Intent.createChooser(intent,
                         mResources.getString(R.string.dialog_title_maps_chooser)));
             }
-        }
-        else if (item.getItemId() == R.id.map_view_rink) {
+        } else if (item.getItemId() == R.id.map_view_rink) {
 
             mActivityHelper.goMap(mGeoLat, mGeoLng);
             return true;
@@ -214,7 +210,7 @@ public class RinkDetailsFragment extends Fragment
         ((TextView) mRootView.findViewById(R.id.l_user_updated_at)).setText(String.format(
                 mResources.getString(R.string.rink_details_user_updated_at),
                 userUpdatedAt
-                ));
+        ));
     }
 
     /**
@@ -258,7 +254,7 @@ public class RinkDetailsFragment extends Fragment
         String name = String.format(cursor.getString(RinksQuery.PARK_NAME), prefixParcName);
         String address = cursor.getString(RinksQuery.PARK_ADDRESS);
         int distance = cursor.getInt(RinksQuery.PARK_GEO_DISTANCE);
-        String sDistance = (distance > 0 ? Helper.getDistanceDisplay(getSupportActivity()
+        String sDistance = (distance > 0 ? Helper.getDistanceDisplay(getActivity()
                 .getApplicationContext(), distance) : null);
 
         final String phone = cursor.getString(RinksQuery.PARK_PHONE);
@@ -270,8 +266,7 @@ public class RinkDetailsFragment extends Fragment
              * address.
              */
             visibility = View.GONE;
-        }
-        else {
+        } else {
             visibility = View.VISIBLE;
             ((TextView) mRootView.findViewById(R.id.l_park_address)).setText(address);
         }
@@ -279,13 +274,12 @@ public class RinkDetailsFragment extends Fragment
 
         if (sDistance == null) {
             visibility = View.GONE;
-        }
-        else {
+        } else {
             visibility = View.VISIBLE;
             ((TextView) mRootView.findViewById(R.id.l_park_distance)).setText(
                     String.format(mResources.getString(R.string.rink_details_park_distance),
                             sDistance)
-                    );
+            );
         }
         mRootView.findViewById(R.id.l_park_distance).setVisibility(visibility);
 
@@ -294,13 +288,12 @@ public class RinkDetailsFragment extends Fragment
              * Hide phone info.
              */
             visibility = View.GONE;
-        }
-        else {
+        } else {
             visibility = View.VISIBLE;
             ((TextView) mRootView.findViewById(R.id.l_park_phone)).setText(String.format(
                     mResources.getString(R.string.rink_details_park_phone),
                     phone
-                    ));
+            ));
 
             ImageButton dialerButton = (ImageButton) mRootView.findViewById(R.id.l_rink_call);
             dialerButton.setOnClickListener(new OnClickListener() {
@@ -315,6 +308,7 @@ public class RinkDetailsFragment extends Fragment
         mRootView.findViewById(R.id.l_rink_call).setVisibility(visibility);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void updateConditionsInfo(Cursor cursor) {
         int kindId = cursor.getInt(RinksQuery.RINK_KIND_ID);
 
@@ -333,9 +327,15 @@ public class RinkDetailsFragment extends Fragment
         vCondition.setText(String.format(
                 mResources.getString(R.string.rink_details_conditions),
                 getConditionText(condition)
-                ));
+        ));
 
-        vCondition.setBackgroundDrawable(mResources.getDrawable(Helper.getConditionBackground(condition)));
+        if (Const.SUPPORTS_JELLYBEAN) {
+            vCondition.setBackground(mResources.getDrawable(Helper.getConditionBackground(condition)));
+        }
+        else {
+            vCondition.setBackgroundResource(Helper.getConditionBackground(condition));
+        }
+
         vCondition.setTextColor(mResources.getColor(Helper.getConditionTextColor(condition)));
 
         int visibility = View.GONE;
@@ -347,7 +347,7 @@ public class RinkDetailsFragment extends Fragment
             ((TextView) mRootView.findViewById(R.id.l_rink_surface)).setText(String.format(
                     mResources.getString(R.string.rink_details_surface),
                     surface
-                    ));
+            ));
             visibilitySurface = (surface.length() > 0 ? View.VISIBLE : View.INVISIBLE);
 
             ImageView viewIsCleared = (ImageView) mRootView.findViewById(R.id.l_rink_is_cleared);
@@ -412,7 +412,7 @@ public class RinkDetailsFragment extends Fragment
                     .setText(String.format(
                             mResources.getString(R.string.rink_details_borough_updated_at),
                             updatedAt
-                            ));
+                    ));
         } catch (ParseException e) {
             Log.v(TAG, e.toString());
             visibilty = View.GONE;
@@ -428,9 +428,8 @@ public class RinkDetailsFragment extends Fragment
             ((TextView) mRootView.findViewById(R.id.l_user_updated_at)).setText(String.format(
                     mResources.getString(R.string.rink_details_user_updated_at),
                     userUpdatedAt
-                    ));
-        }
-        else {
+            ));
+        } else {
             visibilty = View.GONE;
         }
         mRootView.findViewById(R.id.l_user_updated_at).setVisibility(visibilty);
@@ -446,14 +445,13 @@ public class RinkDetailsFragment extends Fragment
             /**
              * Remove from favorites.
              */
-            String[] args = new String[] {
+            String[] args = new String[]{
                     Integer.toString(mRinkId)
             };
             mHandler.startDelete(0x10, null, Favorites.CONTENT_URI,
                     FavoritesColumns.FAVORITE_RINK_ID + "=?", args);
             message = R.string.toast_favorites_removed;
-        }
-        else {
+        } else {
             /**
              * Add to favorites
              */
@@ -518,14 +516,11 @@ public class RinkDetailsFragment extends Fragment
 
         if (isResurfaced == 1) {
             surfaceIndex = R.string.rink_details_is_resurfaced;
-        }
-        else if (isFlooded == 1) {
+        } else if (isFlooded == 1) {
             surfaceIndex = R.string.rink_details_is_flooded;
-        }
-        else if (isCleared == 1) {
+        } else if (isCleared == 1) {
             surfaceIndex = R.string.rink_details_is_cleared;
-        }
-        else {
+        } else {
             return "";
         }
 
@@ -535,7 +530,7 @@ public class RinkDetailsFragment extends Fragment
     private static interface RinksQuery {
         // int _TOKEN = 0x10;
 
-        final String[] PROJECTION = new String[] {
+        final String[] PROJECTION = new String[]{
                 BaseColumns._ID,
                 RinksColumns.RINK_ID,
                 RinksColumns.RINK_KIND_ID,
@@ -569,14 +564,12 @@ public class RinkDetailsFragment extends Fragment
         final int RINK_IS_RESURFACED = 8;
         final int RINK_CONDITION = 9;
         final int RINK_IS_FAVORITE = 10;
-
         final int PARK_NAME = 11;
         final int PARK_GEO_LAT = 12;
         final int PARK_GEO_LNG = 13;
         final int PARK_GEO_DISTANCE = 14;
         final int PARK_ADDRESS = 15;
         final int PARK_PHONE = 16;
-
         final int BOROUGH_NAME = 17;
         final int BOROUGH_UPDATED_AT = 18;
     }

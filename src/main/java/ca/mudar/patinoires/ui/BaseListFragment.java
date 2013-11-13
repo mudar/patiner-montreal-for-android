@@ -23,21 +23,6 @@
 
 package ca.mudar.patinoires.ui;
 
-import ca.mudar.patinoires.PatinoiresApp;
-import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.providers.RinksContract;
-import ca.mudar.patinoires.providers.RinksContract.Favorites;
-import ca.mudar.patinoires.providers.RinksContract.FavoritesColumns;
-import ca.mudar.patinoires.providers.RinksContract.Parks;
-import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
-import ca.mudar.patinoires.providers.RinksContract.Rinks;
-import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
-import ca.mudar.patinoires.ui.widgets.RinksCursorAdapter;
-import ca.mudar.patinoires.utils.ActivityHelper;
-import ca.mudar.patinoires.utils.Const;
-import ca.mudar.patinoires.utils.Const.PrefsValues;
-import ca.mudar.patinoires.utils.Helper;
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -55,14 +40,29 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.view.MenuInflater;
-import android.support.v4.view.MenuItem;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
+import ca.mudar.patinoires.PatinoiresApp;
+import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.providers.RinksContract;
+import ca.mudar.patinoires.providers.RinksContract.Favorites;
+import ca.mudar.patinoires.providers.RinksContract.FavoritesColumns;
+import ca.mudar.patinoires.providers.RinksContract.Parks;
+import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
+import ca.mudar.patinoires.providers.RinksContract.Rinks;
+import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
+import ca.mudar.patinoires.ui.widgets.RinksCursorAdapter;
+import ca.mudar.patinoires.utils.ActivityHelper;
+import ca.mudar.patinoires.utils.Const;
+import ca.mudar.patinoires.utils.Const.PrefsValues;
+import ca.mudar.patinoires.utils.Helper;
 
 public abstract class BaseListFragment extends ListFragment implements LoaderCallbacks<Cursor> {
 
@@ -95,13 +95,13 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
         mActivityHelper = ActivityHelper.createInstance(getActivity());
         mAppHelper = ((PatinoiresApp) getActivity().getApplicationContext());
 
-        locationManager = (LocationManager) getSupportActivity().getSystemService(
+        locationManager = (LocationManager) getActivity().getSystemService(
                 Context.LOCATION_SERVICE);
         locationListener = new MyLocationListener();
         criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_COARSE);
 
-        SharedPreferences prefs = getSupportActivity().getSharedPreferences(Const.APP_PREFS_NAME,
+        SharedPreferences prefs = getActivity().getSharedPreferences(Const.APP_PREFS_NAME,
                 Context.MODE_PRIVATE);
         hasFollowLocationChanges = prefs
                 .getBoolean(Const.PrefsNames.FOLLOW_LOCATION_CHANGES, false);
@@ -172,7 +172,7 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
         double geoLng = c.getDouble(RinksQuery.PARK_GEO_LAT);
 
         menu.setHeaderTitle(name);
-        MenuInflater inflater = (MenuInflater) getSupportActivity().getMenuInflater();
+        MenuInflater inflater = (MenuInflater) getActivity().getMenuInflater();
         inflater.inflate(R.menu.context_menu_rink, menu);
 
         menu.findItem(R.id.favorites_add).setVisible(isFavorite == 0);
@@ -196,7 +196,7 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         Cursor c = mAdapter.getCursor();
-        ContentResolver contentResolver = getSupportActivity().getContentResolver();
+        ContentResolver contentResolver = getActivity().getContentResolver();
 
         int rinkId = c.getInt(RinksQuery.RINK_ID);
         Intent intent;
@@ -254,7 +254,7 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
             filter = null;
         }
 
-        return new CursorLoader(getSupportActivity().getApplicationContext(), mContentUri,
+        return new CursorLoader(getActivity().getApplicationContext(), mContentUri,
                 RinksQuery.RINKS_SUMMARY_PROJECTION, filter, null, mSort);
     }
 

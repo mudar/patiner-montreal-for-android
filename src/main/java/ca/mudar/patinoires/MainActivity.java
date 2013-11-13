@@ -23,14 +23,6 @@
 
 package ca.mudar.patinoires;
 
-import ca.mudar.patinoires.providers.RinksDatabase;
-import ca.mudar.patinoires.receivers.DetachableResultReceiver;
-import ca.mudar.patinoires.services.SyncService;
-import ca.mudar.patinoires.utils.ActivityHelper;
-import ca.mudar.patinoires.utils.ConnectionHelper;
-import ca.mudar.patinoires.utils.Const;
-import ca.mudar.patinoires.utils.EulaHelper;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,13 +32,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
-import android.support.v4.view.Window;
+import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
+
+import ca.mudar.patinoires.providers.RinksDatabase;
+import ca.mudar.patinoires.receivers.DetachableResultReceiver;
+import ca.mudar.patinoires.services.SyncService;
+import ca.mudar.patinoires.utils.ActivityHelper;
+import ca.mudar.patinoires.utils.ConnectionHelper;
+import ca.mudar.patinoires.utils.Const;
+import ca.mudar.patinoires.utils.EulaHelper;
 
 public class MainActivity extends LocationFragmentActivity {
     protected static final String TAG = "MainActivity";
@@ -158,7 +158,7 @@ public class MainActivity extends LocationFragmentActivity {
         ((Button) root.findViewById(R.id.home_btn_favorites))
                 .setText(R.string.btn_favorites);
 
-        invalidateOptionsMenu();
+        supportInvalidateOptionsMenu();
     }
 
     private void createServiceFragment() {
@@ -189,13 +189,13 @@ public class MainActivity extends LocationFragmentActivity {
 
         /** {@inheritDoc} */
         public void onReceiveResult(int resultCode, Bundle resultData) {
-            MainActivity activity = (MainActivity) getSupportActivity();
+            MainActivity activity = (MainActivity) getActivity();
             if (activity == null) {
                 return;
             }
             activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
             
-            PatinoiresApp appHelper = (PatinoiresApp) getSupportActivity().getApplicationContext();
+            PatinoiresApp appHelper = (PatinoiresApp) getActivity().getApplicationContext();
 
             switch (resultCode) {
                 case SyncService.STATUS_RUNNING: {
@@ -207,10 +207,10 @@ public class MainActivity extends LocationFragmentActivity {
                     activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
 
                     // TODO put this in an activity listener
-                    if (EulaHelper.hasAcceptedEula(getSupportActivity().getApplicationContext())) {
+                    if (EulaHelper.hasAcceptedEula(getActivity().getApplicationContext())) {
                         appHelper.showToastText(R.string.toast_sync_finished, Toast.LENGTH_SHORT);
                     }
-                    finalizeLoadingData(getSupportActivity().getApplicationContext());
+                    finalizeLoadingData(getActivity().getApplicationContext());
 
                     break;
                 }

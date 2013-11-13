@@ -43,7 +43,7 @@
     <color name="listview_color_2">#6785a5</color>
     <color name="listview_color_3">#29466b</color>
     <color name="listview_colorhint">#00000000</color>
-    <!-- <color name="separator_map_list">#e5e5e5</color> -->
+     <color name="separator_map_list">#e5e5e5</color>
     <!-- <color name="separator_about">#606060</color> -->
     <color name="progressbar_background">#aaaaaa</color>
     <color name="progressbar_primary">#ffaa00</color>

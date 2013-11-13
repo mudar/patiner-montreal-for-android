@@ -22,14 +22,6 @@
 
 package ca.mudar.patinoires;
 
-import ca.mudar.patinoires.receivers.LocationChangedReceiver;
-import ca.mudar.patinoires.receivers.PassiveLocationChangedReceiver;
-import ca.mudar.patinoires.utils.ActivityHelper;
-import ca.mudar.patinoires.utils.Const;
-import ca.mudar.patinoires.utils.PlatformSpecificImplementationFactory;
-import ca.mudar.patinoires.utils.base.ILastLocationFinder;
-import ca.mudar.patinoires.utils.base.LocationUpdateRequester;
-
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -42,10 +34,18 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
-public class LocationFragmentActivity extends FragmentActivity {
+import ca.mudar.patinoires.receivers.LocationChangedReceiver;
+import ca.mudar.patinoires.receivers.PassiveLocationChangedReceiver;
+import ca.mudar.patinoires.utils.ActivityHelper;
+import ca.mudar.patinoires.utils.Const;
+import ca.mudar.patinoires.utils.PlatformSpecificImplementationFactory;
+import ca.mudar.patinoires.utils.base.ILastLocationFinder;
+import ca.mudar.patinoires.utils.base.LocationUpdateRequester;
+
+public class LocationFragmentActivity extends ActionBarActivity {
     // TODO Refactor this into an abstract class
 
     private static final String TAG = "LocationFragmentActivity";
@@ -173,8 +173,7 @@ public class LocationFragmentActivity extends FragmentActivity {
     }
 
     /**
-     * Find the last known location (using a {@link LastLocationFinder}) and
-     * updates the place list accordingly.
+     * Find the last known location and updates the place list accordingly.
      * 
      * @param updateWhenLocationChanges Request location updates
      */
@@ -293,8 +292,7 @@ public class LocationFragmentActivity extends FragmentActivity {
     }
 
     /**
-     * One-off location listener that receives updates from the
-     * {@link LastLocationFinder}. This is triggered where the last known
+     * One-off location listener that receives updates triggered where the last known
      * location is outside the bounds of our maximum distance and latency.
      */
     protected LocationListener oneShotLastLocationUpdateListener = new LocationListener() {

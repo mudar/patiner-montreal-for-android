@@ -43,10 +43,9 @@
 
     <application
         android:name=".PatinoiresApp"
-        android:debuggable="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name_manifest"
-        android:theme="@style/Theme.Patinoires" >
+        android:theme="@style/PatinoiresTheme" >
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -62,12 +61,12 @@
             android:name=".ui.TabsPagerActivity"
             android:exported="false"
             android:label="@string/app_name"
-            android:theme="@style/Theme.TabsPager" />
+            android:theme="@style/TabsPagerTheme" />
         <activity
             android:name=".ui.RinkDetailsActivity"
             android:label="@string/app_name_details"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.Details" >
+            android:theme="@style/DetailsTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -113,12 +112,12 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name_map"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.Patinoires" >
+            android:theme="@style/PatinoiresTheme" >
         </activity>
         <activity
             android:name=".ui.AboutActivity"
             android:label="@string/app_name_about"
-            android:theme="@style/Theme.About" >
+            android:theme="@style/AboutTheme" >
         </activity>
         <activity
             android:name=".ui.widgets.MyPreferenceActivity"

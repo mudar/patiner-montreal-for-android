@@ -21,12 +21,12 @@
 
 package ca.mudar.patinoires.utils;
 
-import ca.mudar.patinoires.utils.base.ILastLocationFinder;
-import ca.mudar.patinoires.utils.base.LocationUpdateRequester;
-
 import android.app.AlarmManager;
 import android.content.Context;
 import android.location.LocationManager;
+
+import ca.mudar.patinoires.utils.base.ILastLocationFinder;
+import ca.mudar.patinoires.utils.base.LocationUpdateRequester;
 
 /**
  * Factory class to create the correct instances of a variety of classes with

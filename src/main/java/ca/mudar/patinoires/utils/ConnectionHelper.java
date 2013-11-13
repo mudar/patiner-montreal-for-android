@@ -23,14 +23,14 @@
 
 package ca.mudar.patinoires.utils;
 
-import ca.mudar.patinoires.PatinoiresApp;
-import ca.mudar.patinoires.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
+
+import ca.mudar.patinoires.PatinoiresApp;
+import ca.mudar.patinoires.R;
 
 public class ConnectionHelper {
     public static boolean hasConnection(final Context context) {

@@ -23,16 +23,16 @@
 
 package ca.mudar.patinoires.ui;
 
-import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.utils.ActivityHelper;
-import ca.mudar.patinoires.utils.Const;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.utils.ActivityHelper;
+import ca.mudar.patinoires.utils.Const;
 
 public class DashboardFragment extends Fragment {
 
@@ -45,7 +45,7 @@ public class DashboardFragment extends Fragment {
                 new View.OnClickListener() {
                     public void onClick(View view) {
 
-                        Intent intent = new Intent(Intent.ACTION_SYNC, null, getSupportActivity()
+                        Intent intent = new Intent(Intent.ACTION_SYNC, null, getActivity()
                                 .getApplicationContext(),
                                 TabsPagerActivity.class);
                         intent.putExtra(Const.INTENT_EXTRA_TABS_CURRENT, Const.TABS_INDEX_SKATING);
@@ -55,7 +55,7 @@ public class DashboardFragment extends Fragment {
         root.findViewById(R.id.home_btn_hockey).setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View view) {
-                        Intent intent = new Intent(getSupportActivity().getApplicationContext(),
+                        Intent intent = new Intent(getActivity().getApplicationContext(),
                                 TabsPagerActivity.class);
                         intent.putExtra(Const.INTENT_EXTRA_TABS_CURRENT, Const.TABS_INDEX_HOCKEY);
                         startActivity(intent);
@@ -70,7 +70,7 @@ public class DashboardFragment extends Fragment {
         root.findViewById(R.id.home_btn_favorites).setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View view) {
-                        Intent intent = new Intent(getSupportActivity().getApplicationContext(),
+                        Intent intent = new Intent(getActivity().getApplicationContext(),
                                 TabsPagerActivity.class);
                         intent.putExtra(Const.INTENT_EXTRA_TABS_CURRENT, Const.TABS_INDEX_FAVORITES);
                         startActivity(intent);

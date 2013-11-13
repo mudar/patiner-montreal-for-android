@@ -127,8 +127,8 @@ public class DashboardLayout extends ViewGroup {
         int spaceDifference;
 
         // Horizontal and vertical space between items
-        int hSpace = 0;
-        int vSpace = 0;
+        int hSpace;
+        int vSpace;
 
         int cols = 1;
         int rows;
@@ -136,8 +136,8 @@ public class DashboardLayout extends ViewGroup {
         while (true) {
             rows = (visibleCount - 1) / cols + 1;
 
-            hSpace = ((width - mMaxChildWidth * cols) / (cols + 1));
-            vSpace = ((height - mMaxChildHeight * rows) / (rows + 1));
+            hSpace = Math.abs((width - mMaxChildWidth * cols) / (cols + 1));
+            vSpace = Math.abs((height - mMaxChildHeight * rows) / (rows + 1));
 
             spaceDifference = Math.abs(vSpace - hSpace);
             if (rows * cols != visibleCount) {

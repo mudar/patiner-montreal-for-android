@@ -23,14 +23,6 @@
 
 package ca.mudar.patinoires.utils;
 
-import ca.mudar.patinoires.PatinoiresApp;
-import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
-import ca.mudar.patinoires.utils.Const.DbValues;
-import ca.mudar.patinoires.utils.Const.UnitsDisplay;
-
-import com.google.android.maps.GeoPoint;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.location.Address;
@@ -43,6 +35,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+
+import ca.mudar.patinoires.PatinoiresApp;
+import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
+import ca.mudar.patinoires.utils.Const.DbValues;
+import ca.mudar.patinoires.utils.Const.UnitsDisplay;
 
 // TODO Refactor this into geohelper and iohelper
 public class Helper {
@@ -312,12 +310,13 @@ public class Helper {
      * @param Location
      * @return GeoPoint
      */
-    public static GeoPoint locationToGeoPoint(Location location) {
-        GeoPoint geoPoint = new GeoPoint((int) (location.getLatitude() * 1E6),
-                (int) (location.getLongitude() * 1E6));
-
-        return geoPoint;
-    }
+//    public static GeoPoint locationToGeoPoint(Location location) {
+    // TODO: refactor for gmaps api v2
+//        GeoPoint geoPoint = new GeoPoint((int) (location.getLatitude() * 1E6),
+//                (int) (location.getLongitude() * 1E6));
+//
+//        return geoPoint;
+//    }
 
     /**
      * Convert GeoPoint to Location
@@ -325,12 +324,13 @@ public class Helper {
      * @param GeoPoint
      * @return Location
      */
-    public static Location geoPointToLocation(GeoPoint geoPoint) {
-        Location location = new Location(Const.LOCATION_PROVIDER);
-
-        location.setLatitude(geoPoint.getLatitudeE6() / 1E6);
-        location.setLongitude(geoPoint.getLongitudeE6() / 1E6);
-
-        return location;
-    }
+//    public static Location geoPointToLocation(GeoPoint geoPoint) {
+    // TODO: refactor for gmaps api v2
+//        Location location = new Location(Const.LOCATION_PROVIDER);
+//
+//        location.setLatitude(geoPoint.getLatitudeE6() / 1E6);
+//        location.setLongitude(geoPoint.getLongitudeE6() / 1E6);
+//
+//        return location;
+//    }
 }

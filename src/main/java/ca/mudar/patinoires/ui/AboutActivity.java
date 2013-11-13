@@ -23,24 +23,24 @@
 
 package ca.mudar.patinoires.ui;
 
-import ca.mudar.patinoires.PatinoiresApp;
-import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.utils.ActivityHelper;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class AboutActivity extends FragmentActivity {
+import ca.mudar.patinoires.PatinoiresApp;
+import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.utils.ActivityHelper;
+
+public class AboutActivity extends ActionBarActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,7 +78,7 @@ public class AboutActivity extends FragmentActivity {
         }
 
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+                                 Bundle savedInstanceState) {
             if (container == null) {
                 return null;
             }
@@ -86,7 +86,7 @@ public class AboutActivity extends FragmentActivity {
             /**
              * Handle UI language changes.
              */
-            getSupportActivity().getSupportActionBar().setTitle(R.string.app_name_map);
+            ((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name_map);
 
             /**
              * Inflate XML layout.
@@ -111,7 +111,7 @@ public class AboutActivity extends FragmentActivity {
             ((TextView) root.findViewById(R.id.about_contents_credits_2))
                     .setMovementMethod(method);
             ((TextView) root.findViewById(R.id.about_contents_credits_3))
-            .setMovementMethod(method);
+                    .setMovementMethod(method);
             ((TextView) root.findViewById(R.id.about_contents_open_data))
                     .setMovementMethod(method);
 

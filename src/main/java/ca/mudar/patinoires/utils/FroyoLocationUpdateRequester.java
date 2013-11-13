@@ -22,12 +22,12 @@
 
 package ca.mudar.patinoires.utils;
 
-import ca.mudar.patinoires.utils.base.LocationUpdateRequester;
-
 import android.app.PendingIntent;
 import android.location.Criteria;
 import android.location.LocationManager;
 import android.util.Log;
+
+import ca.mudar.patinoires.utils.base.LocationUpdateRequester;
 
 /**
  * Provides support for initiating active and passive location updates optimized

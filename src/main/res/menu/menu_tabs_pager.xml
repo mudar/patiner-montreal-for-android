@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Patiner Montréal for Android. 
     Information about outdoor rinks in the city of Montréal: conditions,
     services, contact, map, etc.
@@ -22,23 +21,29 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:patinoires="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/menu_refresh"
         android:icon="@drawable/ic_actionbar_refresh"
-        android:showAsAction="always"
-        android:title="@string/menu_refresh"/>
+        android:title="@string/menu_refresh"
+        patinoires:actionProviderClass="android.support.v7.widget.ShareActionProvider"
+        patinoires:showAsAction="always" />
 
     <item
         android:id="@+id/menu_map"
         android:icon="@android:drawable/ic_menu_compass"
-        android:title="@string/menu_view_map"/>
+        android:title="@string/menu_view_map"
+        patinoires:actionProviderClass="android.support.v7.widget.ShareActionProvider"
+        patinoires:showAsAction="never" />
     <!-- TODO enable search -->
     <item
-        android:visible="false"
         android:id="@+id/menu_search"
         android:icon="@android:drawable/ic_menu_search"
-        android:title="@string/menu_search"/>
+        android:title="@string/menu_search"
+        android:visible="false"
+        patinoires:actionProviderClass="android.support.v7.widget.ShareActionProvider"
+        patinoires:showAsAction="ifRoom" />
 
 </menu>

@@ -23,26 +23,26 @@
 
 package ca.mudar.patinoires.ui;
 
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.Window;
+import android.widget.Toast;
+
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.receivers.DetachableResultReceiver;
 import ca.mudar.patinoires.services.SyncService;
 import ca.mudar.patinoires.utils.ActivityHelper;
 
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
-import android.support.v4.view.Window;
-import android.view.MenuInflater;
-import android.widget.Toast;
-
-public class RinkDetailsActivity extends FragmentActivity {
+public class RinkDetailsActivity extends ActionBarActivity {
     protected static final String TAG = "RinkDetailsActivity";
 
     private SyncStatusUpdaterFragment mSyncStatusUpdaterFragment;
@@ -148,7 +148,7 @@ public class RinkDetailsActivity extends FragmentActivity {
                     activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
                     // mSyncing = false;
 
-                    FragmentManager fm = getSupportFragmentManager();
+                    FragmentManager fm = getFragmentManager();
                     RinkDetailsFragment detailsFragment = (RinkDetailsFragment) fm
                             .findFragmentById(R.id.fragment_rink_details);
                     detailsFragment.onConditionsRefresh();

@@ -22,8 +22,6 @@
 
 package ca.mudar.patinoires.utils;
 
-import ca.mudar.patinoires.utils.base.ILastLocationFinder;
-
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -36,6 +34,8 @@ import android.location.LocationManager;
 import android.util.Log;
 
 import java.util.List;
+
+import ca.mudar.patinoires.utils.base.ILastLocationFinder;
 
 /**
  * Optimized implementation of Last Location Finder for devices running

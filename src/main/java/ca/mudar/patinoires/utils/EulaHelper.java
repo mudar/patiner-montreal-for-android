@@ -25,8 +25,6 @@
 
 package ca.mudar.patinoires.utils;
 
-import ca.mudar.patinoires.R;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -43,6 +41,8 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
 import java.io.IOException;
+
+import ca.mudar.patinoires.R;
 
 /**
  * A helper for showing EULAs and storing a {@link SharedPreferences} bit

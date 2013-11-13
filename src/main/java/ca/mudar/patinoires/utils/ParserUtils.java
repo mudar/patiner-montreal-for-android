@@ -24,9 +24,11 @@
 
 package ca.mudar.patinoires.utils;
 
-import ca.mudar.patinoires.io.XmlHandler;
-import ca.mudar.patinoires.providers.RinksContract;
-import ca.mudar.patinoires.providers.RinksContract.SyncColumns;
+import android.content.ContentProvider;
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.net.Uri;
+import android.text.format.Time;
 
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.JSONException;
@@ -35,16 +37,14 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import android.content.ContentProvider;
-import android.content.ContentResolver;
-import android.database.Cursor;
-import android.net.Uri;
-import android.text.format.Time;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.regex.Pattern;
+
+import ca.mudar.patinoires.io.XmlHandler;
+import ca.mudar.patinoires.providers.RinksContract;
+import ca.mudar.patinoires.providers.RinksContract.SyncColumns;
 
 /**
  * Various utility methods used by {@link XmlHandler} implementations.
