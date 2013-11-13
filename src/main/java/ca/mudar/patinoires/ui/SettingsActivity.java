@@ -21,13 +21,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires.ui.widgets;
-
-import ca.mudar.patinoires.PatinoiresApp;
-import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.utils.Const;
-import ca.mudar.patinoires.utils.Const.PrefsNames;
-import ca.mudar.patinoires.utils.Const.PrefsValues;
+package ca.mudar.patinoires.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,17 +34,23 @@ import android.widget.Toast;
 
 import java.util.Locale;
 
-public class MyPreferenceActivity extends PreferenceActivity implements
+import ca.mudar.patinoires.PatinoiresApp;
+import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.utils.Const;
+import ca.mudar.patinoires.utils.Const.PrefsNames;
+import ca.mudar.patinoires.utils.Const.PrefsValues;
+import ca.mudar.patinoires.utils.SettingsHelper;
+
+public class SettingsActivity extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
-    protected static final String TAG = "MyPreferenceActivity";
-
+    protected static final String TAG = "SettingsActivity";
     protected SharedPreferences mSharedPrefs;
-    protected PatinoiresApp mAppHelper;
-
     ListPreference tUnits;
     ListPreference tListSort;
     ListPreference tLanguage;
+    private PatinoiresApp mAppHelper;
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,12 +60,7 @@ public class MyPreferenceActivity extends PreferenceActivity implements
         mAppHelper = (PatinoiresApp) getApplicationContext();
         mAppHelper.updateUiLanguage();
 
-        if (Const.SUPPORTS_FROYO) {
-            addPreferencesFromResource(R.xml.preferences);
-        }
-        else {
-            addPreferencesFromResource(R.xml.preferences_eclair);
-        }
+        addPreferencesFromResource(R.xml.preferences);
 
         mSharedPrefs = getSharedPreferences(Const.APP_PREFS_NAME, MODE_PRIVATE);
 
@@ -81,13 +76,13 @@ public class MyPreferenceActivity extends PreferenceActivity implements
         /**
          * Default units system is ISO
          */
-        tUnits.setSummary(getSummaryByValue(mSharedPrefs.getString(PrefsNames.UNITS_SYSTEM,
+        tUnits.setSummary(SettingsHelper.getSummaryByValue(getResources(), mSharedPrefs.getString(PrefsNames.UNITS_SYSTEM,
                 PrefsValues.UNITS_ISO)));
 
         /**
          * Default sort list order is by name
          */
-        tListSort.setSummary(getSummaryByValue(mSharedPrefs.getString(PrefsNames.LIST_SORT,
+        tListSort.setSummary(SettingsHelper.getSummaryByValue(getResources(), mSharedPrefs.getString(PrefsNames.LIST_SORT,
                 PrefsValues.LIST_SORT_DISTANCE)));
 
         /**
@@ -98,7 +93,7 @@ public class MyPreferenceActivity extends PreferenceActivity implements
         if (!lg.equals(PrefsValues.LANG_EN) && !lg.equals(PrefsValues.LANG_FR)) {
             lg = PrefsValues.LANG_EN;
         }
-        tLanguage.setSummary(getSummaryByValue(mSharedPrefs.getString(PrefsNames.LANGUAGE, lg)));
+        tLanguage.setSummary(SettingsHelper.getSummaryByValue(getResources(), mSharedPrefs.getString(PrefsNames.LANGUAGE, lg)));
         /**
          * This is required because language initially defaults to phone
          * language.
@@ -124,6 +119,7 @@ public class MyPreferenceActivity extends PreferenceActivity implements
     /**
      * ChangeListener
      */
+    @SuppressWarnings("deprecation")
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
         boolean needsErrorCheck = false;
         /**
@@ -131,42 +127,35 @@ public class MyPreferenceActivity extends PreferenceActivity implements
          */
         if (key.equals(PrefsNames.UNITS_SYSTEM)) {
             String units = prefs.getString(key, PrefsValues.UNITS_ISO);
-            tUnits.setSummary(getSummaryByValue(units));
+            tUnits.setSummary(SettingsHelper.getSummaryByValue(getResources(), units));
             mAppHelper.setUnits(units);
-        }
-        else if (key.equals(PrefsNames.LIST_SORT)) {
+        } else if (key.equals(PrefsNames.LIST_SORT)) {
             String sort = prefs.getString(key, PrefsValues.LIST_SORT_DISTANCE);
-            tListSort.setSummary(getSummaryByValue(sort));
+            tListSort.setSummary(SettingsHelper.getSummaryByValue(getResources(), sort));
             mAppHelper.setListSort(sort);
-        }
-        else if (key.equals(PrefsNames.LANGUAGE)) {
+        } else if (key.equals(PrefsNames.LANGUAGE)) {
             String lg = prefs.getString(key, Locale.getDefault().getLanguage());
-            tLanguage.setSummary(getSummaryByValue(lg));
+            tLanguage.setSummary(SettingsHelper.getSummaryByValue(getResources(), lg));
             onConfigurationChanged(lg);
-        }
-        else if (key.equals(PrefsNames.CONDITIONS_SHOW_EXCELLENT)) {
+        } else if (key.equals(PrefsNames.CONDITIONS_SHOW_EXCELLENT)) {
             mAppHelper.setConditionsFilter(
                     prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_EXCELLENT, true),
                     Const.INDEX_PREFS_EXCELLENT);
             needsErrorCheck = true;
-        }
-        else if (key.equals(PrefsNames.CONDITIONS_SHOW_GOOD)) {
+        } else if (key.equals(PrefsNames.CONDITIONS_SHOW_GOOD)) {
             mAppHelper.setConditionsFilter(prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_GOOD, true),
                     Const.INDEX_PREFS_GOOD);
             needsErrorCheck = true;
-        }
-        else if (key.equals(PrefsNames.CONDITIONS_SHOW_BAD)) {
+        } else if (key.equals(PrefsNames.CONDITIONS_SHOW_BAD)) {
             mAppHelper.setConditionsFilter(prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_BAD, true),
                     Const.INDEX_PREFS_BAD);
             needsErrorCheck = true;
-        }
-        else if (key.equals(PrefsNames.CONDITIONS_SHOW_CLOSED)) {
+        } else if (key.equals(PrefsNames.CONDITIONS_SHOW_CLOSED)) {
             mAppHelper.setConditionsFilter(
                     prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_CLOSED, true),
                     Const.INDEX_PREFS_CLOSED);
             needsErrorCheck = true;
-        }
-        else if (key.equals(PrefsNames.CONDITIONS_SHOW_UNKNOWN)) {
+        } else if (key.equals(PrefsNames.CONDITIONS_SHOW_UNKNOWN)) {
             mAppHelper.setConditionsFilter(
                     prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_UNKNOWN, true),
                     Const.INDEX_PREFS_UNKNOWN);
@@ -174,65 +163,10 @@ public class MyPreferenceActivity extends PreferenceActivity implements
         }
 
         if (needsErrorCheck) {
-            verifyConditionsError(prefs, key);
-        }
-    }
-
-    /**
-     * Error proof verification: if the user unchecks all 4 conditions filters,
-     * re-enable the last unchecked condition and display Toast message.
-     */
-    private void verifyConditionsError(SharedPreferences prefs, String key) {
-        boolean hasEnabledCondition = false;
-
-        hasEnabledCondition = prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_EXCELLENT, false)
-                || hasEnabledCondition;
-        hasEnabledCondition = prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_GOOD, false)
-                || hasEnabledCondition;
-        hasEnabledCondition = prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_BAD, false)
-                || hasEnabledCondition;
-        hasEnabledCondition = prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_CLOSED, false)
-                || hasEnabledCondition;
-        hasEnabledCondition = prefs.getBoolean(PrefsNames.CONDITIONS_SHOW_UNKNOWN, false)
-                || hasEnabledCondition;
-
-        if (!hasEnabledCondition) {
-            ((CheckBoxPreference) findPreference(key)).setChecked(true);
-            mAppHelper.showToastText(R.string.toast_prefs_conditions_error, Toast.LENGTH_LONG);
-        }
-    }
-
-    /**
-     * Get display name of selected preference value. Example: "English" for
-     * "en", "Metric" for "iso", etc.
-     * 
-     * @param index Preference key
-     * @return Display name of the value
-     */
-    private String getSummaryByValue(String index) {
-        if (index == null) {
-            return "";
-        }
-        else if (index.equals(PrefsValues.UNITS_ISO)) {
-            return getResources().getString(R.string.prefs_units_iso);
-        }
-        else if (index.equals(PrefsValues.UNITS_IMP)) {
-            return getResources().getString(R.string.prefs_units_imperial);
-        }
-        else if (index.equals(PrefsValues.LIST_SORT_NAME)) {
-            return getResources().getString(R.string.prefs_list_sort_name);
-        }
-        else if (index.equals(PrefsValues.LIST_SORT_DISTANCE)) {
-            return getResources().getString(R.string.prefs_list_sort_distance);
-        }
-        else if (index.equals(PrefsValues.LANG_FR)) {
-            return getResources().getString(R.string.prefs_language_french);
-        }
-        else if (index.equals(PrefsValues.LANG_EN)) {
-            return getResources().getString(R.string.prefs_language_english);
-        }
-        else {
-            return "";
+            if (!SettingsHelper.verifyConditionsError(prefs, key)) {
+                ((CheckBoxPreference) findPreference(key)).setChecked(true);
+                mAppHelper.showToastText(R.string.toast_prefs_conditions_error, Toast.LENGTH_LONG);
+            }
         }
     }
 
@@ -246,7 +180,7 @@ public class MyPreferenceActivity extends PreferenceActivity implements
         mAppHelper.updateUiLanguage();
 
         finish();
-        Intent intent = new Intent(getApplicationContext(), MyPreferenceActivity.class);
+        Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         startActivity(intent);
     }
