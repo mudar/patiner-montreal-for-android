@@ -24,11 +24,11 @@
 package ca.mudar.patinoires.ui;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,7 +44,6 @@ import ca.mudar.patinoires.utils.ActivityHelper;
 
 public class RinkDetailsActivity extends ActionBarActivity {
     protected static final String TAG = "RinkDetailsActivity";
-
     private SyncStatusUpdaterFragment mSyncStatusUpdaterFragment;
 
     @Override
@@ -58,9 +57,9 @@ public class RinkDetailsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_rink_details);
         setProgressBarIndeterminateVisibility(Boolean.FALSE);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            getActionBar().setHomeButtonEnabled(true);
-        }
+        final ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setHomeButtonEnabled(true);
 
         FragmentManager fm = getSupportFragmentManager();
 
@@ -116,7 +115,6 @@ public class RinkDetailsActivity extends ActionBarActivity {
     public static class SyncStatusUpdaterFragment extends Fragment implements
             DetachableResultReceiver.Receiver {
         public static final String TAG = SyncStatusUpdaterFragment.class.getName();
-
         // private boolean mSyncing = false;
         private DetachableResultReceiver mReceiver;
 
@@ -129,7 +127,9 @@ public class RinkDetailsActivity extends ActionBarActivity {
             mReceiver.setReceiver(this);
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public void onReceiveResult(int resultCode, Bundle resultData) {
 
             RinkDetailsActivity activity = (RinkDetailsActivity) getActivity();

@@ -23,14 +23,14 @@
 -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:installLocation="auto"
     package="ca.mudar.patinoires"
+    android:installLocation="auto"
     android:versionCode="9"
-    android:versionName="@string/app_version" >
+    android:versionName="@string/app_version">
 
     <uses-sdk
-        android:minSdkVersion="7"
-        android:targetSdkVersion="17" />
+        android:minSdkVersion="10"
+        android:targetSdkVersion="19" />
 
     <!-- <supports-screens android:anyDensity="true" /> -->
 
@@ -45,12 +45,12 @@
         android:name=".PatinoiresApp"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name_manifest"
-        android:theme="@style/PatinoiresTheme" >
+        android:theme="@style/PatinoiresTheme">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.Dashboard" >
+            android:theme="@style/Theme.Dashboard">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -66,7 +66,11 @@
             android:name=".ui.RinkDetailsActivity"
             android:label="@string/app_name_details"
             android:launchMode="singleTop"
-            android:theme="@style/DetailsTheme" >
+            android:theme="@style/DetailsTheme"
+            android:uiOptions="splitActionBarWhenNarrow">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -117,12 +121,17 @@
         <activity
             android:name=".ui.AboutActivity"
             android:label="@string/app_name_about"
-            android:theme="@style/AboutTheme" >
+            android:theme="@style/AboutTheme">
         </activity>
         <activity
-            android:name=".ui.widgets.MyPreferenceActivity"
+            android:name=".ui.SettingsActivity"
             android:label="@string/app_name_preferences"
-            android:theme="@android:style/Theme.Black" >
+            android:theme="@style/PreferencesTheme">
+        </activity>
+        <activity
+            android:name=".ui.SettingsActivityHC"
+            android:label="@string/app_name_preferences"
+            android:theme="@style/PreferencesTheme">
         </activity>
 
         <uses-library android:name="com.google.android.maps" />
@@ -134,12 +143,12 @@
         <receiver android:name=".receivers.PassiveLocationChangedReceiver" />
         <receiver
             android:name=".receivers.ConnectivityChangedReceiver"
-            android:enabled="false" >
+            android:enabled="false">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receivers.PowerStateChangedReceiver" >
+        <receiver android:name=".receivers.PowerStateChangedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BATTERY_LOW" />
                 <action android:name="android.intent.action.BATTERY_OKAY" />

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Patiner Montréal for Android. 
+    Patiner Montréal for Android.
     Information about outdoor rinks in the city of Montréal: conditions,
     services, contact, map, etc.
 
@@ -21,26 +21,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item
-        android:id="@+id/refresh_rink"
-        android:title="@string/menu_refresh_rink"/>
-
-    <item
-        android:id="@+id/favorites_add"
-        android:title="@string/menu_favorites_add"/>
-
-    <item
-        android:id="@+id/favorites_remove"
-        android:title="@string/menu_favorites_remove"/>
-
-    <item
-        android:id="@+id/call_rink"
-        android:title="@string/menu_call_rink"/>
-
-    <item
-        android:id="@+id/map_view_rink"
-        android:title="@string/menu_map_view_rink"/>
-
-</menu>
+<resources>
+    <style name="PatinoiresActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:background">@drawable/background_actionbar</item>
+        <item name="backgroundSplit">@drawable/background_actionbar</item>
+        <item name="android:displayOptions">showHome|useLogo</item>
+    </style>
+</resources>

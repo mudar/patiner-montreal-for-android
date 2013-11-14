@@ -23,47 +23,45 @@
 -->
 
 <resources>
-    <style name="PatinoiresBaseTheme" parent="@style/Theme.AppCompat">
+    <style name="PatinoiresBaseTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
+        <item name="actionBarStyle">@style/PatinoiresActionBar</item>
+        <item name="logo">@drawable/ic_logo_patinoires</item>
+        <item name="actionBarWidgetTheme">@style/PatinoiresActionBarWidget</item>
+    </style>
+
+    <style name="PreferencesBaseTheme" parent="@android:style/Theme.Light">
     </style>
 
 
     <style name="PatinoiresTheme" parent="@style/PatinoiresBaseTheme">
         <item name="android:windowBackground">@drawable/background_portrait</item>
         <item name="selectableItemBackground">@drawable/actionbar_btn_selectable</item>
-        <item name="abBackground">@drawable/background_actionbar</item>
-        <item name="abDisplayOptions">showHome|useLogo</item>
-        <item name="abLogo">@drawable/ic_logo_patinoires</item>
+        <item name="android:textColor">@color/dashboard_text</item>
     </style>
 
-    <style name="Theme.Dashboard" parent="@PatinoiresTheme">
+    <style name="Theme.Dashboard" parent="@style/PatinoiresTheme">
         <item name="selectableItemBackground">@android:color/transparent</item>
-        <item name="android:textColor">@color/dashboard_text</item>
     </style>
 
-    <style name="TabsPagerTheme" parent="@PatinoiresTheme">
-
-        <!-- <item name="android:windowBackground">@drawable/background_dashboard</item> -->
-        <item name="android:textColor">@color/dashboard_text</item>
+    <style name="TabsPagerTheme" parent="@style/PatinoiresTheme">
     </style>
 
-    <style name="AboutTheme" parent="@PatinoiresTheme">
+    <style name="AboutTheme" parent="@style/PatinoiresTheme">
         <item name="android:textSize">@dimen/textSizeMedium</item>
         <item name="android:textColor">@color/body_text_1</item>
         <item name="android:textColorLink">@color/hyperlink</item>
     </style>
 
-    <style name="DetailsTheme" parent="@PatinoiresTheme">
-        <item name="logo">@drawable/ic_logo_patinoires_narrow</item>
-        <item name="android:textColor">@color/dashboard_text</item>
+    <style name="DetailsTheme" parent="@style/PatinoiresTheme">
     </style>
 
-    <style name="PreferencesTheme" parent="@PatinoiresTheme">
-        <item name="android:windowBackground">@color/black</item>
+    <style name="PreferencesTheme" parent="@style/PreferencesBaseTheme">
+        <item name="android:listSeparatorTextViewStyle">@style/PrefsCategory</item>
     </style>
 
 </resources>

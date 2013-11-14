@@ -24,17 +24,9 @@
 
 <resources>
 
-    <style name="PatinoiresTheme" parent="@style/Theme.AppCompat">
+    <style name="PatinoiresTheme" parent="@style/PatinoiresBaseTheme">
         <item name="android:windowBackground">@drawable/background_portrait</item>
         <item name="selectableItemBackground">@drawable/actionbar_btn_selectable</item>
-        <item name="background">@drawable/background_actionbar</item>
-        <item name="displayOptions">showHome|useLogo</item>
-        <item name="logo">@drawable/ic_logo_patinoires</item>
-    </style>
-
-    <style name="DetailsTheme" parent="@PatinoiresTheme">
-        <item name="logo">@drawable/ic_logo_patinoires</item>
-        <item name="android:textColor">@color/dashboard_text</item>
     </style>
 
 </resources>

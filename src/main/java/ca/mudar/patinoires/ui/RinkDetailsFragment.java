@@ -153,8 +153,8 @@ public class RinkDetailsFragment extends Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_rink_details_fragment, menu);
 
-        int resIcon = (mIsFavorite == 1 ? R.drawable.ic_actionbar_favorite_on
-                : R.drawable.ic_actionbar_favorite_off);
+        int resIcon = (mIsFavorite == 1 ? R.drawable.ic_action_star_on
+                : R.drawable.ic_action_star_off);
 
         menu.findItem(R.id.menu_favorites_toggle).setIcon(resIcon);
 

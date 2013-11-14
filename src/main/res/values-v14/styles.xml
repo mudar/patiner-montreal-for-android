@@ -1,4 +1,5 @@
-/*
+<?xml version="1.0" encoding="utf-8"?>
+<!--
     Patiner Montréal for Android.
     Information about outdoor rinks in the city of Montréal: conditions,
     services, contact, map, etc.
@@ -19,39 +20,12 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+-->
 
-package ca.mudar.patinoires.ui.widgets;
-
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.OverlayItem;
-
-public class MyOverlayItem extends OverlayItem {
-
-    protected String itemId;
-    protected String extra;
-
-    public MyOverlayItem(GeoPoint point, String title, String snippet, String itemId, String extra) {
-        super(point, title, snippet);
-
-        this.itemId = itemId;
-        this.extra = extra;
-    }
-
-    public String getItemId() {
-        return this.itemId;
-    }
-
-    public void setItemId(String id) {
-        this.itemId = id;
-    }
-
-    public String getExtra() {
-        return this.extra;
-    }
-
-    public void setItemExtra(String extra) {
-        this.extra = extra;
-    }
-
-}
+<resources>
+    <style name="PatinoiresActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:background">@drawable/background_actionbar</item>
+        <item name="android:backgroundSplit">@drawable/background_actionbar</item>
+        <item name="android:displayOptions">showHome|useLogo</item>
+    </style>
+</resources>

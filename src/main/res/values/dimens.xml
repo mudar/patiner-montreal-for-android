@@ -41,5 +41,7 @@
     <dimen name="tab_margin">2dp</dimen>
     <dimen name="tab_padding">2dp</dimen>
     <dimen name="list_padding">6dp</dimen>
-
+    <!--Preferences-->
+    <dimen name="padding_prefs_category">4dp</dimen>
+    <dimen name="padding_prefs_category_bottom">8dp</dimen>
 </resources>

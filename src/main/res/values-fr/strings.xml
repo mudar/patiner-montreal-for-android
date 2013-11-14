@@ -45,6 +45,7 @@
     <string name="menu_share_map">Partager</string>
     <string name="menu_favorites_add">Ajouter aux favoris</string>
     <string name="menu_favorites_remove">Supprimer des favrois</string>
+    <string name="menu_share">Partager</string>
     <string name="menu_call_rink">Appeler</string>
     <string name="menu_map_view_rink">Situer sur la carte</string>
     <string name="context_menu_favorites_add">Ajouter aux favoris</string>
