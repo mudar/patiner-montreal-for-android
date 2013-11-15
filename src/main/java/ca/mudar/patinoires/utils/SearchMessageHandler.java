@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-    Patiner Montréal for Android. 
+/*
+    Patiner Montréal for Android.
     Information about outdoor rinks in the city of Montréal: conditions,
     services, contact, map, etc.
 
@@ -20,20 +19,36 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
--->
+package ca.mudar.patinoires.utils;
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/map_root"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
+import android.os.Handler;
+import android.os.Message;
 
-    <com.google.android.maps.MapView
-        android:id="@+id/map_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:apiKey="@string/google_map_api_key_debug"
-        android:clickable="true" />
+import java.lang.ref.WeakReference;
 
-</LinearLayout>
+public class SearchMessageHandler extends Handler {
+
+    private final WeakReference<OnMessageHandledListener> mListener;
+
+    /**
+     * Caller must implement this interface to receive the handler's message
+     */
+    public interface OnMessageHandledListener {
+        public void OnMessageHandled(Message msg);
+    }
+
+    public SearchMessageHandler(OnMessageHandledListener target) {
+        mListener = new WeakReference<OnMessageHandledListener>(target);
+    }
+
+    @Override
+    public void handleMessage(Message msg)
+    {
+        OnMessageHandledListener target = mListener.get();
+        if (target != null) {
+            target.OnMessageHandled(msg);
+        }
+    }
+}

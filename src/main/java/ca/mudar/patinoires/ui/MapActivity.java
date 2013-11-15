@@ -23,77 +23,79 @@
 
 package ca.mudar.patinoires.ui;
 
+import android.content.Intent;
+import android.location.Location;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
+import android.view.Window;
+
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.ui.MapFragment.OnMyLocationChangedListener;
 import ca.mudar.patinoires.utils.ActivityHelper;
 import ca.mudar.patinoires.utils.ConnectionHelper;
 import ca.mudar.patinoires.utils.Const;
-import ca.mudar.patinoires.utils.Helper;
 
-import com.google.android.maps.GeoPoint;
 
-import android.content.Intent;
-import android.location.Location;
-import android.os.Build;
-import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentMapActivity;
-import android.support.v4.view.Menu;
-import android.support.v4.view.MenuItem;
-import android.view.MenuInflater;
-
-public class MapActivity extends FragmentMapActivity implements OnMyLocationChangedListener {
+public class MapActivity extends ActionBarActivity implements MapFragment.OnMyLocationChangedListener {
     protected static final String TAG = "MapActivity";
-
     private PatinoiresApp mAppHelper;
-    private GeoPoint initGeoPoint;
+    private Location initLocation;
     private boolean isCenterOnMyLocation;
-
-    @Override
-    protected boolean isRouteDisplayed() {
-        return false;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
         mAppHelper = (PatinoiresApp) getApplicationContext();
         mAppHelper.updateUiLanguage();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            getActionBar().setHomeButtonEnabled(true);
-        }
-
         setContentView(R.layout.activity_map);
+        setProgressBarIndeterminateVisibility(Boolean.FALSE);
 
-        initGeoPoint = null;
+        final ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setHomeButtonEnabled(true);
 
-        Integer latitude = getIntent().getIntExtra(Const.INTENT_EXTRA_GEO_LAT, Integer.MIN_VALUE);
-        Integer longitude = getIntent().getIntExtra(Const.INTENT_EXTRA_GEO_LNG, Integer.MIN_VALUE);
+        initLocation = null;
 
-        if (!latitude.equals(Integer.MIN_VALUE) && !longitude.equals(Integer.MIN_VALUE)) {
-            initGeoPoint = new GeoPoint(latitude, longitude);
+        double latitude = getIntent().getDoubleExtra(Const.INTENT_EXTRA_GEO_LAT, Double.MIN_VALUE);
+        double longitude = getIntent().getDoubleExtra(Const.INTENT_EXTRA_GEO_LNG, Double.MIN_VALUE);
+
+        if (Double.compare(latitude, Double.MIN_VALUE) != 0
+                && Double.compare(latitude, Double.MIN_VALUE) != 0) {
+            initLocation = new Location(Const.LOCATION_PROVIDER_INTENT);
+
+            initLocation.setLatitude(latitude);
+            initLocation.setLongitude(longitude);
+
             isCenterOnMyLocation = false;
-        }
-        else {
+        } else {
             isCenterOnMyLocation = true;
         }
+
     }
 
     @Override
     public void onNewIntent(Intent intent) {
-        initGeoPoint = null;
+        initLocation = null;
 
-        Integer latitude = intent.getIntExtra(Const.INTENT_EXTRA_GEO_LAT, Integer.MIN_VALUE);
-        Integer longitude = intent.getIntExtra(Const.INTENT_EXTRA_GEO_LNG, Integer.MIN_VALUE);
+        double latitude = intent.getDoubleExtra(Const.INTENT_EXTRA_GEO_LAT, Double.MIN_VALUE);
+        double longitude = intent.getDoubleExtra(Const.INTENT_EXTRA_GEO_LNG, Double.MIN_VALUE);
 
-        if (!latitude.equals(Integer.MIN_VALUE) && !longitude.equals(Integer.MIN_VALUE)) {
-            initGeoPoint = new GeoPoint(latitude, longitude);
+        if (Double.compare(latitude, Double.MIN_VALUE) != 0
+                && Double.compare(latitude, Double.MIN_VALUE) != 0) {
+            initLocation = new Location(Const.LOCATION_PROVIDER_INTENT);
+
+            initLocation.setLatitude(latitude);
+            initLocation.setLongitude(longitude);
+
             isCenterOnMyLocation = false;
-        }
-        else {
+        } else {
             isCenterOnMyLocation = true;
         }
     }
@@ -106,17 +108,17 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
             ConnectionHelper.showDialogNoConnection(this);
         }
 
-        if (initGeoPoint != null || isCenterOnMyLocation) {
+        if (initLocation != null || isCenterOnMyLocation) {
             FragmentManager fm = getSupportFragmentManager();
             MapFragment fragmentMap = (MapFragment) fm.findFragmentById(R.id.fragment_map);
-            fragmentMap.setMapCenter(initGeoPoint);
+            fragmentMap.setMapCenter(initLocation);
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        initGeoPoint = null;
+        initLocation = null;
         isCenterOnMyLocation = false;
     }
 
@@ -129,35 +131,7 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_map, menu);
-
-        /**
-         * Disable the My Location button if the user location is not known yet.
-         */
-        if (mAppHelper.getLocation() == null) {
-            menu.findItem(R.id.menu_map_mylocation).setEnabled(false);
-        }
-
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_map_mylocation) {
-            Location location = mAppHelper.getLocation();
-            if (location != null) {
-                FragmentManager fm = getSupportFragmentManager();
-                MapFragment fragmentMap = (MapFragment) fm.findFragmentById(R.id.fragment_map);
-                GeoPoint geoPoint = Helper.locationToGeoPoint(location);
-
-                fragmentMap.setMapCenterZoomed(geoPoint);
-            }
-            return true;
-        }
-
         ActivityHelper mActivityHelper = ActivityHelper.createInstance(this);
         return mActivityHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
@@ -167,17 +141,20 @@ public class MapActivity extends FragmentMapActivity implements OnMyLocationChan
      * send it to the AppHelper and enable the My Location item in the menu.
      */
     @Override
-    public void OnMyLocationChanged(final GeoPoint geoPoint) {
+    public void OnMyLocationChanged(final Location location) {
         /**
          * Following code allows the background listener to modify the UI's
          * menu.
          */
         runOnUiThread(new Runnable() {
             public void run() {
+                // TODO: verify that new location is sent to service & favorites
+                // fragment
                 ((PatinoiresApp) getApplicationContext())
-                        .setLocation(Helper.geoPointToLocation(geoPoint));
-                invalidateOptionsMenu();
+                        .setLocation(location);
+                // invalidateOptionsMenu();
             }
         });
     }
+
 }

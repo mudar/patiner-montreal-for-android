@@ -45,6 +45,12 @@ public class Const {
     public static final int INDEX_PREFS_BAD = 0x2;
     public static final int INDEX_PREFS_CLOSED = 0x3;
     public static final int INDEX_PREFS_UNKNOWN = 0x4;
+    public static final String LOCATION_PROVIDER_DEFAULT = "DefaultLocationProvider";
+    public static final String LOCATION_PROVIDER_LONG_PRESS = "LongPressLocationProvider";
+    public static final String LOCATION_PROVIDER_SEARCH = "SearchLocationProvider";
+    public static final String LOCATION_PROVIDER_INTENT = "IntentLocationProvider";
+    public static final String LOCATION_PROVIDER_PREFS = "PrefsLocationProvider";
+    public static final String LOCATION_PROVIDER_SERVICE = "ServiceLocationProvider";
     public static final double MAPS_DEFAULT_COORDINATES[] = {
             45.5d, -73.666667d
     };
@@ -67,7 +73,6 @@ public class Const {
     public static final String INTENT_EXTRA_ID_RINK = "id_rink";
     public static final String INTENT_EXTRA_URL_PATH_FR = "patinoires";
     public static final String INTENT_EXTRA_URL_PATH_EN = "rinks";
-
     public static final String TAG_FRAGMENT_LIST = "tag_fragment_list";
     public static final String TAG_FRAGMENT_MAP = "tag_fragment_map";
     public static final String KEY_INSTANCE_COORDS = "map_coordinates";

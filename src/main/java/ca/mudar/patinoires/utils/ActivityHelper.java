@@ -35,6 +35,7 @@ import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.services.SyncService;
 import ca.mudar.patinoires.ui.AboutActivity;
+import ca.mudar.patinoires.ui.MapActivity;
 import ca.mudar.patinoires.ui.RinkDetailsActivity;
 import ca.mudar.patinoires.ui.SettingsActivity;
 import ca.mudar.patinoires.ui.SettingsActivityHC;
@@ -85,15 +86,15 @@ public class ActivityHelper {
      */
     public final void goMap(double lat, double lng) {
         // TODO: refactor for gmaps api v2
-//        if (mActivity instanceof ca.mudar.patinoires.ui.MapActivity) {
-//            return;
-//        }
-//
-//        final Intent intent = new Intent(mActivity.getApplicationContext(), MapActivity.class);
-//        intent.putExtra(Const.INTENT_EXTRA_GEO_LAT, (int) (lat * 1E6));
-//        intent.putExtra(Const.INTENT_EXTRA_GEO_LNG, (int) (lng * 1E6));
-//        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//        mActivity.startActivity(intent);
+        if (mActivity instanceof ca.mudar.patinoires.ui.MapActivity) {
+            return;
+        }
+
+        final Intent intent = new Intent(mActivity.getApplicationContext(), MapActivity.class);
+        intent.putExtra(Const.INTENT_EXTRA_GEO_LAT, lat );
+        intent.putExtra(Const.INTENT_EXTRA_GEO_LNG, lng );
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        mActivity.startActivity(intent);
     }
 
     /**
@@ -101,13 +102,13 @@ public class ActivityHelper {
      */
     public final void goMap() {
         // TODO: refactor for gmaps api v2
-//        if (mActivity instanceof ca.mudar.patinoires.ui.MapActivity) {
-//            return;
-//        }
-//
-//        final Intent intent = new Intent(mActivity.getApplicationContext(), MapActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//        mActivity.startActivity(intent);
+        if (mActivity instanceof ca.mudar.patinoires.ui.MapActivity) {
+            return;
+        }
+
+        final Intent intent = new Intent(mActivity.getApplicationContext(), MapActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        mActivity.startActivity(intent);
     }
 
     /**
@@ -162,9 +163,6 @@ public class ActivityHelper {
                     intent = new Intent(mActivity, SettingsActivity.class);
                 }
                 mActivity.startActivity(intent);
-                return true;
-            case R.id.menu_map:
-                goMap();
                 return true;
             case R.id.menu_refresh:
                 triggerRefresh(null, true);

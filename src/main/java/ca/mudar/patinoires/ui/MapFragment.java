@@ -23,74 +23,63 @@
 
 package ca.mudar.patinoires.ui;
 
-import ca.mudar.patinoires.PatinoiresApp;
-import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.providers.RinksContract.Parks;
-import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
-import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
-import ca.mudar.patinoires.ui.widgets.MyItemizedOverlay;
-import ca.mudar.patinoires.ui.widgets.MyOverlayItem;
-import ca.mudar.patinoires.utils.ActivityHelper;
-import ca.mudar.patinoires.utils.Const;
-import ca.mudar.patinoires.utils.Const.PrefsValues;
-import ca.mudar.patinoires.utils.Helper;
-
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapController;
-import com.google.android.maps.MapView;
-import com.google.android.maps.MyLocationOverlay;
-import com.google.android.maps.Overlay;
-
-import android.database.Cursor;
-import android.graphics.drawable.Drawable;
+import android.app.Activity;
+import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.BaseColumns;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.SupportActivity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.util.Log;
+import android.view.MenuItem;
+import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+
 import java.util.List;
 
-public class MapFragment extends Fragment {
+import ca.mudar.patinoires.PatinoiresApp;
+import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.utils.ActivityHelper;
+import ca.mudar.patinoires.utils.Const;
+
+public class MapFragment extends SupportMapFragment implements
+        GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnInfoWindowClickListener {
+
     protected static final String TAG = "MapFragment";
-
-    protected static int INDEX_OVERLAY_MY_LOCATION = 0x0;
-    protected static int INDEX_OVERLAY_PLACEMARKS = 0x1;
-
-    protected static int ZOOM_DEFAULT = 14;
-    protected static int ZOOM_NEAR = 17;
-
-    protected PatinoiresApp mAppHelper;
-    protected ActivityHelper mActivityHelper;
-
-    protected MapView mMapView;
-    protected MyLocationOverlay mLocationOverlay;
-    protected MapController mMapController;
-    protected LocationManager mLocationManager;
+    protected static final int INDEX_OVERLAY_MY_LOCATION = 0x0;
+    protected static final int INDEX_OVERLAY_PLACEMARKS = 0x1;
+    // protected static final float ZOOM_DEFAULT = 12f;
+    private static final float ZOOM_NEAR = 17f;
+    private static final float ZOOM_MIN = 16f;
+    private static final float HUE_MARKER = 94f;
+    private static final float HUE_MARKER_STARRED = BitmapDescriptorFactory.HUE_YELLOW;
+    private static final float DISTANCE_MARKER_HINT = 50f;
     protected OnMyLocationChangedListener mListener;
-
-    protected GeoPoint initGeoPoint = null;
-    protected GeoPoint mMapCenter = null;
-
-    /**
-     * Container Activity must implement this interface to receive the list item
-     * clicks.
-     */
-    public interface OnMyLocationChangedListener {
-        public void OnMyLocationChanged(GeoPoint geoPoint);
-    }
+    protected LocationManager mLocationManager;
+    ActivityHelper activityHelper;
+    private GoogleMap mMap;
+        private LocationSource.OnLocationChangedListener onLocationChangedListener;
+    private Location initLocation = null;
+    private Location mMapCenter = null;
+    private LatLng screenCenter = null;
+    private Marker clickedMarker = null;
+    private Marker searchedMarker = null;
+    private boolean hasHintMarker = true;
+    private PatinoiresApp mAppHelper;
+    private MenuItem searchItem;
+    private String postalCode;
 
     /**
      * Attach a listener.
      */
     @Override
-    public void onAttach(SupportActivity activity) {
+    public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
             mListener = (OnMyLocationChangedListener) activity;
@@ -100,100 +89,103 @@ public class MapFragment extends Fragment {
         }
     }
 
+    /**
+     * Create map and initialize
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mActivityHelper = ActivityHelper.createInstance(getActivity());
-        mAppHelper = ((PatinoiresApp) getSupportActivity().getApplicationContext());
-
-        setRetainInstance(true);
     }
 
-    /**
-     * Create the map view and restore saved instance (if any). {@inheritDoc}
-     */
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-
-        View root = inflater.inflate(R.layout.fragment_map, container, false);
-        mMapView = (MapView) root.findViewById(R.id.map_view);
-
-        return root;
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mMapView.setBuiltInZoomControls(true);
+        activityHelper = ActivityHelper.createInstance(getActivity());
+        mAppHelper = (PatinoiresApp) getActivity().getApplicationContext();
 
-        mMapController = mMapView.getController();
+        setUpMapIfNeeded();
 
         mLocationManager = (LocationManager) getActivity().getApplicationContext()
-                .getSystemService(MapActivity.LOCATION_SERVICE);
+                .getSystemService(Context.LOCATION_SERVICE);
 
-        initMap();
+//        initMap();
     }
 
     /**
-     * Enable user location (GPS) updates on map display. {@inheritDoc}
+     * Enable user location (GPS) updates on map display.
      */
     @Override
     public void onResume() {
-        mLocationOverlay.enableMyLocation();
-
         super.onResume();
+
+        setUpMapIfNeeded();
     }
 
-    /**
-     * Disable user location (GPS) updates on map hide. {@inheritDoc}
-     */
-    @Override
-    public void onPause() {
-        mLocationOverlay.disableMyLocation();
-        super.onPause();
-    }
 
-    /**
-     * Initialize Map: centre and load rinks
-     */
-    protected void initMap() {
-        mLocationOverlay = new MyLocationOverlay(getActivity().getApplicationContext(), mMapView);
-        mLocationOverlay.enableCompass();
-        mLocationOverlay.enableMyLocation();
-        mMapView.getOverlays().add(INDEX_OVERLAY_MY_LOCATION, mLocationOverlay);
-
-        ArrayList<MapMarker> mapMarkers = fetchMapMarkers();
-
-        Drawable drawable = this.getResources().getDrawable(R.drawable.ic_map_default_marker);
-        MyItemizedOverlay mItemizedOverlay = new MyItemizedOverlay(drawable,
-                mMapView);
-
-        if (mapMarkers.size() > 0) {
-            for (MapMarker marker : mapMarkers) {
-
-                MyOverlayItem overlayitem = new MyOverlayItem(marker.geoPoint, marker.name,
-                        marker.address, marker.id, marker.extra);
-                mItemizedOverlay.addOverlay(overlayitem);
+    private void setUpMapIfNeeded() {
+        // Do a null check to confirm that we have not already instantiated the
+        // map.
+        if (!checkReady()) {
+            // Try to obtain the map from the SupportMapFragment.
+            mMap = getMap();
+            // Check if we were successful in obtaining the map.
+            if (checkReady()) {
+                setUpMap();
             }
-            mMapView.getOverlays().add(INDEX_OVERLAY_PLACEMARKS, mItemizedOverlay);
         }
+    }
+
+    private void setUpMap() {
+
+        mMap.setMyLocationEnabled(true);
+//        mMap.setMapType(MAP_TYPE_NORMAL);
+
+        mMap.setLocationSource(null);
+
+//        mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(getActivity()));
+
+        mMap.setOnMarkerClickListener(this);
+        mMap.setOnInfoWindowClickListener(this);
+
+        // Required for the windowActionBarOverlay / transparent actionbar
+//        mMap.setPadding(0, getPaddingTop(), 0, 0);
+
+//        UiSettings uiSettings = mMap.getUiSettings();
+
+//        uiSettings.setZoomControlsEnabled(true);
+//        uiSettings.setMyLocationButtonEnabled(true);
+//        uiSettings.setAllGesturesEnabled(true);
+//        uiSettings.setCompassEnabled(true);
+    }
+
+    private boolean checkReady() {
+        if (mMap == null) {
+            mAppHelper.showToastText(R.string.toast_map_not_ready, Toast.LENGTH_SHORT);
+            return false;
+        }
+        return true;
     }
 
     /**
      * Set new map center.
-     * 
+     *
      * @param mapCenter
      */
-    protected void animateToPoint(GeoPoint mapCenter) {
-        if (mapCenter != null) {
-            mMapController.setZoom(ZOOM_NEAR);
-            mMapController.animateTo(mapCenter);
+    protected void animateToPoint(Location mapCenter) {
+        Log.v(TAG, "animateToPoint");
+        if (mMap == null) {
+            Log.v(TAG, "map is null!");
+            return;
         }
-        else {
-            mMapController.setZoom(ZOOM_DEFAULT);
+        if (mapCenter != null) {
+            Log.v(TAG, "ZOOM_NEAR");
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+                    mapCenter.getLatitude(), mapCenter.getLongitude()), ZOOM_NEAR));
+        } else {
+            Log.v(TAG, "ZOOM_DEFAULT + initialAnimateToPoint");
+            mMap.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_NEAR));
             initialAnimateToPoint();
         }
     }
@@ -204,197 +196,92 @@ public class MapFragment extends Fragment {
      * defines the zoom.
      */
     protected void initialAnimateToPoint() {
-        List<String> enabledProviders = mLocationManager.getProviders(true);
+        Log.v(TAG, "initialAnimateToPoint");
+        final List<String> enabledProviders = mLocationManager.getProviders(true);
 
         double coordinates[] = Const.MAPS_DEFAULT_COORDINATES;
         final double lat = coordinates[0];
         final double lng = coordinates[1];
 
-        Location userLocation = mAppHelper.getLocation();
+        final Location userLocation = mAppHelper.getLocation();
         if (userLocation != null) {
             /**
              * Center on app's user location.
              */
-            GeoPoint appGeoPoint = Helper.locationToGeoPoint(userLocation);
-            mMapController.setCenter(appGeoPoint);
-        }
-        else {
+            Log.v(TAG, "initialAnimateToPoint lat = " +
+            userLocation.getLatitude() + ". Lon = "
+            + userLocation.getLongitude());
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(
+                    userLocation.getLatitude(), userLocation.getLongitude())));
+        } else {
             /**
              * Center on Downtown.
              */
-            GeoPoint cityCenter = new GeoPoint((int) (lat * 1E6), (int) (lng * 1E6));
-            mMapController.setCenter(cityCenter);
+            Log.v(TAG, "initialAnimateToPoint. Center on Downtown");
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));
         }
 
-        if ((mMapCenter == null) && enabledProviders.contains(LocationManager.NETWORK_PROVIDER)) {
-            /**
-             * Get user current location then display on map.
-             */
-            mLocationOverlay.runOnFirstFix(new Runnable() {
-                public void run() {
-                    GeoPoint userGeoPoint = mLocationOverlay.getMyLocation();
-
-                    if (mListener != null) {
-                        mListener.OnMyLocationChanged(userGeoPoint);
-                    }
-
-                    /**
-                     * If user is very far from Montreal (> 25km) we center the
-                     * map on Downtown.
-                     */
-                    float[] resultDistance = new float[1];
-                    android.location.Location.distanceBetween(lat, lng,
-                            (userGeoPoint.getLatitudeE6() / 1E6),
-                            (userGeoPoint.getLongitudeE6() / 1E6), resultDistance);
-
-                    if (resultDistance[0] > Const.MAPS_MIN_DISTANCE) {
-                        userGeoPoint = new GeoPoint((int) (lat * 1E6), (int) (lng * 1E6));
-                    }
-
-                    mMapCenter = userGeoPoint;
-                    if (userGeoPoint != null) {
-                        mMapController.animateTo(userGeoPoint);
-                    }
-                }
-            });
-        }
-        else if (mMapCenter != null) {
+        if (mMapCenter != null) {
             /**
              * The AppHelper knows the user location from a previous query, so
              * use the saved value.
              */
-            mMapController.setCenter(mMapCenter);
+            Log.v(TAG, "initialAnimateToPoint. mMapCenter != null");
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(
+                    mMapCenter.getLatitude(), mMapCenter.getLongitude())));
         }
     }
 
     /**
-     * The query selected columns
-     */
-
-    /**
-     * Get the list of Placemarks from the database and return them as array to
-     * be added as OverlayItems in the map.
-     * 
-     * @return ArrayList of MarpMarkers
-     */
-    protected ArrayList<MapMarker> fetchMapMarkers() {
-        MapMarker mMapMarker;
-        ArrayList<MapMarker> alLocations = new ArrayList<MapMarker>();
-
-        /**
-         * Filter rinks by conditions.
-         */
-        String filter = Helper.getSqliteConditionsFilter(mAppHelper.getConditionsFilter());
-
-        Cursor cur = getActivity().getApplicationContext().getContentResolver()
-                .query(Parks.CONTENT_URI, RinksQuery.MAP_MARKER_PROJECTION, filter, null, null);
-
-        if (cur.moveToFirst()) {
-
-            // TODO: put this in a query Interface
-
-            String prefixParcName = getResources().getString(R.string.rink_details_park_name);
-
-            do {
-                String extra = "";
-                /**
-                 * Display the name of the rink or the total number of rinks.
-                 */
-                int nbRinks = cur.getInt(RinksQuery.columnRinksTotal);
-                if (nbRinks > 1) {
-                    extra = String.format(
-                            getResources().getString(R.string.park_total_rinks_plural),
-                            nbRinks);
-                }
-                else {
-                    extra = cur.getString(mAppHelper.getLanguage().equals(PrefsValues.LANG_FR) ?
-                            RinksQuery.columnDescFr : RinksQuery.columnDescEn);
-                }
-
-                mMapMarker = new MapMarker(cur.getString(RinksQuery.columnParkId), String.format(
-                        cur.getString(RinksQuery.columnName), prefixParcName),
-                        cur.getString(RinksQuery.columnAddress), cur.getDouble(RinksQuery.columnGeoLat),
-                        cur.getDouble(RinksQuery.columnGeoLng), extra);
-                alLocations.add(mMapMarker);
-
-            } while (cur.moveToNext());
-        }
-        cur.close();
-
-        return alLocations;
-    }
-
-    /**
-     * Data structure of a Placemark/MapMarker/OverlayItem
-     */
-    protected static class MapMarker {
-        public final String id;
-        public final String name;
-        public final String address;
-        public final GeoPoint geoPoint;
-        public final String extra;
-
-        public MapMarker(String id, String name, String address, double geoLat, double geoLng,
-                String extra) {
-            this.id = id;
-            this.name = name;
-            this.address = address;
-            this.geoPoint = new GeoPoint((int) (geoLat * 1E6), (int) (geoLng * 1E6));
-            this.extra = extra;
-        }
-    }
-
-    /**
-     * Setter for the MapCenter GeoPoint. Centers map on the new location and
-     * displays the ViewBallooon.
-     * 
+     * Setter for the MapCenter Location. Centers map on the new location
+     *
      * @param mapCenter The new location
      */
-    public void setMapCenter(GeoPoint mapCenter) {
-        initGeoPoint = mapCenter;
+    public void setMapCenter(Location mapCenter) {
+        Log.v(TAG, "setMapCenter");
+//        Log.v(TAG, "lat = " + mapCenter.getLatitude() + " lng = " +mapCenter.getLongitude());
+        initLocation = mapCenter;
         animateToPoint(mapCenter);
-
-        if (mapCenter != null) {
-            Overlay overlayPlacemarks = mMapView.getOverlays().get(INDEX_OVERLAY_PLACEMARKS);
-            overlayPlacemarks.onTap(mapCenter, mMapView);
-        }
     }
 
     /**
-     * Used for menu's "My Location" and for Postal Code search. Sets the map
-     * center on the location with a near zoom.
+     * Sets the map center on the user real location with a near zoom.
      */
-    public void setMapCenterZoomed(GeoPoint mapCenter) {
-        mMapController.setZoom(ZOOM_NEAR);
+    public void resetMapCenter() {
+        searchedMarker = null;
+        if (!mMap.isMyLocationEnabled()) {
+            mMap.setMyLocationEnabled(true);
+        }
+        mMap.setLocationSource(null);
+        setMapCenterZoomed(mAppHelper.getLocation());
+    }
+
+    /**
+     * Sets the map center on the location with a near zoom. Used for Address
+     * Search and Tab re-selection.
+     */
+    private void setMapCenterZoomed(Location mapCenter) {
+        // mMapController.setZoom(ZOOM_NEAR);
         setMapCenter(mapCenter);
     }
 
-    private static interface RinksQuery {
-        // int _TOKEN = 0x10;
+    @Override
+    public void onInfoWindowClick(Marker marker) {
 
-        final String[] MAP_MARKER_PROJECTION = new String[] {
-                BaseColumns._ID,
-                ParksColumns.PARK_ID,
-                ParksColumns.PARK_NAME,
-                ParksColumns.PARK_ADDRESS,
-                ParksColumns.PARK_GEO_LAT,
-                ParksColumns.PARK_GEO_LNG,
-                ParksColumns.PARK_TOTAL_RINKS,
-                RinksColumns.RINK_DESC_FR,
-                RinksColumns.RINK_DESC_EN,
-                RinksColumns.RINK_IS_FAVORITE
-        };
+    }
 
-        // final int columnId = 0x0;
-        final int columnParkId = 0x1;
-        final int columnName = 0x2;
-        final int columnAddress = 0x3;
-        final int columnGeoLat = 0x4;
-        final int columnGeoLng = 0x5;
-        final int columnRinksTotal = 0x6;
-        final int columnDescFr = 0x7;
-        final int columnDescEn = 0x8;
-        // final int columnRinkIsFavorite = 0x9;
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return false;
+    }
+
+
+    /**
+     * Container Activity must implement this interface to receive the list item
+     * clicks.
+     */
+    public interface OnMyLocationChangedListener {
+        public void OnMyLocationChanged(Location location);
     }
 
 }

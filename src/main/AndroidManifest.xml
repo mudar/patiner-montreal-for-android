@@ -34,18 +34,46 @@
 
     <!-- <supports-screens android:anyDensity="true" /> -->
 
+    <permission
+        android:name="ca.mudar.patinoires.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="ca.mudar.patinoires.permission.MAPS_RECEIVE" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
-    <!-- <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" /> -->
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
+    <uses-feature android:name="android.hardware.location.gps" />
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="false" />
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
 
     <application
         android:name=".PatinoiresApp"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name_manifest"
         android:theme="@style/PatinoiresTheme">
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="__GOOGLE_MAPS_V2_API_KEY__" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -116,23 +144,19 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name_map"
             android:launchMode="singleTop"
-            android:theme="@style/PatinoiresTheme" >
-        </activity>
+            android:theme="@style/MapTheme"></activity>
         <activity
             android:name=".ui.AboutActivity"
             android:label="@string/app_name_about"
-            android:theme="@style/AboutTheme">
-        </activity>
+            android:theme="@style/AboutTheme"></activity>
         <activity
             android:name=".ui.SettingsActivity"
             android:label="@string/app_name_preferences"
-            android:theme="@style/PreferencesTheme">
-        </activity>
+            android:theme="@style/PreferencesTheme"></activity>
         <activity
             android:name=".ui.SettingsActivityHC"
             android:label="@string/app_name_preferences"
-            android:theme="@style/PreferencesTheme">
-        </activity>
+            android:theme="@style/PreferencesTheme"></activity>
 
         <uses-library android:name="com.google.android.maps" />
 
