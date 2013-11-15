@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Patiner Montréal for Android. 
     Information about outdoor rinks in the city of Montréal: conditions,
     services, contact, map, etc.
@@ -26,9 +25,7 @@
 
     <string name="hello">Hello World, Patinoires!</string>
     <string name="app_name">Patiner Montréal</string>
-    <string name="app_version">1.0.0</string>
-    <string name="google_map_api_key">0glAHGvFHL0gAEDm5bMNdruBtKReUb1qDlpZSlA</string>
-    <string name="google_map_api_key_debug">0glAHGvFHL0gAEDm5bMNdruBtKReUb1qDlpZSlA</string>
+    <string name="app_version">1.1</string>
     <string name="app_name_map">Patiner Montréal Map</string>
     <string name="app_name_details">Patiner Montréal Rink</string>
     <string name="app_name_search">Patiner Montréal Search</string>
@@ -91,7 +88,7 @@
     <string name="dialog_network_connection_title">No connection!</string>
     <string name="dialog_network_connection_message">You need a network connection to update the rinks information. Please turn on mobile network or Wi-Fi in Settings…</string>
     <string name="search_hint">Search rinks</string>
-    <string name="search_results">Results for \'<xliff:g id="string">%s</xliff:g>\'</string>
+    <string name="search_results">Results for ’<xliff:g id="string">%s</xliff:g>’</string>
     <!-- <string name="prefs_category_display">Display Settings</string> -->
     <string name="prefs_breadcrumb">Settings</string>
     <string name="prefs_category_conditions">Rink Conditions</string>
@@ -117,6 +114,7 @@
     <string name="menu_favorites_toggle">Favorite rink</string>
     <string name="about_contents_project_version">Version %s</string>
     <string name="toast_network_connection_error">Network connection is unavailable…</string>
+    <string name="toast_map_not_ready">Loading Map…</string>
     <string name="toast_favorites_added">Added %s to favorites</string>
     <string name="toast_favorites_removed">Removed %s from favorites</string>
     <string name="toast_prefs_conditions_error">Please check at least one condition…</string>
@@ -158,11 +156,15 @@
     <string name="accessibility_ic_dial">Dial phone number</string>
     <string name="accessibility_ic_tab">Section icon</string>
     <string name="about_contents_slogan">Enjoy the Winter!</string>
-    <string name="about_contents_intro_1">Patiner Montréal provides you with daily updated information about conditions and services of Montréal\'s outdoor rinks.</string>
+    <string name="about_contents_intro_1">Patiner Montréal provides you with daily updated information about conditions and services of Montréal’s outdoor rinks.</string>
     <string name="about_contents_intro_2">Patiner Montréal for Android is an open source project to promote Open Data in Montréal. With the help of an other Montréal Ouvert project, the app retrieves information published by the city to bring it to your phone.</string>
     <string name="about_contents_credits_1">Android app developed by <a href="http://www.mudar.ca/">Mudar Noufal</a>. Source code is released under the GPLv3 license from the Free Software Foundation.</string>
     <string name="about_contents_credits_2">Art Direction and Graphic Design by <a href="http://www.nofolio.com/">Noémie Darveau</a>.</string>
     <string name="about_contents_credits_3">Project done in collaboration with <a href="http://montrealouvert.net/donnees-ouvertes-questions-frequemment-demandees/?lang=en">Montréal ouvert</a>. Many thanks to <a href="http://www.slashpoundbang.com/">James McKinney</a> (open data API), Jonathan Brun &amp; Daniel Mireault.</string>
     <string name="about_contents_open_data">This app is powered by The City of Montréal Open Data <a href="http://donnees.ville.montreal.qc.ca/">Portal</a>, in compliance with its Open Data <a href="http://donnees.ville.montreal.qc.ca/licence-texte-complet">license</a>. Additional source: City of Dorval Leisure and culture <a href="http://www.ville.dorval.qc.ca/loisirs/en/default.asp?contentID=807">Portal</a>.</string>
-
+    <!--Share-->
+    <string name="share_subject_skating">Skating at %s outdoor rink</string>
+    <string name="share_subject_hockey">Playing Hockey at %s outdoor rink</string>
+    <string name="share_text_skating">I’m going skating at <xliff:g id="string">%s</xliff:g> rink http://patinermontreal.ca/rinks/<xliff:g id="string">%s</xliff:g> Rink via @patinermtl</string>
+    <string name="share_text_hockey">I’m going to play hockey at <xliff:g id="string">%s</xliff:g> rink http://patinermontreal.ca/rinks/<xliff:g id="string">%s</xliff:g> via @patinermtl</string>
 </resources>

@@ -73,6 +73,7 @@ import ca.mudar.patinoires.utils.NotifyingAsyncQueryHandler;
 public class RinkDetailsFragment extends Fragment
         implements NotifyingAsyncQueryHandler.AsyncQueryListener {
     private static final String TAG = "RinkDetailsFragment";
+    private static final String SEND_INTENT_TYPE = "text/plain";
     protected static int mRinkId = -1;
     protected static Uri mRinkUri = null;
     protected ActivityHelper mActivityHelper;
@@ -81,6 +82,7 @@ public class RinkDetailsFragment extends Fragment
     protected int mIsFavorite = 0;
     protected double mGeoLat = 0;
     protected double mGeoLng = 0;
+    protected int mRinkKind = 0;
     protected String mRinkName = "";
     protected Resources mResources;
     protected NotifyingAsyncQueryHandler mHandler;
@@ -196,6 +198,27 @@ public class RinkDetailsFragment extends Fragment
 
             mActivityHelper.goMap(mGeoLat, mGeoLng);
             return true;
+        } else if (item.getItemId() == R.id.menu_share) {
+            // Native sharing
+            final boolean isHockey = (mRinkKind == DbValues.KIND_PSE);
+            final String shareSubject = String.format(
+                    getResources().getString((isHockey ? R.string.share_subject_hockey : R.string.share_subject_skating)),
+                    mRinkName);
+            final String shareText = String.format(
+                    getResources().getString((isHockey ? R.string.share_text_hockey: R.string.share_text_skating)),
+                    mRinkName,
+                    mRinkId);
+
+            final Bundle extras = new Bundle();
+            extras.putString(Intent.EXTRA_SUBJECT, shareSubject);
+            extras.putString(Intent.EXTRA_TEXT, shareText);
+
+            final Intent sendIntent = new Intent();
+            sendIntent.putExtras(extras);
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType(this.SEND_INTENT_TYPE);
+            startActivity(sendIntent);
+            return true;
         }
 
         return mActivityHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
@@ -310,7 +333,7 @@ public class RinkDetailsFragment extends Fragment
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void updateConditionsInfo(Cursor cursor) {
-        int kindId = cursor.getInt(RinksQuery.RINK_KIND_ID);
+        mRinkKind = cursor.getInt(RinksQuery.RINK_KIND_ID);
 
         final int isCleared = cursor.getInt(RinksQuery.RINK_IS_CLEARED);
         final int isFlooded = cursor.getInt(RinksQuery.RINK_IS_FLOODED);
@@ -318,7 +341,7 @@ public class RinkDetailsFragment extends Fragment
         int condition = cursor.getInt(RinksQuery.RINK_CONDITION);
 
         ((ImageView) mRootView.findViewById(R.id.l_rink_kind_id))
-                .setImageResource(Helper.getRinkImage(kindId, condition));
+                .setImageResource(Helper.getRinkImage(mRinkKind, condition));
 
         /**
          * Display condition on a colored background.
@@ -331,8 +354,7 @@ public class RinkDetailsFragment extends Fragment
 
         if (Const.SUPPORTS_JELLYBEAN) {
             vCondition.setBackground(mResources.getDrawable(Helper.getConditionBackground(condition)));
-        }
-        else {
+        } else {
             vCondition.setBackgroundResource(Helper.getConditionBackground(condition));
         }
 
