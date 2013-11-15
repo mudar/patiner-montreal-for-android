@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Patiner Montréal for Android. 
     Information about outdoor rinks in the city of Montréal: conditions,
     services, contact, map, etc.
@@ -25,14 +24,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/map_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="?attr/actionBarSize">
+    android:layout_height="match_parent">
 
     <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
         android:id="@+id/fragment_map"
         android:name="ca.mudar.patinoires.ui.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        map:cameraBearing="-34"
         map:cameraTargetLat="45.5"
         map:cameraTargetLng="-73.666667"
         map:cameraZoom="10"

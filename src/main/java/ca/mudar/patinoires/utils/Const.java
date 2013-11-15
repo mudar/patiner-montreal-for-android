@@ -94,6 +94,9 @@ public class Const {
     //    The following are useless based on minSdkVersion
     public static boolean SUPPORTS_GINGERBREAD = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
     public static boolean SUPPORTS_FROYO = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
+
+    public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
     /**
      * Location constants. Copied from
      * com.radioactiveyak.location_best_practices

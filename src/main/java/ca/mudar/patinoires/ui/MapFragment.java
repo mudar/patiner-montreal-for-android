@@ -25,10 +25,15 @@ package ca.mudar.patinoires.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
+import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -39,13 +44,19 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.providers.RinksContract;
+import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
+import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
 import ca.mudar.patinoires.utils.ActivityHelper;
 import ca.mudar.patinoires.utils.Const;
+import ca.mudar.patinoires.utils.Helper;
 
 public class MapFragment extends SupportMapFragment implements
         GoogleMap.OnMarkerClickListener,
@@ -57,14 +68,14 @@ public class MapFragment extends SupportMapFragment implements
     // protected static final float ZOOM_DEFAULT = 12f;
     private static final float ZOOM_NEAR = 17f;
     private static final float ZOOM_MIN = 16f;
-    private static final float HUE_MARKER = 94f;
+    private static final float HUE_MARKER = 228f;
     private static final float HUE_MARKER_STARRED = BitmapDescriptorFactory.HUE_YELLOW;
     private static final float DISTANCE_MARKER_HINT = 50f;
     protected OnMyLocationChangedListener mListener;
     protected LocationManager mLocationManager;
     ActivityHelper activityHelper;
     private GoogleMap mMap;
-        private LocationSource.OnLocationChangedListener onLocationChangedListener;
+    private LocationSource.OnLocationChangedListener onLocationChangedListener;
     private Location initLocation = null;
     private Location mMapCenter = null;
     private LatLng screenCenter = null;
@@ -74,6 +85,7 @@ public class MapFragment extends SupportMapFragment implements
     private PatinoiresApp mAppHelper;
     private MenuItem searchItem;
     private String postalCode;
+    private DbAsyncTask dbAsyncTask = null;
 
     /**
      * Attach a listener.
@@ -96,7 +108,6 @@ public class MapFragment extends SupportMapFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -121,12 +132,12 @@ public class MapFragment extends SupportMapFragment implements
         super.onResume();
 
         setUpMapIfNeeded();
+
+        queryOverlays();
     }
 
-
     private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the
-        // map.
+        // Do a null check to confirm that we have not already instantiated the map.
         if (!checkReady()) {
             // Try to obtain the map from the SupportMapFragment.
             mMap = getMap();
@@ -140,24 +151,13 @@ public class MapFragment extends SupportMapFragment implements
     private void setUpMap() {
 
         mMap.setMyLocationEnabled(true);
-//        mMap.setMapType(MAP_TYPE_NORMAL);
-
         mMap.setLocationSource(null);
+        mMap.setPadding(0, getPaddingTop(), 0, 0);
 
 //        mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(getActivity()));
 
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
-
-        // Required for the windowActionBarOverlay / transparent actionbar
-//        mMap.setPadding(0, getPaddingTop(), 0, 0);
-
-//        UiSettings uiSettings = mMap.getUiSettings();
-
-//        uiSettings.setZoomControlsEnabled(true);
-//        uiSettings.setMyLocationButtonEnabled(true);
-//        uiSettings.setAllGesturesEnabled(true);
-//        uiSettings.setCompassEnabled(true);
     }
 
     private boolean checkReady() {
@@ -209,8 +209,8 @@ public class MapFragment extends SupportMapFragment implements
              * Center on app's user location.
              */
             Log.v(TAG, "initialAnimateToPoint lat = " +
-            userLocation.getLatitude() + ". Lon = "
-            + userLocation.getLongitude());
+                    userLocation.getLatitude() + ". Lon = "
+                    + userLocation.getLongitude());
             mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(
                     userLocation.getLatitude(), userLocation.getLongitude())));
         } else {
@@ -239,7 +239,8 @@ public class MapFragment extends SupportMapFragment implements
      */
     public void setMapCenter(Location mapCenter) {
         Log.v(TAG, "setMapCenter");
-//        Log.v(TAG, "lat = " + mapCenter.getLatitude() + " lng = " +mapCenter.getLongitude());
+        if (mapCenter != null)
+            Log.v(TAG, "lat = " + mapCenter.getLatitude() + " lng = " + mapCenter.getLongitude());
         initLocation = mapCenter;
         animateToPoint(mapCenter);
     }
@@ -275,6 +276,30 @@ public class MapFragment extends SupportMapFragment implements
         return false;
     }
 
+    private void queryOverlays() {
+        if (dbAsyncTask != null) {
+            dbAsyncTask.cancel(true);
+        }
+
+        final String queryFilter = Helper.getSqliteConditionsFilter(mAppHelper.getConditionsFilter());
+
+        dbAsyncTask = new DbAsyncTask();
+        dbAsyncTask.execute(queryFilter);
+    }
+
+    private int getPaddingTop() {
+
+        TypedValue tv = new TypedValue();
+        if (getActivity().getTheme().resolveAttribute(R.attr.actionBarSize, tv, true)) {
+            int actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+            return actionBarHeight;
+        } else {
+            Resources res = getResources();
+            int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, res.getDisplayMetrics());
+            return px;
+        }
+
+    }
 
     /**
      * Container Activity must implement this interface to receive the list item
@@ -284,4 +309,177 @@ public class MapFragment extends SupportMapFragment implements
         public void OnMyLocationChanged(Location location);
     }
 
+    private static interface RinksQuery {
+        // int _TOKEN = 0x10;
+
+        final String[] MAP_MARKER_PROJECTION = new String[]{
+                BaseColumns._ID,
+                ParksColumns.PARK_ID,
+                ParksColumns.PARK_NAME,
+                ParksColumns.PARK_ADDRESS,
+                ParksColumns.PARK_GEO_LAT,
+                ParksColumns.PARK_GEO_LNG,
+                ParksColumns.PARK_TOTAL_RINKS,
+                RinksColumns.RINK_DESC_FR,
+                RinksColumns.RINK_DESC_EN,
+                RinksColumns.RINK_IS_FAVORITE
+        };
+        // final int columnId = 0x0;
+        final int columnParkId = 0x1;
+        final int columnName = 0x2;
+        final int columnAddress = 0x3;
+        final int columnGeoLat = 0x4;
+        final int columnGeoLng = 0x5;
+        final int columnRinksTotal = 0x6;
+        final int columnDescFr = 0x7;
+        final int columnDescEn = 0x8;
+        // final int columnRinkIsFavorite = 0x9;
+    }
+
+
+    private class DbAsyncTask extends AsyncTask<Object, Void, Cursor> {
+
+        @Override
+        protected void onPreExecute() {
+
+            try {
+                // Needed to avoid problems when main activity is sent to
+                // background
+                getActivity().setProgressBarIndeterminateVisibility(Boolean.TRUE);
+
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected Cursor doInBackground(Object... params) {
+            final String queryFilter = (String) params[0];
+
+            try {
+                Cursor cur = getActivity()
+                        .getApplicationContext()
+                        .getContentResolver()
+                        .query(RinksContract.Parks.CONTENT_URI,
+                                RinksQuery.MAP_MARKER_PROJECTION,
+                                queryFilter,
+                                null,
+                                null);
+                return cur;
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            try {
+                // Needed to avoid problems when main activity is sent to
+                // background
+                getActivity().setProgressBarIndeterminateVisibility(Boolean.FALSE);
+
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                return;
+            }
+
+            if (cursor == null) {
+                return;
+            }
+
+            final int totalMarkers = cursor.getCount();
+            if (totalMarkers == 0) {
+                cursor.close();
+                return;
+            }
+
+            if (isCancelled()) {
+                cursor.close();
+                return;
+            }
+
+            mMap.clear();
+
+            // TODO: use same following code between DB and JSON
+            if (searchedMarker != null) {
+                searchedMarker = mMap.addMarker(new MarkerOptions()
+                        .position(searchedMarker.getPosition())
+                        .title(searchedMarker.getTitle())
+                        .snippet(null)
+                        .icon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)).visible(true));
+                searchedMarker.showInfoWindow();
+                hasHintMarker = false;
+            }
+
+            if (screenCenter == null || clickedMarker != null) {
+                hasHintMarker = false;
+            }
+            Location locationCenter = new Location(Const.LOCATION_PROVIDER_DEFAULT);
+            if (hasHintMarker) {
+                locationCenter.setLatitude(screenCenter.latitude);
+                locationCenter.setLongitude(screenCenter.longitude);
+            }
+
+            final String prefixParcName = getResources().getString(R.string.rink_details_park_name);
+
+            cursor.moveToFirst();
+            do {
+                if (isCancelled()) {
+                    cursor.close();
+                    return;
+                }
+
+                final int parkId = cursor.getInt(RinksQuery.columnParkId);
+                final String parkName = String.format(cursor.getString(RinksQuery.columnName), prefixParcName);
+                final double lat = cursor.getDouble(RinksQuery.columnGeoLat);
+                final double lng = cursor.getDouble(RinksQuery.columnGeoLng);
+                final String address = cursor.getString(RinksQuery.columnAddress);
+                String desc = (address != null && address.length() > 0 ? address + Const.LINE_SEPARATOR : "");
+
+                /**
+                 * Display the name of the rink or the total number of rinks.
+                 */
+                int nbRinks = cursor.getInt(RinksQuery.columnRinksTotal);
+                if (nbRinks > 1) {
+                    desc += String.format(
+                            getResources().getString(R.string.park_total_rinks_plural),
+                            nbRinks);
+                } else {
+                    desc += cursor.getString(mAppHelper.getLanguage().equals(Const.PrefsValues.LANG_FR) ?
+                            RinksQuery.columnDescFr : RinksQuery.columnDescEn);
+                }
+
+
+                final Marker marker = mMap.addMarker(new MarkerOptions()
+                        .title(parkName)
+                        .position(new LatLng(lat, lng))
+                        .snippet(desc)
+                        .icon(BitmapDescriptorFactory.defaultMarker(HUE_MARKER))
+                        .visible(true));
+
+                if (clickedMarker != null) {
+                    if (clickedMarker.getPosition().equals(marker.getPosition())) {
+                        marker.showInfoWindow();
+                    }
+                } else if (hasHintMarker) {
+                    Location locationMarker = new Location(Const.LOCATION_PROVIDER_DEFAULT);
+                    locationMarker.setLatitude(marker.getPosition().latitude);
+                    locationMarker.setLongitude(marker.getPosition().longitude);
+
+//                    if (locationCenter.distanceTo(locationMarker) < DISTANCE_MARKER_HINT) {
+//                        marker.showInfoWindow();
+//                        hasHintMarker = false;
+//                        clickedMarker = marker;
+//                    }
+                }
+
+            } while (cursor.moveToNext());
+            cursor.close();
+
+        }
+
+    }
 }
