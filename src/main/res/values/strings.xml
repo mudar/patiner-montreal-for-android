@@ -43,6 +43,8 @@
     <string name="menu_favorites_add">Add to favorites</string>
     <string name="menu_favorites_remove">Remove from favorites</string>
     <string name="menu_share">Share</string>
+    <string name="menu_rating">Rate</string>
+    <string name="menu_eula">License</string>
     <string name="menu_call_rink">Call</string>
     <string name="menu_map_view_rink">Locate on map</string>
     <string name="context_menu_favorites_add">Add to favorites</string>
@@ -167,4 +169,6 @@
     <string name="share_subject_hockey">Playing Hockey at %s outdoor rink</string>
     <string name="share_text_skating">I’m going skating at <xliff:g id="string">%s</xliff:g> rink http://patinermontreal.ca/rinks/<xliff:g id="string">%s</xliff:g> Rink via @patinermtl</string>
     <string name="share_text_hockey">I’m going to play hockey at <xliff:g id="string">%s</xliff:g> rink http://patinermontreal.ca/rinks/<xliff:g id="string">%s</xliff:g> via @patinermtl</string>
+    <string name="share_subject_map">Outdoor Rinks in Montreal</string>
+    <string name="share_text_map">Interactive map of Montreal’s outdoor rinks: Skating, Hockey and daily conditions. http://patinermontreal.ca/ via @patinermtl</string>
 </resources>

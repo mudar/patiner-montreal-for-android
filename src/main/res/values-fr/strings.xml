@@ -39,6 +39,8 @@
     <string name="menu_refresh_rink">Rafraîchir</string>
     <string name="menu_view_map">Carte</string>
     <string name="menu_search">Rechercher</string>
+    <string name="menu_rating">Évaluer</string>
+    <string name="menu_eula">Licence</string>
     <string name="menu_select_conditions">Conditions</string>
     <string name="menu_share_map">Partager</string>
     <string name="menu_favorites_add">Ajouter aux favoris</string>
@@ -168,4 +170,6 @@
     <string name="share_subject_hockey">Jouer au hockey à la patinoire extérieure %s</string>
     <string name="share_text_skating">Je vais patiner à la patinoire <xliff:g id="string">%s</xliff:g> http://patinermontreal.ca/patinoires/<xliff:g id="string">%s</xliff:g> via @patinermtl</string>
     <string name="share_text_hockey">Je vais jouer au hockey à la patinoire <xliff:g id="string">%s</xliff:g> http://patinermontreal.ca/patinoires/<xliff:g id="string">%s</xliff:g> via @patinermtl</string>
+    <string name="share_subject_map">Patinoires extérieures à Montréal</string>
+    <string name="share_text_map">Carte des patinoires extérieures à Montréal: patinage, hockey et conditions quotidiennes. http://patinermontreal.ca/ via @patinermtl</string>
 </resources>

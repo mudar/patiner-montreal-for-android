@@ -198,7 +198,7 @@ public class RinkDetailsFragment extends Fragment
 
             mActivityHelper.goMap(mGeoLat, mGeoLng);
             return true;
-        } else if (item.getItemId() == R.id.menu_share) {
+        } else if (item.getItemId() == R.id.menu_share_rink) {
             // Native sharing
             final boolean isHockey = (mRinkKind == DbValues.KIND_PSE);
             final String shareSubject = String.format(

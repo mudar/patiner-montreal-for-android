@@ -21,37 +21,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:patinoires="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_favorites_toggle"
-        android:icon="@drawable/ic_action_star_off"
-        android:orderInCategory="1"
-        android:title="@string/menu_favorites_toggle"
+        android:id="@+id/menu_rating"
+        android:icon="@drawable/ic_action_rating"
+        android:showAsAction="always"
+        android:title="@string/menu_rating"
         patinoires:showAsAction="always" />
 
     <item
-        android:id="@+id/map_view_rink"
-        android:icon="@drawable/ic_action_compass"
-        android:orderInCategory="2"
-        android:title="@string/menu_view_map"
-        patinoires:showAsAction="always" />
-
-    <item
-        android:id="@+id/menu_share_rink"
-        android:icon="@drawable/ic_action_share"
-        android:orderInCategory="3"
+        android:id="@+id/menu_share_app"
         android:title="@string/menu_share"
-        patinoires:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/menu_gmaps_directions"
-        android:icon="@drawable/ic_action_directions"
-        android:orderInCategory="4"
-        android:title="@string/menu_gmaps_directions"
         patinoires:showAsAction="never" />
 
+    <item
+        android:id="@+id/menu_eula"
+        android:title="@string/menu_eula"
+        patinoires:showAsAction="never" />
 
 </menu>

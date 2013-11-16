@@ -28,9 +28,13 @@
     <item
         android:id="@+id/menu_search"
         android:icon="@drawable/ic_action_search"
-        android:showAsAction="always"
         android:title="@string/menu_search"
-        android:visible="false"
-        patinoires:showAsAction="never" />
+        patinoires:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_share_map"
+        android:icon="@drawable/ic_action_share"
+        android:title="@string/menu_share"
+        patinoires:showAsAction="ifRoom" />
 
 </menu>

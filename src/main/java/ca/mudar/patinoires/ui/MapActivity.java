@@ -29,6 +29,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import ca.mudar.patinoires.PatinoiresApp;
@@ -43,6 +45,7 @@ public class MapActivity extends ActionBarActivity implements MapFragment.OnMyLo
     private PatinoiresApp mAppHelper;
     private Location initLocation;
     private boolean isCenterOnMyLocation;
+    private static final String SEND_INTENT_TYPE = "text/plain";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,7 +130,33 @@ public class MapActivity extends ActionBarActivity implements MapFragment.OnMyLo
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_map, menu);
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_share_map) {
+            // Native sharing
+            final String shareSubject = getResources().getString(R.string.share_subject_map);
+            final String shareText = String.format(getResources().getString(R.string.share_text_map));
+
+            final Bundle extras = new Bundle();
+            extras.putString(Intent.EXTRA_SUBJECT, shareSubject);
+            extras.putString(Intent.EXTRA_TEXT, shareText);
+
+            final Intent sendIntent = new Intent();
+            sendIntent.putExtras(extras);
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.setType(this.SEND_INTENT_TYPE);
+            startActivity(sendIntent);
+            return true;
+        }
+
         ActivityHelper mActivityHelper = ActivityHelper.createInstance(this);
         return mActivityHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
