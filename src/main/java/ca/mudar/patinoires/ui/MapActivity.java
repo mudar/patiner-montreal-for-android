@@ -30,7 +30,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
-import android.view.Window;
 
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
@@ -49,13 +48,10 @@ public class MapActivity extends ActionBarActivity implements MapFragment.OnMyLo
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
         mAppHelper = (PatinoiresApp) getApplicationContext();
         mAppHelper.updateUiLanguage();
 
         setContentView(R.layout.activity_map);
-        setProgressBarIndeterminateVisibility(Boolean.FALSE);
 
         final ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);

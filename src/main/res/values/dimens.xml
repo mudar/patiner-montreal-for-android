@@ -44,4 +44,9 @@
     <!--Preferences-->
     <dimen name="padding_prefs_category">4dp</dimen>
     <dimen name="padding_prefs_category_bottom">8dp</dimen>
+    <!--Map-->
+    <dimen name="map_info_window_padding">4dp</dimen>
+    <dimen name="map_info_window_title_text">16sp</dimen>
+    <dimen name="map_info_window_snippet_text">14sp</dimen>
+
 </resources>

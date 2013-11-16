@@ -24,7 +24,10 @@
 package ca.mudar.patinoires.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.location.Location;
@@ -34,7 +37,12 @@ import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,13 +55,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.providers.RinksContract;
 import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
+import ca.mudar.patinoires.ui.widgets.MyInfoWindowAdapter;
 import ca.mudar.patinoires.utils.ActivityHelper;
 import ca.mudar.patinoires.utils.Const;
 import ca.mudar.patinoires.utils.Helper;
@@ -86,6 +97,7 @@ public class MapFragment extends SupportMapFragment implements
     private MenuItem searchItem;
     private String postalCode;
     private DbAsyncTask dbAsyncTask = null;
+    private Map<String, String> mMarkersMap;
 
     /**
      * Attach a listener.
@@ -154,7 +166,7 @@ public class MapFragment extends SupportMapFragment implements
         mMap.setLocationSource(null);
         mMap.setPadding(0, getPaddingTop(), 0, 0);
 
-//        mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(getActivity()));
+        mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(getActivity()));
 
         mMap.setOnMarkerClickListener(this);
         mMap.setOnInfoWindowClickListener(this);
@@ -268,6 +280,40 @@ public class MapFragment extends SupportMapFragment implements
 
     @Override
     public void onInfoWindowClick(Marker marker) {
+        final String parkId = mMarkersMap.get(marker.getId());
+        Log.v(TAG, "Park id = " + parkId);
+
+
+        String filter = Helper.getSqliteConditionsFilter(mAppHelper.getConditionsFilter());
+
+        String uri = RinksContract.Parks.buildRinksUri(parkId).toString();
+
+        Cursor cur = getActivity().getContentResolver()
+                .query(RinksContract.Parks.buildRinksUri(parkId), ParkRinksQuery.PROJECTION,
+                        filter,
+                        null, RinksContract.Rinks.DEFAULT_SORT);
+
+        ArrayList<DialogListItemRink> rinksArrayList = new ArrayList<DialogListItemRink>();
+        if (cur.moveToFirst()) {
+            DialogListItemRink rink;
+            do {
+                String description = cur.getString(mAppHelper.getLanguage().equals(
+                        Const.PrefsValues.LANG_FR) ?
+                        ParkRinksQuery.DESC_FR : ParkRinksQuery.DESC_EN);
+                int image = Helper.getRinkImage(cur.getInt(ParkRinksQuery.KIND_ID),
+                        cur.getInt(ParkRinksQuery.CONDITION));
+
+                rink = new DialogListItemRink(cur.getInt(ParkRinksQuery.RINK_ID),
+                        description,
+                        image);
+                rinksArrayList.add(rink);
+
+            } while (cur.moveToNext());
+        }
+        cur.close();
+
+        displayDialog(marker, rinksArrayList);
+
 
     }
 
@@ -336,20 +382,11 @@ public class MapFragment extends SupportMapFragment implements
         // final int columnRinkIsFavorite = 0x9;
     }
 
-
     private class DbAsyncTask extends AsyncTask<Object, Void, Cursor> {
 
         @Override
         protected void onPreExecute() {
-
-            try {
-                // Needed to avoid problems when main activity is sent to
-                // background
-                getActivity().setProgressBarIndeterminateVisibility(Boolean.TRUE);
-
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
+            mMarkersMap = new HashMap<String, String>();
         }
 
         @Override
@@ -375,17 +412,7 @@ public class MapFragment extends SupportMapFragment implements
 
         @Override
         protected void onPostExecute(Cursor cursor) {
-            try {
-                // Needed to avoid problems when main activity is sent to
-                // background
-                getActivity().setProgressBarIndeterminateVisibility(Boolean.FALSE);
-
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-                return;
-            }
-
-            if (cursor == null) {
+            if (cursor == null || !isAdded()) {
                 return;
             }
 
@@ -432,7 +459,7 @@ public class MapFragment extends SupportMapFragment implements
                     return;
                 }
 
-                final int parkId = cursor.getInt(RinksQuery.columnParkId);
+                final String parkId = cursor.getString(RinksQuery.columnParkId);
                 final String parkName = String.format(cursor.getString(RinksQuery.columnName), prefixParcName);
                 final double lat = cursor.getDouble(RinksQuery.columnGeoLat);
                 final double lng = cursor.getDouble(RinksQuery.columnGeoLng);
@@ -460,6 +487,8 @@ public class MapFragment extends SupportMapFragment implements
                         .icon(BitmapDescriptorFactory.defaultMarker(HUE_MARKER))
                         .visible(true));
 
+                mMarkersMap.put(marker.getId(), parkId);
+
                 if (clickedMarker != null) {
                     if (clickedMarker.getPosition().equals(marker.getPosition())) {
                         marker.showInfoWindow();
@@ -482,4 +511,100 @@ public class MapFragment extends SupportMapFragment implements
         }
 
     }
+
+
+
+    private static interface ParkRinksQuery {
+        final String[] PROJECTION = new String[] {
+                BaseColumns._ID,
+                RinksColumns.RINK_ID,
+                RinksColumns.RINK_KIND_ID,
+                RinksColumns.RINK_DESC_FR,
+                RinksColumns.RINK_DESC_EN,
+                RinksColumns.RINK_CONDITION,
+                // RinksColumns.RINK_IS_FAVORITE
+        };
+
+        // final int _ID = 0x0;
+        final int RINK_ID = 0x1;
+        final int KIND_ID = 0x2;
+        final int DESC_FR = 0x3;
+        final int DESC_EN = 0x4;
+        final int CONDITION = 0x5;
+        // final int IS_FAVORITE = 0x6;
+    }
+
+    private static class DialogListItemRink {
+        public final int rinkId;
+        public final String description;
+        public final int image;
+
+        public DialogListItemRink(int rinkId, String description, int resourceImage) {
+            this.rinkId = rinkId;
+            this.description = description;
+            this.image = resourceImage;
+        }
+    }
+
+
+    private class RinksDialogAdapter extends ArrayAdapter<DialogListItemRink> {
+        protected static final String TAG = "RinksDialogAdapter";
+
+        private Context context;
+        private int textViewResourceId;
+
+        public RinksDialogAdapter(Context context, int textViewResourceId,
+                                  List<DialogListItemRink> objects) {
+            super(context, textViewResourceId, objects);
+
+            this.context = context;
+            this.textViewResourceId = textViewResourceId;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                LayoutInflater inflater = LayoutInflater.from(context);
+                convertView = inflater.inflate(textViewResourceId, null);
+            }
+
+            DialogListItemRink item = getItem(position);
+
+            if (item != null) {
+                TextView rinkDesc = (TextView) convertView.findViewById(R.id.l_rink_desc);
+                rinkDesc.setText(item.description);
+                rinkDesc.setCompoundDrawablesWithIntrinsicBounds(item.image, 0, 0, 0);
+            }
+
+            return convertView;
+        }
+    }
+
+
+    private void displayDialog(Marker marker,
+                               final ArrayList<DialogListItemRink> rinksArrayList) {
+        RinksDialogAdapter parkRinksAdapter = new RinksDialogAdapter(getActivity(),
+                R.layout.maps_parks_rink_item, rinksArrayList);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setTitle(marker.getTitle())
+                .setAdapter(
+                        parkRinksAdapter,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int item) {
+                                DialogListItemRink rink = rinksArrayList.get(item);
+
+                                Intent intent = new Intent(getActivity(), RinkDetailsActivity.class);
+                                intent.putExtra(Const.INTENT_EXTRA_ID_RINK, rink.rinkId);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                                getActivity().startActivity(intent);
+                            }
+                        }
+                )
+                .setNegativeButton(android.R.string.cancel, null);
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 }

@@ -63,4 +63,8 @@
     <color name="conditions_background_unknown">#20000000</color>
     <!-- Preferences -->
     <color name="prefs_category_text">#29466b</color>
+    <!--Map-->
+    <color name="map_info_window_title">#ff29466b</color>
+    <color name="map_info_window_snippet">#9929466b</color>
+
 </resources>
