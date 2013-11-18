@@ -21,7 +21,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires.utils;
+package ca.mudar.patinoires;
 
 import android.app.AlarmManager;
 import android.os.Build;
@@ -31,7 +31,9 @@ public class Const {
     public static final String APP_PREFS_NAME = "PatinoiresPrefsFile";
     public static final String URL_JSON_INITIAL_IMPORT = "http://patinermontreal.ca/data.json";
     public static final String URL_JSON_CONDITIONS_UPDATES = "http://patinermontreal.ca/conditions.json";
-    public static final String URL_GMAPS_DIRECTIONS = "http://maps.google.com/maps?saddr=%s1&daddr=%s2&dirflg=r";
+    public static final String URL_GMAPS_DIRECTIONS = "http://maps.google.com/maps?saddr=%s&daddr=%s&dirflg=r";
+    public static final String URL_PLAYSTORE = "http://play.google.com/store/apps/details?id=ca.mudar.patinoires";
+
     public static final int TABS_INDEX_SKATING = 0x0;
     public static final int TABS_INDEX_HOCKEY = 0x1;
     public static final int TABS_INDEX_ALL = 0x2;
@@ -73,6 +75,7 @@ public class Const {
     public static final String INTENT_EXTRA_ID_RINK = "id_rink";
     public static final String INTENT_EXTRA_URL_PATH_FR = "patinoires";
     public static final String INTENT_EXTRA_URL_PATH_EN = "rinks";
+    public static final int INTENT_REQ_CODE_EULA = 0x10;
     public static final String TAG_FRAGMENT_LIST = "tag_fragment_list";
     public static final String TAG_FRAGMENT_MAP = "tag_fragment_map";
     public static final String KEY_INSTANCE_COORDS = "map_coordinates";
@@ -123,6 +126,11 @@ public class Const {
     public static boolean DISABLE_PASSIVE_LOCATION_WHEN_USER_EXIT = false;
     public static String ACTIVE_LOCATION_UPDATE_PROVIDER_DISABLED = "ca.mudar.patinoires.data.ACTIVE_LOCATION_UPDATE_PROVIDER_DISABLED";
 
+    // Assets
+    public static interface LocalAssets {
+        final String LICENSE = "gpl-3.0-standalone.html";
+    }
+
     public static interface DbValues {
         final int SORT_DISTANCE = 0x0;
         final int SORT_RINK = 0x1;
@@ -157,7 +165,8 @@ public class Const {
         final String CONDITIONS_SHOW_BAD = "prefs_show_bad";
         final String CONDITIONS_SHOW_CLOSED = "prefs_show_closed";
         final String CONDITIONS_SHOW_UNKNOWN = "prefs_show_unknown";
-        final String LAST_FAST_UPDATE = "lastFastUpdateTime";
+//        final String LAST_FAST_UPDATE = "lastFastUpdateTime";
+        final String HAS_ACCEPTED_EULA = "accepted_eula"; // maintain old prefs name
     }
 
     public static interface PrefsValues {

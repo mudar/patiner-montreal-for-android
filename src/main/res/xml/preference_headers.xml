@@ -24,7 +24,7 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
 
     <header
-        android:fragment="ca.mudar.patinoires.ui.SettingsActivity$SettingsFragment"
+        android:fragment="ca.mudar.patinoires.ui.activity.SettingsActivityHC$SettingsFragment"
         android:title="@string/prefs_breadcrumb" />
 
 </preference-headers>

@@ -21,14 +21,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires.ui;
+package ca.mudar.patinoires.ui.fragment;
 
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 
-public class FavoritesListFragment extends BaseListFragment {
+public class AllListFragment extends BaseListFragment {
 
-    public FavoritesListFragment() {
-        super(Rinks.CONTENT_FAVORITES_URI);
+    public AllListFragment() {
+        super(Rinks.CONTENT_ALL_URI);
     }
 
 }

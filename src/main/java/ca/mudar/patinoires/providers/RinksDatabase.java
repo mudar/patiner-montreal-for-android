@@ -27,7 +27,7 @@ import ca.mudar.patinoires.providers.RinksContract.BoroughsColumns;
 import ca.mudar.patinoires.providers.RinksContract.FavoritesColumns;
 import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
-import ca.mudar.patinoires.utils.Const;
+import ca.mudar.patinoires.Const;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

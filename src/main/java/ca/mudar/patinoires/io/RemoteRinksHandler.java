@@ -23,6 +23,22 @@
 
 package ca.mudar.patinoires.io;
 
+import android.content.ContentProviderOperation;
+import android.content.ContentResolver;
+import android.telephony.PhoneNumberUtils;
+import android.text.format.DateFormat;
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+
+import ca.mudar.patinoires.Const.DbValues;
 import ca.mudar.patinoires.providers.RinksContract.Boroughs;
 import ca.mudar.patinoires.providers.RinksContract.BoroughsColumns;
 import ca.mudar.patinoires.providers.RinksContract.Parks;
@@ -30,25 +46,9 @@ import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
 import ca.mudar.patinoires.utils.ApiStringHelper;
-import ca.mudar.patinoires.utils.Const.DbValues;
 import ca.mudar.patinoires.utils.Helper;
 import ca.mudar.patinoires.utils.Lists;
 import ca.mudar.patinoires.utils.ParserUtils;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
-import android.telephony.PhoneNumberUtils;
-import android.text.format.DateFormat;
-import android.util.Log;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
 
 public class RemoteRinksHandler extends JsonHandler {
     private static final String TAG = "RemoteRinksHandler";
@@ -91,7 +91,7 @@ public class RemoteRinksHandler extends JsonHandler {
              * Get Borough info
              */
             try {
-                borough = (JSONObject) boroughs.getJSONObject(i);
+                borough = boroughs.getJSONObject(i);
             } catch (JSONException e) {
                 Log.d(TAG, e.toString());
                 continue;
@@ -125,7 +125,7 @@ public class RemoteRinksHandler extends JsonHandler {
 
             for (int j = 0; j < totalRinks; j++) {
                 try {
-                    rink = (JSONObject) rinks.getJSONObject(j);
+                    rink = rinks.getJSONObject(j);
                 } catch (JSONException e) {
                     Log.d(TAG, e.toString());
                     continue;

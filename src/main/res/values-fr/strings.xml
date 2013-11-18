@@ -32,6 +32,8 @@
     <string name="app_name_search">Recherche de Patiner Montréal</string>
     <string name="app_name_preferences">Paramètres de Patiner Montréal</string>
     <string name="app_name_manifest">Patiner Montreal</string>
+    <string name="app_name_about">À propos de Patiner Montréal</string>
+    <string name="app_name_eula">Licence</string>
     <string name="menu_about">À propos</string>
     <string name="menu_preferences">Paramètres</string>
     <string name="menu_refresh">Rafraîchir</string>
@@ -112,7 +114,6 @@
     <string name="park_distance_imp_min">&lt; 200 pi</string>
     <string name="toast_sync_error">Erreur de connexion : %s</string>
     <string name="toast_sync_finished">Mise à jour terminée</string>
-    <string name="app_name_about">À propos de Patiner Montréal</string>
     <string name="logo_open_data_content_desc">Montréal Ouvert</string>
     <string name="menu_favorites_toggle">Patinoire favorite</string>
     <string name="about_contents_project_version">Version %s</string>
@@ -121,10 +122,9 @@
     <string name="toast_favorites_added">Ajoutée aux favoris : %s</string>
     <string name="toast_favorites_removed">Supprimée des favoris : %s</string>
     <string name="toast_prefs_conditions_error">Veuillez cocher au moins une condition…</string>
-    <string name="eula_assets_filename">gpl-3.0-standalone.html</string>
     <string name="eula_title">GNU General Public License v3.0</string>
-    <string name="dialog_btn_eula_accept">Accepter</string>
-    <string name="dialog_btn_eula_decline">Refuser</string>
+    <string name="eula_accept_btn">Accepter</string>
+    <string name="eula_decline_btn">Refuser</string>
     <string name="park_total_rinks">1 patinoire</string>
     <string name="park_total_rinks_plural">%s patinoires</string>
     <string name="menu_map_mylocation">Ma position</string>
@@ -172,4 +172,6 @@
     <string name="share_text_hockey">Je vais jouer au hockey à la patinoire <xliff:g id="string">%s</xliff:g> http://patinermontreal.ca/patinoires/<xliff:g id="string">%s</xliff:g> via @patinermtl</string>
     <string name="share_subject_map">Patinoires extérieures à Montréal</string>
     <string name="share_text_map">Carte des patinoires extérieures à Montréal: patinage, hockey et conditions quotidiennes. http://patinermontreal.ca/ via @patinermtl</string>
+    <string name="share_subject_app">Application android: Patiner Montréal</string>
+    <string name="share_text_app">Découvrez Patiner Montréal sur Google Playstore %s</string>
 </resources>

@@ -61,6 +61,9 @@
         <item name="android:textColorLink">@color/hyperlink</item>
     </style>
 
+    <style name="EulaTheme" parent="@style/PatinoiresTheme">
+    </style>
+
     <style name="DetailsTheme" parent="@style/PatinoiresTheme">
     </style>
 

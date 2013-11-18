@@ -21,9 +21,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires.ui;
+package ca.mudar.patinoires.ui.fragment;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -55,6 +57,9 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import ca.mudar.patinoires.Const;
+import ca.mudar.patinoires.Const.DbValues;
+import ca.mudar.patinoires.Const.PrefsValues;
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.providers.RinksContract;
@@ -63,10 +68,6 @@ import ca.mudar.patinoires.providers.RinksContract.Favorites;
 import ca.mudar.patinoires.providers.RinksContract.FavoritesColumns;
 import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
-import ca.mudar.patinoires.utils.ActivityHelper;
-import ca.mudar.patinoires.utils.Const;
-import ca.mudar.patinoires.utils.Const.DbValues;
-import ca.mudar.patinoires.utils.Const.PrefsValues;
 import ca.mudar.patinoires.utils.Helper;
 import ca.mudar.patinoires.utils.NotifyingAsyncQueryHandler;
 
@@ -76,7 +77,6 @@ public class RinkDetailsFragment extends Fragment
     private static final String SEND_INTENT_TYPE = "text/plain";
     protected static int mRinkId = -1;
     protected static Uri mRinkUri = null;
-    protected ActivityHelper mActivityHelper;
     protected PatinoiresApp mAppHelper;
     protected View mRootView;
     protected int mIsFavorite = 0;
@@ -86,13 +86,26 @@ public class RinkDetailsFragment extends Fragment
     protected String mRinkName = "";
     protected Resources mResources;
     protected NotifyingAsyncQueryHandler mHandler;
+    private OnRinkClickListener mListener;
+
+    /**
+     * Attach a listener.
+     */
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnRinkClickListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnRinkClickListener");
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-        mActivityHelper = ActivityHelper.createInstance(getActivity());
 
         mAppHelper = ((PatinoiresApp) getActivity().getApplicationContext());
         mResources = getResources();
@@ -170,11 +183,11 @@ public class RinkDetailsFragment extends Fragment
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.menu_favorites_toggle) {
-            onCheckedChanged(mIsFavorite == 1 ? true : false);
+            onCheckedChanged(mIsFavorite == 1);
 
             mIsFavorite = (mIsFavorite == 0 ? 1 : 0); // Toggle value
             getActivity().supportInvalidateOptionsMenu();
-            mActivityHelper.notifyAllTabs(getActivity().getContentResolver());
+            mListener.notifyAllTabs(getActivity().getContentResolver());
             return true;
             // return false;
         } else if (item.getItemId() == R.id.menu_gmaps_directions) {
@@ -184,8 +197,11 @@ public class RinkDetailsFragment extends Fragment
                  * Get directions using Intents.
                  */
                 Location userLocation = mAppHelper.getLocation();
-                String sAddr = Double.toString(userLocation.getLatitude()) + ","
-                        + Double.toString(userLocation.getLongitude());
+                String sAddr = "";
+                if ( userLocation != null) {
+                    sAddr = Double.toString(userLocation.getLatitude()) + ","
+                            + Double.toString(userLocation.getLongitude());
+                }
                 String urlGmaps = String.format(Const.URL_GMAPS_DIRECTIONS, sAddr,
                         mGeoLat + "," + mGeoLng);
 
@@ -196,7 +212,7 @@ public class RinkDetailsFragment extends Fragment
             }
         } else if (item.getItemId() == R.id.map_view_rink) {
 
-            mActivityHelper.goMap(mGeoLat, mGeoLng);
+            mListener.goMap(mGeoLat, mGeoLng);
             return true;
         } else if (item.getItemId() == R.id.menu_share_rink) {
             // Native sharing
@@ -205,7 +221,7 @@ public class RinkDetailsFragment extends Fragment
                     getResources().getString((isHockey ? R.string.share_subject_hockey : R.string.share_subject_skating)),
                     mRinkName);
             final String shareText = String.format(
-                    getResources().getString((isHockey ? R.string.share_text_hockey: R.string.share_text_skating)),
+                    getResources().getString((isHockey ? R.string.share_text_hockey : R.string.share_text_skating)),
                     mRinkName,
                     mRinkId);
 
@@ -221,7 +237,7 @@ public class RinkDetailsFragment extends Fragment
             return true;
         }
 
-        return mActivityHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -277,8 +293,9 @@ public class RinkDetailsFragment extends Fragment
         String name = String.format(cursor.getString(RinksQuery.PARK_NAME), prefixParcName);
         String address = cursor.getString(RinksQuery.PARK_ADDRESS);
         int distance = cursor.getInt(RinksQuery.PARK_GEO_DISTANCE);
-        String sDistance = (distance > 0 ? Helper.getDistanceDisplay(getActivity()
-                .getApplicationContext(), distance) : null);
+        String sDistance = (distance > 0 ?
+                Helper.getDistanceDisplay(getActivity().getApplicationContext(),
+                        distance) : null);
 
         final String phone = cursor.getString(RinksQuery.PARK_PHONE);
 
@@ -547,6 +564,16 @@ public class RinkDetailsFragment extends Fragment
         }
 
         return (String) mResources.getText(surfaceIndex);
+    }
+
+    /**
+     * Container Activity must implement this interface to receive the list item
+     * clicks.
+     */
+    public interface OnRinkClickListener {
+        public void goMap(double lat, double lng);
+
+        public void notifyAllTabs(ContentResolver contentResolver);
     }
 
     private static interface RinksQuery {

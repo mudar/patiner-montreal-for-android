@@ -21,7 +21,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires.ui;
+package ca.mudar.patinoires.ui.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,9 +36,9 @@ import java.util.Locale;
 
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.utils.Const;
-import ca.mudar.patinoires.utils.Const.PrefsNames;
-import ca.mudar.patinoires.utils.Const.PrefsValues;
+import ca.mudar.patinoires.Const;
+import ca.mudar.patinoires.Const.PrefsNames;
+import ca.mudar.patinoires.Const.PrefsValues;
 import ca.mudar.patinoires.utils.SettingsHelper;
 
 public class SettingsActivity extends PreferenceActivity implements
@@ -163,7 +163,7 @@ public class SettingsActivity extends PreferenceActivity implements
         }
 
         if (needsErrorCheck) {
-            if (!SettingsHelper.verifyConditionsError(prefs, key)) {
+            if (!SettingsHelper.verifyConditionsError(prefs)) {
                 ((CheckBoxPreference) findPreference(key)).setChecked(true);
                 mAppHelper.showToastText(R.string.toast_prefs_conditions_error, Toast.LENGTH_LONG);
             }

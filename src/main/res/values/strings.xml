@@ -31,6 +31,8 @@
     <string name="app_name_search">Patiner Montréal Search</string>
     <string name="app_name_preferences">Patiner Montréal Preferences</string>
     <string name="app_name_manifest">Patiner Montréal</string>
+    <string name="app_name_about">About Patiner Montréal</string>
+    <string name="app_name_eula">EULA</string>
     <string name="menu_about">About</string>
     <string name="menu_preferences">Settings</string>
     <string name="menu_refresh">Refresh</string>
@@ -111,7 +113,6 @@
     <string name="park_distance_imp_min">&lt; 200 ft</string>
     <string name="toast_sync_error">Sync error: %s</string>
     <string name="toast_sync_finished">Update completed successfully</string>
-    <string name="app_name_about">About Patiner Montréal</string>
     <string name="logo_open_data_content_desc">Montréal Ouvert</string>
     <string name="menu_favorites_toggle">Favorite rink</string>
     <string name="about_contents_project_version">Version %s</string>
@@ -120,10 +121,9 @@
     <string name="toast_favorites_added">Added %s to favorites</string>
     <string name="toast_favorites_removed">Removed %s from favorites</string>
     <string name="toast_prefs_conditions_error">Please check at least one condition…</string>
-    <string name="eula_assets_filename">gpl-3.0-standalone.html</string>
     <string name="eula_title">GNU General Public License v3.0</string>
-    <string name="dialog_btn_eula_accept">Accept</string>
-    <string name="dialog_btn_eula_decline">Decline</string>
+    <string name="eula_accept_btn">Accept</string>
+    <string name="eula_decline_btn">Decline</string>
     <string name="park_total_rinks">1 rink</string>
     <string name="park_total_rinks_plural">%s rinks</string>
     <string name="menu_map_mylocation">My Location</string>
@@ -171,4 +171,6 @@
     <string name="share_text_hockey">I’m going to play hockey at <xliff:g id="string">%s</xliff:g> rink http://patinermontreal.ca/rinks/<xliff:g id="string">%s</xliff:g> via @patinermtl</string>
     <string name="share_subject_map">Outdoor Rinks in Montreal</string>
     <string name="share_text_map">Interactive map of Montreal’s outdoor rinks: Skating, Hockey and daily conditions. http://patinermontreal.ca/ via @patinermtl</string>
+    <string name="share_subject_app">Android app: Patiner Montreal</string>
+    <string name="share_text_app">Discover Patiner Montreal on Google Playstore %s</string>
 </resources>

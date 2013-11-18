@@ -23,16 +23,6 @@
 
 package ca.mudar.patinoires.providers;
 
-import ca.mudar.patinoires.providers.RinksContract.Boroughs;
-import ca.mudar.patinoires.providers.RinksContract.Favorites;
-import ca.mudar.patinoires.providers.RinksContract.Parks;
-import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
-import ca.mudar.patinoires.providers.RinksContract.Rinks;
-import ca.mudar.patinoires.providers.RinksDatabase.Tables;
-import ca.mudar.patinoires.services.SyncService;
-import ca.mudar.patinoires.utils.Const.DbValues;
-import ca.mudar.patinoires.utils.SelectionBuilder;
-
 import android.app.Activity;
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
@@ -51,6 +41,16 @@ import android.util.Log;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+
+import ca.mudar.patinoires.Const.DbValues;
+import ca.mudar.patinoires.providers.RinksContract.Boroughs;
+import ca.mudar.patinoires.providers.RinksContract.Favorites;
+import ca.mudar.patinoires.providers.RinksContract.Parks;
+import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
+import ca.mudar.patinoires.providers.RinksContract.Rinks;
+import ca.mudar.patinoires.providers.RinksDatabase.Tables;
+import ca.mudar.patinoires.services.SyncService;
+import ca.mudar.patinoires.utils.SelectionBuilder;
 
 /**
  * Provider that stores {@link RinksContract} data. Data is usually inserted by

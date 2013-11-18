@@ -23,13 +23,6 @@
 
 package ca.mudar.patinoires.services;
 
-import ca.mudar.patinoires.providers.RinksContract;
-import ca.mudar.patinoires.providers.RinksContract.Parks;
-import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
-import ca.mudar.patinoires.utils.Const;
-import ca.mudar.patinoires.utils.Const.PrefsNames;
-import ca.mudar.patinoires.utils.Lists;
-
 import android.app.IntentService;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
@@ -46,6 +39,13 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 import java.util.ArrayList;
+
+import ca.mudar.patinoires.Const;
+import ca.mudar.patinoires.Const.PrefsNames;
+import ca.mudar.patinoires.providers.RinksContract;
+import ca.mudar.patinoires.providers.RinksContract.Parks;
+import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
+import ca.mudar.patinoires.utils.Lists;
 
 public class DistanceUpdateService extends IntentService {
     private static final String TAG = "DistanceUpdateService";

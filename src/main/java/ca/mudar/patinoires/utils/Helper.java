@@ -36,11 +36,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
-import ca.mudar.patinoires.utils.Const.DbValues;
-import ca.mudar.patinoires.utils.Const.UnitsDisplay;
+import ca.mudar.patinoires.Const.DbValues;
+import ca.mudar.patinoires.Const.UnitsDisplay;
 
 // TODO Refactor this into geohelper and iohelper
 public class Helper {

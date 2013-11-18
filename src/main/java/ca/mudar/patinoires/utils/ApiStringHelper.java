@@ -24,7 +24,7 @@
 package ca.mudar.patinoires.utils;
 
 import ca.mudar.patinoires.io.RemoteRinksHandler.RemoteValues;
-import ca.mudar.patinoires.utils.Const.DbValues;
+import ca.mudar.patinoires.Const.DbValues;
 
 public class ApiStringHelper {
     /**

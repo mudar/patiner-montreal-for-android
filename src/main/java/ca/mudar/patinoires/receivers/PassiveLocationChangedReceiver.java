@@ -24,7 +24,7 @@
 package ca.mudar.patinoires.receivers;
 
 import ca.mudar.patinoires.services.DistanceUpdateService;
-import ca.mudar.patinoires.utils.Const;
+import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.utils.LegacyLastLocationFinder;
 
 import android.content.BroadcastReceiver;

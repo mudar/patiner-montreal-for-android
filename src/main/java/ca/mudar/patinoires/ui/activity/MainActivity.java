@@ -21,49 +21,73 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires;
+package ca.mudar.patinoires.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
+import ca.mudar.patinoires.Const;
+import ca.mudar.patinoires.PatinoiresApp;
+import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.providers.RinksDatabase;
 import ca.mudar.patinoires.receivers.DetachableResultReceiver;
 import ca.mudar.patinoires.services.SyncService;
-import ca.mudar.patinoires.utils.ActivityHelper;
 import ca.mudar.patinoires.utils.ConnectionHelper;
-import ca.mudar.patinoires.utils.Const;
 import ca.mudar.patinoires.utils.EulaHelper;
 
-public class MainActivity extends LocationFragmentActivity {
+public class MainActivity extends BaseActivity {
     protected static final String TAG = "MainActivity";
-
-    private SyncStatusUpdaterFragment mSyncStatusUpdaterFragment;
     private static boolean hasLoadedData;
+    private static boolean hasLaunchedEula = false;
+    protected PatinoiresApp mAppHelper;
+    protected SharedPreferences prefs;
+    private SyncStatusUpdaterFragment mSyncStatusUpdaterFragment;
     private String lang;
+
+    public static void finalizeLoadingData(Context context) {
+
+        SharedPreferences prefs = context.getSharedPreferences(Const.APP_PREFS_NAME,
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+        PatinoiresApp appHelper = (PatinoiresApp) context;
+
+        prefsEditor.putBoolean(Const.PrefsNames.HAS_LOADED_DATA, true);
+        prefsEditor.putInt(Const.PrefsNames.VERSION_DATABASE,
+                RinksDatabase.getDatabaseVersion());
+        prefsEditor.commit();
+        hasLoadedData = true;
+
+        /**
+         * Make sure the distance is updated on first load!
+         */
+        Location l = appHelper.getLocation();
+        appHelper.initializeLocation();
+        appHelper.setLocation(l);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+
+        super.onCreate(savedInstanceState);
 
         /**
          * SharedPreferences are used to verify determine if syncService is
          * required for initial launch or on database upgrade.
          */
+        prefs = getSharedPreferences(Const.APP_PREFS_NAME, Context.MODE_PRIVATE);
         hasLoadedData = prefs.getBoolean(Const.PrefsNames.HAS_LOADED_DATA, false);
         int dbVersionPrefs = prefs.getInt(Const.PrefsNames.VERSION_DATABASE, -1);
 
@@ -75,7 +99,8 @@ public class MainActivity extends LocationFragmentActivity {
         /**
          * Display the GPLv3 licence
          */
-        if (!EulaHelper.hasAcceptedEula(this)) {
+        if (!EulaHelper.hasAcceptedEula(this) && !hasLaunchedEula) {
+            hasLaunchedEula = true;
             EulaHelper.showEula(false, this);
         }
 
@@ -92,7 +117,7 @@ public class MainActivity extends LocationFragmentActivity {
          * Android ICS has support for setHomeButtonEnabled() to disable tap on
          * actionbar logo on dashboard.
          */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+        if (Const.SUPPORTS_ICECREAMSANDWICH) {
             getActionBar().setHomeButtonEnabled(false);
         }
     }
@@ -120,9 +145,8 @@ public class MainActivity extends LocationFragmentActivity {
                     SyncService.class);
             intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mSyncStatusUpdaterFragment.mReceiver);
             startService(intent);
-        }
-        else {
-            mActivityHelper.triggerRefresh(mSyncStatusUpdaterFragment.mReceiver, false);
+        } else {
+            triggerRefresh(mSyncStatusUpdaterFragment.mReceiver, false);
         }
     }
 
@@ -135,10 +159,18 @@ public class MainActivity extends LocationFragmentActivity {
         return true;
     }
 
+    // TODO remove when extends BaseActivity
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        ActivityHelper mActivityHelper = ActivityHelper.createInstance(this);
-        return mActivityHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == Const.INTENT_REQ_CODE_EULA) {
+            hasLaunchedEula = false;
+            boolean hasAcceptedEula = EulaHelper.acceptEula(resultCode, this);
+            if (!hasAcceptedEula) {
+                this.finish();
+            }
+        }
     }
 
     /**
@@ -176,7 +208,6 @@ public class MainActivity extends LocationFragmentActivity {
     public static class SyncStatusUpdaterFragment extends Fragment implements
             DetachableResultReceiver.Receiver {
         public static final String TAG = SyncStatusUpdaterFragment.class.getName();
-
         private DetachableResultReceiver mReceiver;
 
         @Override
@@ -187,14 +218,16 @@ public class MainActivity extends LocationFragmentActivity {
             mReceiver.setReceiver(this);
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public void onReceiveResult(int resultCode, Bundle resultData) {
             MainActivity activity = (MainActivity) getActivity();
             if (activity == null) {
                 return;
             }
             activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
-            
+
             PatinoiresApp appHelper = (PatinoiresApp) getActivity().getApplicationContext();
 
             switch (resultCode) {
@@ -233,26 +266,5 @@ public class MainActivity extends LocationFragmentActivity {
                 }
             }
         }
-    }
-
-    public static void finalizeLoadingData(Context context) {
-
-        SharedPreferences prefs = context.getSharedPreferences(Const.APP_PREFS_NAME,
-                Context.MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor = prefs.edit();
-        PatinoiresApp appHelper = (PatinoiresApp) context;
-
-        prefsEditor.putBoolean(Const.PrefsNames.HAS_LOADED_DATA, true);
-        prefsEditor.putInt(Const.PrefsNames.VERSION_DATABASE,
-                RinksDatabase.getDatabaseVersion());
-        prefsEditor.commit();
-        hasLoadedData = true;
-
-        /**
-         * Make sure the distance is updated on first load!
-         */
-        Location l = appHelper.getLocation();
-        appHelper.initializeLocation();
-        appHelper.setLocation(l);
     }
 }

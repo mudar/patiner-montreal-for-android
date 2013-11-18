@@ -21,7 +21,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires.ui;
+package ca.mudar.patinoires.ui.activity;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -36,15 +36,16 @@ import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.List;
 import java.util.Locale;
 
+import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.utils.Const;
 import ca.mudar.patinoires.utils.SettingsHelper;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -62,7 +63,6 @@ public class SettingsActivityHC extends PreferenceActivity {
         ActionBar ab = getActionBar();
 
         ab.setDisplayHomeAsUpEnabled(true);
-        ab.setTitle(R.string.app_name_preferences);
 
         showBreadCrumbs(getResources().getString(R.string.prefs_breadcrumb), null);
     }
@@ -70,10 +70,10 @@ public class SettingsActivityHC extends PreferenceActivity {
     @Override
     public Intent getIntent() {
         // Override the original intent to remove headers and directly show
-        // MyPrefsFragment
+        // SettingsFragment
         final Intent intent = new Intent(super.getIntent());
         intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT,
-                MyPrefsFragment.class.getName());
+                SettingsFragment.class.getName());
         intent.putExtra(PreferenceActivity.EXTRA_NO_HEADERS, true);
         return intent;
     }
@@ -89,7 +89,8 @@ public class SettingsActivityHC extends PreferenceActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            this.finish();
+            // Respond to the action bar's Up/Home button
+            NavUtils.navigateUpFromSameTask(this);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -106,7 +107,7 @@ public class SettingsActivityHC extends PreferenceActivity {
         mAppHelper.updateUiLanguage();
 
         this.finish();
-        Intent intent = new Intent(getApplicationContext(), ca.mudar.patinoires.ui.SettingsActivityHC.class);
+        Intent intent = new Intent(getApplicationContext(), SettingsActivityHC.class);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         startActivity(intent);
     }
@@ -114,7 +115,7 @@ public class SettingsActivityHC extends PreferenceActivity {
     /**
      * This fragment shows the preferences for the first header.
      */
-    public static class MyPrefsFragment extends PreferenceFragment implements
+    public static class SettingsFragment extends PreferenceFragment implements
             OnSharedPreferenceChangeListener {
 
         protected SharedPreferences mSharedPrefs;
@@ -238,7 +239,7 @@ public class SettingsActivityHC extends PreferenceActivity {
             }
 
             if (needsErrorCheck) {
-                if (!SettingsHelper.verifyConditionsError(prefs, key)) {
+                if (!SettingsHelper.verifyConditionsError(prefs)) {
                     ((CheckBoxPreference) findPreference(key)).setChecked(true);
                     mAppHelper.showToastText(R.string.toast_prefs_conditions_error, Toast.LENGTH_LONG);
                 }

@@ -21,45 +21,36 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires.ui;
+package ca.mudar.patinoires.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
-import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.receivers.DetachableResultReceiver;
 import ca.mudar.patinoires.services.SyncService;
-import ca.mudar.patinoires.utils.ActivityHelper;
+import ca.mudar.patinoires.ui.fragment.RinkDetailsFragment;
 
-public class RinkDetailsActivity extends ActionBarActivity {
+public class RinkDetailsActivity extends BaseActivity implements RinkDetailsFragment.OnRinkClickListener {
     protected static final String TAG = "RinkDetailsActivity";
     private SyncStatusUpdaterFragment mSyncStatusUpdaterFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
-        ((PatinoiresApp) getApplicationContext()).updateUiLanguage();
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_rink_details);
         setProgressBarIndeterminateVisibility(Boolean.FALSE);
-
-        final ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setHomeButtonEnabled(true);
 
         FragmentManager fm = getSupportFragmentManager();
 
@@ -88,14 +79,12 @@ public class RinkDetailsActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        ActivityHelper mActivityHelper = ActivityHelper.createInstance(this);
-
         if (item.getItemId() == R.id.menu_refresh) {
-            mActivityHelper.triggerRefresh(mSyncStatusUpdaterFragment.mReceiver, true);
+            triggerRefresh(mSyncStatusUpdaterFragment.mReceiver, true);
             return true;
         }
 
-        return mActivityHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

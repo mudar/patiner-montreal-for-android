@@ -133,8 +133,7 @@ public class ParserUtils {
         }
         queryResult = new String(baf.toByteArray());
 
-        JSONTokener data = new JSONTokener(queryResult);
-        return data;
+        return new JSONTokener(queryResult);
     }
 
     /**

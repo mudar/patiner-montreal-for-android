@@ -21,49 +21,33 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires.ui;
+package ca.mudar.patinoires.ui.activity;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.utils.ActivityHelper;
 
-public class AboutActivity extends ActionBarActivity {
+public class AboutActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        final ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setHomeButtonEnabled(true);
-
-        ((PatinoiresApp) getApplicationContext()).updateUiLanguage();
 
         FragmentManager fm = getSupportFragmentManager();
 
         if (fm.findFragmentById(android.R.id.content) == null) {
             AboutFragment about = new AboutFragment();
             fm.beginTransaction().add(android.R.id.content, about).commit();
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            getActionBar().setHomeButtonEnabled(true);
         }
     }
 
@@ -76,21 +60,13 @@ public class AboutActivity extends ActionBarActivity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        ActivityHelper mActivityHelper = ActivityHelper.createInstance(this);
-        return mActivityHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
-    }
-
     /**
      * AboutFragment
      */
     public static class AboutFragment extends Fragment {
 
         public static AboutFragment newInstance() {
-            AboutFragment about = new AboutFragment();
-
-            return about;
+            return new AboutFragment();
         }
 
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -98,11 +74,6 @@ public class AboutActivity extends ActionBarActivity {
             if (container == null) {
                 return null;
             }
-
-            /**
-             * Handle UI language changes.
-             */
-            ((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name_map);
 
             /**
              * Inflate XML layout.

@@ -21,7 +21,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires.ui;
+package ca.mudar.patinoires.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -32,8 +32,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -46,47 +44,36 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import ca.mudar.patinoires.PatinoiresApp;
+import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.receivers.DetachableResultReceiver;
 import ca.mudar.patinoires.services.SyncService;
-import ca.mudar.patinoires.utils.ActivityHelper;
-import ca.mudar.patinoires.utils.Const;
+import ca.mudar.patinoires.ui.fragment.AllListFragment;
+import ca.mudar.patinoires.ui.fragment.BaseListFragment;
+import ca.mudar.patinoires.ui.fragment.FavoritesListFragment;
+import ca.mudar.patinoires.ui.fragment.HockeyListFragment;
+import ca.mudar.patinoires.ui.fragment.SkatingListFragment;
 
-public class TabsPagerActivity extends ActionBarActivity {
+
+public class TabsPagerActivity extends BaseActivity implements BaseListFragment.OnRinkClickListener {
     private static final String TAG = "TabsPagerActivity";
-
     private SyncStatusUpdaterFragment mSyncStatusUpdaterFragment;
 
-    private TabHost mTabHost;
-    private ViewPager mViewPager;
-    private TabsAdapter mTabsAdapter;
-
-    private PatinoiresApp mAppHelper;
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    public void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
-        mAppHelper = (PatinoiresApp) getApplicationContext();
-
-        mAppHelper.updateUiLanguage();
-
-        final ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setHomeButtonEnabled(true);
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.tabs_pager_fragment);
         setProgressBarIndeterminateVisibility(Boolean.FALSE);
 
-        mTabHost = (TabHost) findViewById(android.R.id.tabhost);
+        TabHost mTabHost = (TabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup();
 
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
 
-        mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
+        TabsAdapter mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
 
         mTabsAdapter.addTab(
                 mTabHost.newTabSpec(Const.TABS_TAG_SKATING).setIndicator(
@@ -141,14 +128,12 @@ public class TabsPagerActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        ActivityHelper mActivityHelper = ActivityHelper.createInstance(this);
         if (item.getItemId() == R.id.menu_refresh) {
-            mActivityHelper.triggerRefresh(mSyncStatusUpdaterFragment.mReceiver, true);
+            triggerRefresh(mSyncStatusUpdaterFragment.mReceiver, true);
             return true;
         }
 
-        return mActivityHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -187,35 +172,6 @@ public class TabsPagerActivity extends ActionBarActivity {
         private final TabHost mTabHost;
         private final ViewPager mViewPager;
         private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
-
-        // TODO: use tabinfo tag?
-        static final class TabInfo {
-            private final String tag;
-            private final Class<?> clss;
-            private final Bundle args;
-
-            TabInfo(String _tag, Class<?> _class, Bundle _args) {
-                tag = _tag;
-                clss = _class;
-                args = _args;
-            }
-        }
-
-        static class DummyTabFactory implements TabHost.TabContentFactory {
-            private final Context mContext;
-
-            public DummyTabFactory(Context context) {
-                mContext = context;
-            }
-
-            @Override
-            public View createTabContent(String tag) {
-                View v = new View(mContext);
-                v.setMinimumWidth(0);
-                v.setMinimumHeight(0);
-                return v;
-            }
-        }
 
         public TabsAdapter(FragmentActivity activity, TabHost tabHost, ViewPager pager) {
             super(activity.getSupportFragmentManager());
@@ -266,12 +222,40 @@ public class TabsPagerActivity extends ActionBarActivity {
         @Override
         public void onPageScrollStateChanged(int state) {
         }
+
+        // TODO: use tabinfo tag?
+        static final class TabInfo {
+            private final String tag;
+            private final Class<?> clss;
+            private final Bundle args;
+
+            TabInfo(String _tag, Class<?> _class, Bundle _args) {
+                tag = _tag;
+                clss = _class;
+                args = _args;
+            }
+        }
+
+        static class DummyTabFactory implements TabHost.TabContentFactory {
+            private final Context mContext;
+
+            public DummyTabFactory(Context context) {
+                mContext = context;
+            }
+
+            @Override
+            public View createTabContent(String tag) {
+                View v = new View(mContext);
+                v.setMinimumWidth(0);
+                v.setMinimumHeight(0);
+                return v;
+            }
+        }
     }
 
     public static class SyncStatusUpdaterFragment extends Fragment implements
             DetachableResultReceiver.Receiver {
         public static final String TAG = SyncStatusUpdaterFragment.class.getName();
-
         // private boolean mSyncing = false;
         private DetachableResultReceiver mReceiver;
 
@@ -284,7 +268,9 @@ public class TabsPagerActivity extends ActionBarActivity {
             mReceiver.setReceiver(this);
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public void onReceiveResult(int resultCode, Bundle resultData) {
 
             TabsPagerActivity activity = (TabsPagerActivity) getActivity();

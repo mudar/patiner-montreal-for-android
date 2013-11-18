@@ -26,23 +26,14 @@
 package ca.mudar.patinoires.utils;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.View;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.LinearLayout;
 
-import java.io.IOException;
-
-import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.Const;
+import ca.mudar.patinoires.ui.activity.EulaActivity;
 
 /**
  * A helper for showing EULAs and storing a {@link SharedPreferences} bit
@@ -53,91 +44,34 @@ public class EulaHelper {
 
     public static boolean hasAcceptedEula(final Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getBoolean("accepted_eula", false);
-    }
-
-    private static void setAcceptedEula(final Context context) {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-                sp.edit().putBoolean("accepted_eula", true).commit();
-                return null;
-            }
-        }.execute();
+        return sp.getBoolean(Const.PrefsNames.HAS_ACCEPTED_EULA, false);
     }
 
     /**
      * Show End User License Agreement.
-     * 
+     *
      * @param accepted True IFF user has accepted license already, which means
-     *            it can be dismissed. If the user hasn't accepted, then the
-     *            EULA must be accepted or the program exits.
+     * it can be dismissed. If the user hasn't accepted, then the
+     * EULA must be accepted or the program exits.
      * @param activity Activity started from.
      */
+
     public static void showEula(final boolean accepted, final Activity activity) {
-
-        String filename = activity.getResources().getString(R.string.eula_assets_filename);
-
-        String helpHtml = "";
-        try {
-            helpHtml = Helper.inputStreamToString(activity.getAssets().open(filename));
-        } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
-        }
-
-        /**
-         * Handle HTML links in the dialog box, openning in default browser
-         */
-        class MyWebViewClient extends WebViewClient {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                activity.startActivity(intent);
-                return true;
-            }
-        }
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-
-        WebView v = new WebView(activity.getApplicationContext());
-        v.setWebViewClient(new MyWebViewClient());
-        v.setVisibility(View.VISIBLE);
-        v.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        v.loadDataWithBaseURL("file:///android_asset/", helpHtml, "text/html", "utf-8", null);
-        v.setLayoutParams(params);
-
-        AlertDialog.Builder eula = new AlertDialog.Builder(activity).setTitle(R.string.eula_title)
-                .setIcon(android.R.drawable.ic_dialog_info).setView(v).setCancelable(accepted);
-
-        if (accepted) {
-            // If they've accepted the EULA allow, show an OK to dismiss.
-            eula.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-        } else {
-            // If they haven't accepted the EULA allow, show accept/decline
-            // buttons and exit on decline.
-            eula.setInverseBackgroundForced(true)
-                    .setPositiveButton(R.string.dialog_btn_eula_accept,
-                            new android.content.DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    setAcceptedEula(activity);
-                                    dialog.dismiss();
-                                }
-                            })
-                    .setNegativeButton(R.string.dialog_btn_eula_decline,
-                            new android.content.DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                    activity.finish();
-                                }
-                            });
-        }
-        eula.show();
+        Intent intent = new Intent(activity, EulaActivity.class);
+        activity.startActivityForResult(intent, Const.INTENT_REQ_CODE_EULA);
     }
+
+    public static boolean acceptEula(int resultCode, final Activity activity) {
+        if (resultCode == Activity.RESULT_OK) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity
+                    .getApplicationContext());
+            prefs.edit().putBoolean(Const.PrefsNames.HAS_ACCEPTED_EULA, true).commit();
+            return true;
+        }
+        else {
+            Log.v(TAG, "User has declined the End User License Agreement!");
+            return false;
+        }
+    }
+
 }

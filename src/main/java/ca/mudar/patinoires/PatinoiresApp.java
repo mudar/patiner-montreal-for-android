@@ -23,11 +23,6 @@
 
 package ca.mudar.patinoires;
 
-import ca.mudar.patinoires.services.DistanceUpdateService;
-import ca.mudar.patinoires.utils.Const;
-import ca.mudar.patinoires.utils.Const.PrefsNames;
-import ca.mudar.patinoires.utils.Const.PrefsValues;
-
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +33,10 @@ import android.location.Location;
 import android.widget.Toast;
 
 import java.util.Locale;
+
+import ca.mudar.patinoires.Const.PrefsNames;
+import ca.mudar.patinoires.Const.PrefsValues;
+import ca.mudar.patinoires.services.DistanceUpdateService;
 
 public class PatinoiresApp extends Application {
     protected static final String TAG = "AppHelper";
@@ -52,7 +51,6 @@ public class PatinoiresApp extends Application {
     private String mLanguage;
     private Toast mToast;
     private boolean[] conditionsFilter = new boolean[5];
-
     private SharedPreferences prefs;
     private Editor prefsEditor;
 
@@ -73,6 +71,8 @@ public class PatinoiresApp extends Application {
     public void onCreate() {
         super.onCreate();
         instance = this;
+
+        System.setProperty("http.keepAlive", "false");
 
         prefs = getSharedPreferences(Const.APP_PREFS_NAME, Context.MODE_PRIVATE);
         prefsEditor = prefs.edit();
@@ -153,10 +153,7 @@ public class PatinoiresApp extends Application {
 
     public void setLocation(Location location) {
 //        Log.v(TAG, "setLocation");
-        if (location == null) {
-            return;
-        }
-        else {
+        if (location != null) {
 //            Log.v(TAG, "new location = " + location.getLatitude() + "," + location.getLongitude());
             if ((mLocation == null) || (this.mLocation.distanceTo(location) > Const.MAX_DISTANCE)) {
                 Intent intent = new Intent(this.getApplicationContext(),
@@ -251,12 +248,12 @@ public class PatinoiresApp extends Application {
         return conditionsFilter;
     }
 
-    public boolean getConditionsFilter(int index) {
-        return conditionsFilter[index];
-    }
-
     public void setConditionsFilter(boolean[] conditions) {
         this.conditionsFilter = conditions;
+    }
+
+    public boolean getConditionsFilter(int index) {
+        return conditionsFilter[index];
     }
 
     public void setConditionsFilter(boolean condition, int index) {

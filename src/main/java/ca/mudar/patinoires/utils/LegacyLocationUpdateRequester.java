@@ -22,6 +22,7 @@ import android.location.Criteria;
 import android.location.LocationManager;
 import android.util.Log;
 
+import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.utils.base.LocationUpdateRequester;
 
 /**

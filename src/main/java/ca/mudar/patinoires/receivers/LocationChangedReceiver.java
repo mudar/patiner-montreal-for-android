@@ -22,15 +22,15 @@
 
 package ca.mudar.patinoires.receivers;
 
-import ca.mudar.patinoires.PatinoiresApp;
-import ca.mudar.patinoires.services.DistanceUpdateService;
-import ca.mudar.patinoires.utils.Const;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
+
+import ca.mudar.patinoires.Const;
+import ca.mudar.patinoires.PatinoiresApp;
+import ca.mudar.patinoires.services.DistanceUpdateService;
 
 /**
  * This Receiver class is used to listen for Broadcast Intents that announce

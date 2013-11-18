@@ -21,7 +21,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires.ui;
+package ca.mudar.patinoires.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,23 +30,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.utils.ActivityHelper;
-import ca.mudar.patinoires.utils.Const;
+import ca.mudar.patinoires.ui.activity.MapActivity;
+import ca.mudar.patinoires.ui.activity.TabsPagerActivity;
 
 public class DashboardFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        final ActivityHelper mActivityHelper = ActivityHelper.createInstance(getActivity());
-        
         root.findViewById(R.id.home_btn_skating).setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View view) {
 
-                        Intent intent = new Intent(Intent.ACTION_SYNC, null, getActivity()
-                                .getApplicationContext(),
+                        Intent intent = new Intent(Intent.ACTION_SYNC, null,
+                                getActivity().getApplicationContext(),
                                 TabsPagerActivity.class);
                         intent.putExtra(Const.INTENT_EXTRA_TABS_CURRENT, Const.TABS_INDEX_SKATING);
                         startActivity(intent);
@@ -64,7 +63,9 @@ public class DashboardFragment extends Fragment {
         root.findViewById(R.id.home_btn_map).setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View view) {
-                        mActivityHelper.goMap();
+                        final Intent intent = new Intent(getActivity().getApplicationContext(), MapActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        startActivity(intent);
                     }
                 });
         root.findViewById(R.id.home_btn_favorites).setOnClickListener(

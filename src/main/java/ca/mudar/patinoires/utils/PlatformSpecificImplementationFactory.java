@@ -25,6 +25,7 @@ import android.app.AlarmManager;
 import android.content.Context;
 import android.location.LocationManager;
 
+import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.utils.base.ILastLocationFinder;
 import ca.mudar.patinoires.utils.base.LocationUpdateRequester;
 

@@ -3,6 +3,7 @@ package ca.mudar.patinoires.utils;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 
+import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.R;
 
 /**
@@ -15,7 +16,7 @@ public class SettingsHelper {
      * Error proof verification: if the user unchecks all 4 conditions filters,
      * re-enable the last unchecked condition and display Toast message.
      */
-    public static boolean verifyConditionsError(SharedPreferences prefs, String key) {
+    public static boolean verifyConditionsError(SharedPreferences prefs) {
         boolean hasEnabledCondition = false;
 
         hasEnabledCondition = prefs.getBoolean(Const.PrefsNames.CONDITIONS_SHOW_EXCELLENT, false)

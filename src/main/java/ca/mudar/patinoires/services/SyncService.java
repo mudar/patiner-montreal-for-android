@@ -25,13 +25,18 @@
 
 package ca.mudar.patinoires.services;
 
-import ca.mudar.patinoires.PatinoiresApp;
-import ca.mudar.patinoires.io.LocalExecutor;
-import ca.mudar.patinoires.io.RemoteConditionsUpdatesHandler;
-import ca.mudar.patinoires.io.RemoteExecutor;
-import ca.mudar.patinoires.io.RemoteRinksHandler;
-import ca.mudar.patinoires.providers.RinksContract;
-import ca.mudar.patinoires.utils.Const;
+import android.app.IntentService;
+import android.app.Service;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Bundle;
+import android.os.ResultReceiver;
+import android.text.format.DateUtils;
+import android.util.Log;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
@@ -49,22 +54,17 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HttpContext;
 
-import android.app.IntentService;
-import android.app.Service;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Bundle;
-import android.os.ResultReceiver;
-import android.text.format.DateUtils;
-import android.util.Log;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
+
+import ca.mudar.patinoires.Const;
+import ca.mudar.patinoires.PatinoiresApp;
+import ca.mudar.patinoires.io.LocalExecutor;
+import ca.mudar.patinoires.io.RemoteConditionsUpdatesHandler;
+import ca.mudar.patinoires.io.RemoteExecutor;
+import ca.mudar.patinoires.io.RemoteRinksHandler;
+import ca.mudar.patinoires.providers.RinksContract;
 
 /**
  * Background {@link Service} that synchronizes data living in

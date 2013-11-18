@@ -28,7 +28,7 @@
 
     <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
         android:id="@+id/fragment_map"
-        android:name="ca.mudar.patinoires.ui.MapFragment"
+        android:name="ca.mudar.patinoires.ui.fragment.MapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         map:cameraBearing="-34"

@@ -21,8 +21,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires.ui;
+package ca.mudar.patinoires.ui.fragment;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -49,6 +50,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import ca.mudar.patinoires.Const;
+import ca.mudar.patinoires.Const.PrefsValues;
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.providers.RinksContract;
@@ -59,40 +62,45 @@ import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
 import ca.mudar.patinoires.ui.widgets.RinksCursorAdapter;
-import ca.mudar.patinoires.utils.ActivityHelper;
-import ca.mudar.patinoires.utils.Const;
-import ca.mudar.patinoires.utils.Const.PrefsValues;
 import ca.mudar.patinoires.utils.Helper;
 
 public abstract class BaseListFragment extends ListFragment implements LoaderCallbacks<Cursor> {
 
     protected static final String TAG = "BaseListFragment";
-
-    protected ActivityHelper mActivityHelper;
     protected PatinoiresApp mAppHelper;
-
     protected Uri mContentUri;
-
     protected RinksCursorAdapter mAdapter;
-
     protected Cursor cursor = null;
     protected View rootView;
     protected String mSort;
-
     protected LocationManager locationManager;
     protected LocationListener locationListener;
     protected Criteria criteria;
+    protected OnRinkClickListener mListener;
     boolean hasFollowLocationChanges = false;
 
     public BaseListFragment(Uri contentUri) {
         mContentUri = contentUri;
     }
 
+    /**
+     * Attach a listener.
+     */
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnRinkClickListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnRinkClickListener");
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mActivityHelper = ActivityHelper.createInstance(getActivity());
         mAppHelper = ((PatinoiresApp) getActivity().getApplicationContext());
 
         locationManager = (LocationManager) getActivity().getSystemService(
@@ -130,11 +138,11 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
         mAdapter = new RinksCursorAdapter(getActivity(),
                 R.layout.fragment_list_item_rinks,
                 cursor,
-                new String[] {
+                new String[]{
                         RinksColumns.RINK_NAME, RINK_DESC, ParksColumns.PARK_GEO_DISTANCE,
                         RinksColumns.RINK_ID
                 },
-                new int[] {
+                new int[]{
                         R.id.rink_name, R.id.rink_address, R.id.rink_distance
                 },
                 0, hasIndexer);
@@ -172,7 +180,7 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
         double geoLng = c.getDouble(RinksQuery.PARK_GEO_LAT);
 
         menu.setHeaderTitle(name);
-        MenuInflater inflater = (MenuInflater) getActivity().getMenuInflater();
+        MenuInflater inflater = getActivity().getMenuInflater();
         inflater.inflate(R.menu.context_menu_rink, menu);
 
         menu.findItem(R.id.favorites_add).setVisible(isFavorite == 0);
@@ -190,7 +198,7 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
         c.moveToPosition(position);
 
         int rinkId = c.getInt(RinksQuery.RINK_ID);
-        mActivityHelper.goRinkDetails(rinkId);
+        mListener.goRinkDetails(rinkId);
     }
 
     @Override
@@ -205,8 +213,8 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
             case R.id.map_view_rink:
                 double lat = c.getDouble(RinksQuery.PARK_GEO_LAT);
                 double lng = c.getDouble(RinksQuery.PARK_GEO_LNG);
-                mActivityHelper.goMap(lat, lng);
-                
+                mListener.goMap(lat, lng);
+
                 return true;
             case R.id.favorites_add:
                 /**
@@ -216,27 +224,27 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
                 final ContentValues values = new ContentValues();
                 values.put(RinksContract.Favorites.FAVORITE_RINK_ID, rinkId);
                 contentResolver.insert(Favorites.CONTENT_URI, values);
-                mActivityHelper.notifyAllTabs(contentResolver);
-                
+                mListener.notifyAllTabs(contentResolver);
+
                 return true;
             case R.id.favorites_remove:
                 /**
                  * Remove from favorites, and update all ContentResolvers to
                  * update the context menu for this same item.
                  */
-                String[] args = new String[] {
+                String[] args = new String[]{
                         Integer.toString(rinkId)
                 };
                 contentResolver.delete(Favorites.CONTENT_URI,
                         FavoritesColumns.FAVORITE_RINK_ID + "=?", args);
-                mActivityHelper.notifyAllTabs(contentResolver);
-                
+                mListener.notifyAllTabs(contentResolver);
+
                 return true;
             case R.id.call_rink:
                 final String phone = c.getString(RinksQuery.PARK_PHONE);
                 intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
                 startActivity(intent);
-                
+
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -278,32 +286,21 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
     }
 
     /**
-     * The location listener. Doesn't do anything but listening, DB updates are
-     * handled by the app's passive listener.
+     * Container Activity must implement this interface to receive the list item
+     * clicks.
      */
-    protected class MyLocationListener implements LocationListener {
+    public interface OnRinkClickListener {
+        public void goRinkDetails(int rinkId);
 
-        @Override
-        public void onLocationChanged(Location location) {
-        }
+        public void goMap(double lat, double lng);
 
-        @Override
-        public void onProviderDisabled(String provider) {
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-        }
+        public void notifyAllTabs(ContentResolver contentResolver);
     }
 
     public static interface RinksQuery {
         // int _TOKEN = 0x10;
 
-        final String[] RINKS_SUMMARY_PROJECTION = new String[] {
+        final String[] RINKS_SUMMARY_PROJECTION = new String[]{
                 BaseColumns._ID,
                 RinksColumns.RINK_ID,
                 RinksColumns.RINK_KIND_ID,
@@ -329,6 +326,29 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
         final int PARK_GEO_LNG = 9;
         final int PARK_GEO_DISTANCE = 10;
         final int PARK_PHONE = 11;
+    }
+
+    /**
+     * The location listener. Doesn't do anything but listening, DB updates are
+     * handled by the app's passive listener.
+     */
+    protected class MyLocationListener implements LocationListener {
+
+        @Override
+        public void onLocationChanged(Location location) {
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
     }
 
 }

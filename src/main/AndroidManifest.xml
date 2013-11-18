@@ -62,7 +62,7 @@
         android:required="true" />
 
     <application
-        android:name=".PatinoiresApp"
+        android:name="ca.mudar.patinoires.PatinoiresApp"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name_manifest"
         android:theme="@style/PatinoiresTheme">
@@ -75,7 +75,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="ca.mudar.patinoires.ui.activity.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Dashboard">
@@ -86,19 +86,29 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.TabsPagerActivity"
+            android:name="ca.mudar.patinoires.ui.activity.TabsPagerActivity"
             android:exported="false"
             android:label="@string/app_name"
-            android:theme="@style/TabsPagerTheme" />
+            android:parentActivityName="ca.mudar.patinoires.ui.activity.MainActivity"
+            android:theme="@style/TabsPagerTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mudar.patinoires.ui.activity.MainActivity" />
+        </activity>
         <activity
-            android:name=".ui.RinkDetailsActivity"
+            android:name="ca.mudar.patinoires.ui.activity.RinkDetailsActivity"
             android:label="@string/app_name_details"
             android:launchMode="singleTop"
+            android:parentActivityName="ca.mudar.patinoires.ui.activity.MainActivity"
             android:theme="@style/DetailsTheme"
             android:uiOptions="splitActionBarWhenNarrow">
             <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mudar.patinoires.ui.activity.MainActivity" />
+            <meta-data
                 android:name="android.support.UI_OPTIONS"
                 android:value="splitActionBarWhenNarrow" />
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -140,39 +150,73 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.MapActivity"
+            android:name="ca.mudar.patinoires.ui.activity.MapActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name_map"
             android:launchMode="singleTop"
-            android:theme="@style/MapTheme"></activity>
+            android:parentActivityName="ca.mudar.patinoires.ui.activity.MainActivity"
+            android:theme="@style/MapTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mudar.patinoires.ui.activity.MainActivity" />
+        </activity>
         <activity
-            android:name=".ui.AboutActivity"
+            android:name="ca.mudar.patinoires.ui.activity.AboutActivity"
+            android:exported="false"
             android:label="@string/app_name_about"
-            android:theme="@style/AboutTheme"></activity>
+            android:parentActivityName="ca.mudar.patinoires.ui.activity.MainActivity"
+            android:theme="@style/AboutTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mudar.patinoires.ui.activity.MainActivity" />
+        </activity>
         <activity
-            android:name=".ui.SettingsActivity"
-            android:label="@string/app_name_preferences"
-            android:theme="@style/PreferencesTheme"></activity>
+            android:name="ca.mudar.patinoires.ui.activity.EulaActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="@string/app_name_eula"
+            android:launchMode="singleTop"
+            android:parentActivityName="ca.mudar.patinoires.ui.activity.AboutActivity"
+            android:theme="@style/EulaTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mudar.patinoires.ui.activity.AboutActivity" />
+        </activity>
         <activity
-            android:name=".ui.SettingsActivityHC"
+            android:name="ca.mudar.patinoires.ui.activity.SettingsActivity"
+            android:exported="false"
             android:label="@string/app_name_preferences"
-            android:theme="@style/PreferencesTheme"></activity>
+            android:theme="@style/PreferencesTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mudar.patinoires.ui.activity.MainActivity" />
+        </activity>
+        <activity
+            android:name="ca.mudar.patinoires.ui.activity.SettingsActivityHC"
+            android:exported="false"
+            android:label="@string/app_name_preferences"
+            android:parentActivityName="ca.mudar.patinoires.ui.activity.MainActivity"
+            android:theme="@style/PreferencesTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mudar.patinoires.ui.activity.MainActivity" />
+        </activity>
 
         <uses-library android:name="com.google.android.maps" />
 
-        <service android:name=".services.SyncService" />
-        <service android:name=".services.DistanceUpdateService" />
+        <service android:name="ca.mudar.patinoires.services.SyncService" />
+        <service android:name="ca.mudar.patinoires.services.DistanceUpdateService" />
 
-        <receiver android:name=".receivers.LocationChangedReceiver" />
-        <receiver android:name=".receivers.PassiveLocationChangedReceiver" />
+        <receiver android:name="ca.mudar.patinoires.receivers.LocationChangedReceiver" />
+        <receiver android:name="ca.mudar.patinoires.receivers.PassiveLocationChangedReceiver" />
         <receiver
-            android:name=".receivers.ConnectivityChangedReceiver"
+            android:name="ca.mudar.patinoires.receivers.ConnectivityChangedReceiver"
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receivers.PowerStateChangedReceiver">
+        <receiver android:name="ca.mudar.patinoires.receivers.PowerStateChangedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BATTERY_LOW" />
                 <action android:name="android.intent.action.BATTERY_OKAY" />
@@ -180,8 +224,9 @@
         </receiver>
 
         <provider
-            android:name=".providers.RinksProvider"
-            android:authorities="ca.mudar.patinoires" />
+            android:name="ca.mudar.patinoires.providers.RinksProvider"
+            android:authorities="ca.mudar.patinoires"
+            android:exported="false" />
     </application>
 
 </manifest>

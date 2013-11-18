@@ -24,7 +24,7 @@
 package ca.mudar.patinoires.ui.widgets;
 
 import ca.mudar.patinoires.R;
-import ca.mudar.patinoires.ui.BaseListFragment.RinksQuery;
+import ca.mudar.patinoires.ui.fragment.BaseListFragment.RinksQuery;
 import ca.mudar.patinoires.utils.Helper;
 
 import android.content.Context;
