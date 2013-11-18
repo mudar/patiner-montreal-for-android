@@ -112,8 +112,11 @@
     <string name="park_distance_imp">%.1f mi</string>
     <string name="park_distance_imp_feet">%s pi</string>
     <string name="park_distance_imp_min">&lt; 200 pi</string>
-    <string name="toast_sync_error">Erreur de connexion : %s</string>
+    <string name="toast_sync_error_debug">Sync error: %s</string>
+    <string name="toast_sync_error">Erreur de connexion&#160;!</string>
     <string name="toast_sync_finished">Mise à jour terminée</string>
+    <string name="toast_playservices_restart">Redémarrage de Patiner Montréal… Mise à jour réussie de Google Play services&#160;!</string>
+
     <string name="logo_open_data_content_desc">Montréal Ouvert</string>
     <string name="menu_favorites_toggle">Patinoire favorite</string>
     <string name="about_contents_project_version">Version %s</string>
@@ -174,4 +177,9 @@
     <string name="share_text_map">Carte des patinoires extérieures à Montréal: patinage, hockey et conditions quotidiennes. http://patinermontreal.ca/ via @patinermtl</string>
     <string name="share_subject_app">Application android: Patiner Montréal</string>
     <string name="share_text_app">Découvrez Patiner Montréal sur Google Playstore %s</string>
+
+    <!-- Playservices -->
+    <string name="playservices_title">De quoi s’agit-il&#160;?</string>
+    <string name="playservices_1">Avec les services Google Play, les applications Android du Play Store s’intègrent dans Google+, Google Maps ainsi que d’autres services Google. Pour pouvoir fonctionner correctement, certaines applications peuvent nécessiter l’installation et la mise à jour des services Google Play.</string>
+    <string name="playservices_2">Les services Google Play sont généralement mis à jour automatiquement sur les appareils Android. Si vous utilisez une application nécessitant la version la plus récente des services Google Play, vous êtes redirigé vers le Play Store où vous pouvez les installer ou les mettre à jour manuellement.</string>
 </resources>

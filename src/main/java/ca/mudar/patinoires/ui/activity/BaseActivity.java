@@ -32,6 +32,7 @@ import android.os.Parcelable;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -42,8 +43,10 @@ import ca.mudar.patinoires.providers.RinksContract;
 import ca.mudar.patinoires.services.SyncService;
 import ca.mudar.patinoires.utils.ConnectionHelper;
 import ca.mudar.patinoires.utils.EulaHelper;
+import ca.mudar.patinoires.utils.LocationUtils;
 
 public class BaseActivity extends ActionBarActivity {
+    protected static final String TAG = "BaseActivity";
     private static final String SEND_INTENT_TYPE = "text/plain";
     private static boolean hasLaunchedEula = false;
 
@@ -64,10 +67,10 @@ public class BaseActivity extends ActionBarActivity {
         /**
          * Display the GPLv3 licence
          */
-//        if (!((Activity) this instanceof EulaActivity) && !EulaHelper.hasAcceptedEula(this)) {
-//                hasLaunchedEula = true;
-//            EulaHelper.showEula(false, this);
-//        }
+        if (!EulaHelper.hasAcceptedEula(this) && !hasLaunchedEula) {
+            hasLaunchedEula = true;
+            EulaHelper.showEula(false, this);
+        }
     }
 
     @Override
@@ -80,18 +83,11 @@ public class BaseActivity extends ActionBarActivity {
             if (!hasAcceptedEula) {
                 this.finish();
             }
+        } else if (requestCode == LocationUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                Log.v(TAG, "PlayServices has resolved connection issue");
+            }
         }
-    }
-
-    /**
-     * Go to Dashboard on ActionBar home tap, clearing activity stack
-     */
-    public final void goHome() {
-
-        final Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startActivity(intent);
-        overridePendingTransition(R.anim.home_enter, R.anim.home_exit);
     }
 
     /**
@@ -169,8 +165,7 @@ public class BaseActivity extends ActionBarActivity {
             return true;
         } else if (item.getItemId() == R.id.menu_search) {
             // TODO Handle search
-            Toast.makeText(getApplicationContext(), "Coming soon!",
-                    Toast.LENGTH_SHORT).show();
+            ((PatinoiresApp) getApplicationContext()).showToastText("Coming soon!", Toast.LENGTH_SHORT);
             return true;
         } else if (item.getItemId() == R.id.menu_about) {
             intent = new Intent(this, AboutActivity.class);

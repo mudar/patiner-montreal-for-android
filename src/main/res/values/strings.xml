@@ -111,8 +111,11 @@
     <string name="park_distance_imp">%.1f mi</string>
     <string name="park_distance_imp_feet">%s ft</string>
     <string name="park_distance_imp_min">&lt; 200 ft</string>
-    <string name="toast_sync_error">Sync error: %s</string>
+    <string name="toast_sync_error_debug">Sync error: %s</string>
+    <string name="toast_sync_error">Server connection error!</string>
     <string name="toast_sync_finished">Update completed successfully</string>
+    <string name="toast_playservices_restart">Restarting Patiner Montréal… Google Play services successfully update!</string>
+
     <string name="logo_open_data_content_desc">Montréal Ouvert</string>
     <string name="menu_favorites_toggle">Favorite rink</string>
     <string name="about_contents_project_version">Version %s</string>
@@ -173,4 +176,9 @@
     <string name="share_text_map">Interactive map of Montreal’s outdoor rinks: Skating, Hockey and daily conditions. http://patinermontreal.ca/ via @patinermtl</string>
     <string name="share_subject_app">Android app: Patiner Montreal</string>
     <string name="share_text_app">Discover Patiner Montreal on Google Playstore %s</string>
+
+    <!-- Playservices -->
+    <string name="playservices_title">What is this about?</string>
+    <string name="playservices_1">Google Play services lets Android apps from the Google Play Store integrate with Google+, Google Maps, and other Google services. To work correctly, some apps may require Google Play services to be present and up to date.</string>
+    <string name="playservices_2">Google Play services is usually updated automatically on Android devices. In the event you use an app that requires the latest Google Play services, you will be redirected to install or update it manually from the Google Play Store.</string>
 </resources>

@@ -202,8 +202,6 @@
                 android:value="ca.mudar.patinoires.ui.activity.MainActivity" />
         </activity>
 
-        <uses-library android:name="com.google.android.maps" />
-
         <service android:name="ca.mudar.patinoires.services.SyncService" />
         <service android:name="ca.mudar.patinoires.services.DistanceUpdateService" />
 

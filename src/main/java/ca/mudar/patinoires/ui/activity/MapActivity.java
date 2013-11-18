@@ -24,31 +24,67 @@
 package ca.mudar.patinoires.ui.activity;
 
 import android.content.Intent;
+import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 
 import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.ui.fragment.MapFragment;
 import ca.mudar.patinoires.utils.ConnectionHelper;
+import ca.mudar.patinoires.utils.LocationUtils;
 
 
-public class MapActivity extends BaseActivity implements MapFragment.OnMyLocationChangedListener {
+public class MapActivity extends BaseActivity implements
+        LocationListener,
+        GooglePlayServicesClient.ConnectionCallbacks,
+        GooglePlayServicesClient.OnConnectionFailedListener {
     protected static final String TAG = "MapActivity";
     private static final String SEND_INTENT_TYPE = "text/plain";
-
     private Location initLocation;
     private boolean isCenterOnMyLocation;
+    private boolean isPlayservicesOutdated;
+    private LocationRequest mLocationRequest;
+    // Stores the current instantiation of the location client in this object
+    private LocationClient mLocationClient;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        mLocationClient.connect();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_map);
+
+        isPlayservicesOutdated = (GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(getApplicationContext()) != ConnectionResult.SUCCESS);
+        if (isPlayservicesOutdated) {
+
+            setContentView(R.layout.activity_playservices_update);
+            setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
+
+        } else {
+
+            setContentView(R.layout.activity_map);
+            setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
+        }
+
 
         initLocation = null;
 
@@ -67,6 +103,7 @@ public class MapActivity extends BaseActivity implements MapFragment.OnMyLocatio
             isCenterOnMyLocation = true;
         }
 
+        initializePlayServices();
     }
 
     @Override
@@ -93,6 +130,18 @@ public class MapActivity extends BaseActivity implements MapFragment.OnMyLocatio
     public void onResume() {
         super.onResume();
 
+        // Check Playservices status
+        if (isPlayservicesOutdated) {
+            if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext()) == ConnectionResult.SUCCESS) {
+                // Playservice updated, display message and restart activity
+                ((PatinoiresApp) getApplicationContext()).showToastText(R.string.toast_playservices_restart, Toast.LENGTH_LONG);
+                final Intent intent = getIntent();
+                this.finish();
+                startActivity(intent);
+            }
+            return;
+        }
+
         if (!ConnectionHelper.hasConnection(this)) {
             ConnectionHelper.showDialogNoConnection(this);
         }
@@ -105,10 +154,17 @@ public class MapActivity extends BaseActivity implements MapFragment.OnMyLocatio
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onStop() {
         initLocation = null;
         isCenterOnMyLocation = false;
+
+        // If the client is connected
+        if (mLocationClient.isConnected()) {
+            stopPeriodicUpdates();
+        }
+        mLocationClient.disconnect();
+
+        super.onStop();
     }
 
     @Override
@@ -122,31 +178,95 @@ public class MapActivity extends BaseActivity implements MapFragment.OnMyLocatio
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_map, menu);
+        if (isPlayservicesOutdated) {
+            return false;
+        } else {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu_map, menu);
 
-        return true;
+            return true;
+        }
     }
 
     /**
-     * Implement the fragmentMap listener interface, to get the user's location,
-     * send it to the AppHelper and enable the My Location item in the menu.
+     * Called by Location Services when the request to connect the
+     * client finishes successfully. At this point, you can
+     * request the current location or start periodic updates
      */
     @Override
-    public void OnMyLocationChanged(final Location location) {
-        /**
-         * Following code allows the background listener to modify the UI's
-         * menu.
-         */
-        runOnUiThread(new Runnable() {
-            public void run() {
-                // TODO: verify that new location is sent to service & favorites
-                // fragment
-                ((PatinoiresApp) getApplicationContext())
-                        .setLocation(location);
-                // invalidateOptionsMenu();
-            }
-        });
+    public void onConnected(Bundle bundle) {
+        startPeriodicUpdates();
     }
 
+    /**
+     * Called by Location Services if the connection to the
+     * location client drops because of an error.
+     */
+    @Override
+    public void onDisconnected() {
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        ((PatinoiresApp) getApplicationContext()).setLocation(location);
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        /**
+         * Google Play services can resolve some errors it detects.
+         * If the error has a resolution, try sending an Intent to
+         * start a Google Play services activity that can resolve
+         * error.
+         */
+        if (connectionResult.hasResolution()) {
+            try {
+                // Start an Activity that tries to resolve the error
+                connectionResult.startResolutionForResult(
+                        this,
+                        LocationUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                /*
+                 * Thrown if Google Play services canceled the original
+                 * PendingIntent
+                 */
+            } catch (IntentSender.SendIntentException e) {
+                // Log the error
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void initializePlayServices() {
+        // Create a new global location parameters object
+        mLocationRequest = LocationRequest.create();
+
+        /*
+         * Set the update interval
+         */
+        mLocationRequest.setInterval(LocationUtils.UPDATE_INTERVAL_IN_MILLISECONDS);
+
+        // Use high accuracy
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        // Set the interval ceiling to one minute
+        mLocationRequest.setFastestInterval(LocationUtils.FAST_INTERVAL_CEILING_IN_MILLISECONDS);
+
+        /*
+         * Create a new location client, using the enclosing class to
+         * handle callbacks.
+         */
+        mLocationClient = new LocationClient(this, this, this);
+    }
+
+    private void startPeriodicUpdates() {
+        mLocationClient.requestLocationUpdates(mLocationRequest, this);
+    }
+
+    /**
+     * In response to a request to stop updates, send a request to
+     * Location Services
+     */
+    private void stopPeriodicUpdates() {
+        mLocationClient.removeLocationUpdates(this);
+    }
 }

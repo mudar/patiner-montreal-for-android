@@ -23,7 +23,6 @@
 
 package ca.mudar.patinoires.ui.fragment;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,7 +30,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -47,7 +45,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -82,10 +79,8 @@ public class MapFragment extends SupportMapFragment implements
     private static final float HUE_MARKER = 228f;
     private static final float HUE_MARKER_STARRED = BitmapDescriptorFactory.HUE_YELLOW;
     private static final float DISTANCE_MARKER_HINT = 50f;
-    protected OnMyLocationChangedListener mListener;
-    protected LocationManager mLocationManager;
+
     private GoogleMap mMap;
-    private LocationSource.OnLocationChangedListener onLocationChangedListener;
     private Location initLocation = null;
     private Location mMapCenter = null;
     private LatLng screenCenter = null;
@@ -97,20 +92,6 @@ public class MapFragment extends SupportMapFragment implements
     private String postalCode;
     private DbAsyncTask dbAsyncTask = null;
     private Map<String, String> mMarkersMap;
-
-    /**
-     * Attach a listener.
-     */
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnMyLocationChangedListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnMyLocationChangedListener");
-        }
-    }
 
     /**
      * Create map and initialize
@@ -127,9 +108,6 @@ public class MapFragment extends SupportMapFragment implements
         mAppHelper = (PatinoiresApp) getActivity().getApplicationContext();
 
         setUpMapIfNeeded();
-
-        mLocationManager = (LocationManager) getActivity().getApplicationContext()
-                .getSystemService(Context.LOCATION_SERVICE);
 
 //        initMap();
     }
@@ -207,7 +185,6 @@ public class MapFragment extends SupportMapFragment implements
      */
     protected void initialAnimateToPoint() {
         Log.v(TAG, "initialAnimateToPoint");
-        final List<String> enabledProviders = mLocationManager.getProviders(true);
 
         double coordinates[] = Const.MAPS_DEFAULT_COORDINATES;
         final double lat = coordinates[0];
@@ -369,14 +346,6 @@ public class MapFragment extends SupportMapFragment implements
         alert.show();
     }
 
-    /**
-     * Container Activity must implement this interface to receive the list item
-     * clicks.
-     */
-    public interface OnMyLocationChangedListener {
-        public void OnMyLocationChanged(Location location);
-    }
-
     private static interface RinksQuery {
         // int _TOKEN = 0x10;
 
@@ -463,7 +432,7 @@ public class MapFragment extends SupportMapFragment implements
 
         @Override
         protected void onPostExecute(Cursor cursor) {
-            if (cursor == null || !isAdded()) {
+            if (cursor == null || !isAdded() || mMap == null) {
                 return;
             }
 

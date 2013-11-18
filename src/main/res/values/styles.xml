@@ -39,6 +39,12 @@
     <style name="EulaButton" parent="@style/ButtonAppTheme">
     </style>
 
+    <!--Playservices-->
+    <style name="PlayservicesTitle" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_marginBottom">@dimen/paddingLarge</item>
+        <item name="android:textColor">@color/body_text_1</item>
+    </style>
+
     <style name="ButtonAppTheme" parent="android:Widget.Button">
         <item name="android:background">@drawable/btn_default_holo_light</item>
         <item name="android:minHeight">48dip</item>

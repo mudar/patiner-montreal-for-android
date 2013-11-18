@@ -24,7 +24,6 @@
 package ca.mudar.patinoires.ui.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -45,6 +44,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import ca.mudar.patinoires.Const;
+import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.receivers.DetachableResultReceiver;
 import ca.mudar.patinoires.services.SyncService;
@@ -258,6 +258,7 @@ public class TabsPagerActivity extends BaseActivity implements BaseListFragment.
         public static final String TAG = SyncStatusUpdaterFragment.class.getName();
         // private boolean mSyncing = false;
         private DetachableResultReceiver mReceiver;
+        private boolean hasSyncError = false;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -279,6 +280,8 @@ public class TabsPagerActivity extends BaseActivity implements BaseListFragment.
             }
             activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
 
+            final PatinoiresApp appHelper = (PatinoiresApp) getActivity().getApplicationContext();
+
             switch (resultCode) {
                 case SyncService.STATUS_RUNNING: {
                     activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
@@ -287,12 +290,13 @@ public class TabsPagerActivity extends BaseActivity implements BaseListFragment.
                 }
                 case SyncService.STATUS_FINISHED: {
                     activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
-                    // mSyncing = false;
-                    Toast.makeText(activity, R.string.toast_sync_finished, Toast.LENGTH_SHORT)
-                            .show();
+                    if (!hasSyncError) {
+                        appHelper.showToastText(R.string.toast_sync_finished, Toast.LENGTH_SHORT);
+                    }
                     break;
                 }
                 case SyncService.STATUS_ERROR: {
+                    hasSyncError = true;
                     /**
                      * Error happened down in SyncService, show as toast.
                      */
@@ -300,9 +304,10 @@ public class TabsPagerActivity extends BaseActivity implements BaseListFragment.
                     activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
 
                     // mSyncing = false;
-                    final String errorText = getString(R.string.toast_sync_error,
-                            resultData.getString(Intent.EXTRA_TEXT));
-                    Toast.makeText(activity, errorText, Toast.LENGTH_LONG).show();
+//                    final String errorText = getString(R.string.toast_sync_error_debug,
+//                            resultData.getString(Intent.EXTRA_TEXT));
+//                    appHelper.showToastText(errorText , Toast.LENGTH_LONG);
+                    appHelper.showToastText(R.string.toast_sync_error, Toast.LENGTH_LONG);
                     break;
                 }
             }

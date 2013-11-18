@@ -36,6 +36,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -138,6 +139,9 @@ public class RinkDetailsFragment extends Fragment
         // }
         else {
             mRinkId = intent.getIntExtra(Const.INTENT_EXTRA_ID_RINK, -1);
+        }
+        if ( mRinkId == -1) {
+            NavUtils.navigateUpFromSameTask(getActivity());
         }
 
         mRinkUri = RinksContract.Rinks.buildRinkUri(Integer.toString(mRinkId));

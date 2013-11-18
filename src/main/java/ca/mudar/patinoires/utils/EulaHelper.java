@@ -51,14 +51,16 @@ public class EulaHelper {
      * Show End User License Agreement.
      *
      * @param accepted True IFF user has accepted license already, which means
-     * it can be dismissed. If the user hasn't accepted, then the
-     * EULA must be accepted or the program exits.
+     *                 it can be dismissed. If the user hasn't accepted, then the
+     *                 EULA must be accepted or the program exits.
      * @param activity Activity started from.
      */
 
     public static void showEula(final boolean accepted, final Activity activity) {
-        Intent intent = new Intent(activity, EulaActivity.class);
-        activity.startActivityForResult(intent, Const.INTENT_REQ_CODE_EULA);
+        if (!(activity instanceof EulaActivity)) {
+            Intent intent = new Intent(activity, EulaActivity.class);
+            activity.startActivityForResult(intent, Const.INTENT_REQ_CODE_EULA);
+        }
     }
 
     public static boolean acceptEula(int resultCode, final Activity activity) {
@@ -67,8 +69,7 @@ public class EulaHelper {
                     .getApplicationContext());
             prefs.edit().putBoolean(Const.PrefsNames.HAS_ACCEPTED_EULA, true).commit();
             return true;
-        }
-        else {
+        } else {
             Log.v(TAG, "User has declined the End User License Agreement!");
             return false;
         }

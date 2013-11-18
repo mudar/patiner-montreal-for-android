@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
+import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.receivers.DetachableResultReceiver;
 import ca.mudar.patinoires.services.SyncService;
@@ -106,6 +107,7 @@ public class RinkDetailsActivity extends BaseActivity implements RinkDetailsFrag
         public static final String TAG = SyncStatusUpdaterFragment.class.getName();
         // private boolean mSyncing = false;
         private DetachableResultReceiver mReceiver;
+        private boolean hasSyncError = false;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -127,6 +129,8 @@ public class RinkDetailsActivity extends BaseActivity implements RinkDetailsFrag
             }
             activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
 
+            final PatinoiresApp appHelper = (PatinoiresApp) getActivity().getApplicationContext();
+
             switch (resultCode) {
                 case SyncService.STATUS_RUNNING: {
                     activity.setProgressBarIndeterminateVisibility(Boolean.TRUE);
@@ -142,17 +146,20 @@ public class RinkDetailsActivity extends BaseActivity implements RinkDetailsFrag
                             .findFragmentById(R.id.fragment_rink_details);
                     detailsFragment.onConditionsRefresh();
 
-                    Toast.makeText(activity, R.string.toast_sync_finished, Toast.LENGTH_SHORT)
-                            .show();
+                    if (!hasSyncError) {
+                        appHelper.showToastText(R.string.toast_sync_finished, Toast.LENGTH_SHORT);
+                    }
                     break;
                 }
                 case SyncService.STATUS_ERROR: {
+                    hasSyncError = true;
                     activity.setProgressBarIndeterminateVisibility(Boolean.FALSE);
                     // Error happened down in SyncService, show as toast.
                     // mSyncing = false;
-                    final String errorText = getString(R.string.toast_sync_error,
-                            resultData.getString(Intent.EXTRA_TEXT));
-                    Toast.makeText(activity, errorText, Toast.LENGTH_LONG).show();
+//                    final String errorText = getString(R.string.toast_sync_error_debug,
+//                            resultData.getString(Intent.EXTRA_TEXT));
+//                    appHelper.showToastText(errorText , Toast.LENGTH_LONG);
+                    appHelper.showToastText(R.string.toast_sync_error, Toast.LENGTH_LONG);
                     break;
                 }
             }
