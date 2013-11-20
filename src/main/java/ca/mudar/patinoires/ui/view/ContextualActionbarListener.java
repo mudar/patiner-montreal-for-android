@@ -34,15 +34,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.RemoteException;
 import android.provider.BaseColumns;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.AbsListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.providers.RinksContract;
 import ca.mudar.patinoires.ui.fragment.BaseListFragment;
@@ -68,7 +69,6 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
 
     @Override
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-        Log.v(TAG, "onItemCheckedStateChanged");
         final int nbItems = mAdapter.getSelectionSize();
 
         final Cursor cursor = mAdapter.getCursor();
@@ -79,8 +79,6 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
 
         mAdapter.setNewSelection(rinkId, checked);
 
-        Log.v(TAG, "nbItems = " + nbItems);
-
         if (checked && nbItems <= 1) {
             mActionMode.invalidate();
         }
@@ -90,7 +88,6 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        Log.v(TAG, "onCreateActionMode");
         mActionMode = mode;
 
         final MenuInflater inflater = mode.getMenuInflater();
@@ -103,17 +100,12 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
 
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-        Log.v(TAG, "onPrepareActionMode");
-        Log.v(TAG, "nbItems = " + mAdapter.getSelectionSize());
-
         final int nbItems = mAdapter.getSelectionSize();
 
         if (nbItems <= 1) {
-            Log.v(TAG, "visibility = true");
             menu.findItem(R.id.map_view_rink).setVisible(true);
             menu.findItem(R.id.call_rink).setVisible(phoneNumberEnabled);
         } else {
-            Log.v(TAG, "visibility = false");
             menu.findItem(R.id.map_view_rink).setVisible(false);
             menu.findItem(R.id.call_rink).setVisible(false);
 
@@ -125,11 +117,7 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-        Log.v(TAG, "onActionItemClicked");
-
         final int nbItems = mAdapter.getSelectionSize();
-        Log.v(TAG, "nbItems = " + nbItems);
-
         final String[] rinkIds = mAdapter.getSelectionItems();
 
         clearActionMode();
@@ -144,10 +132,14 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
         return false;
     }
 
+    /**
+     * Handle CAB actions for a single rink. Additional buttons are call and viewMap.
+     *
+     * @param item
+     * @param rinkId
+     * @return
+     */
     private boolean onActionItemClickedSingle(MenuItem item, String rinkId) {
-        Log.v(TAG, "onActionItemClickedMulti");
-
-
         if (item.getItemId() == R.id.favorites_add) {
             mListener.addToFavorites(Integer.valueOf(rinkId));
             return true;
@@ -156,11 +148,9 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
             return true;
         } else {
             final Uri rinkUri = RinksContract.Rinks.buildRinkUri(rinkId);
-            Log.v(TAG, "rinkUri = " + rinkUri);
             final RinkInfoHolder rinkInfo = getRinkInfo(rinkId);
 
             if (item.getItemId() == R.id.map_view_rink) {
-                Log.v(TAG, "geo = " + rinkInfo.geoLat + "," + rinkInfo.geoLng);
                 mListener.goMapCAB(rinkInfo.geoLat, rinkInfo.geoLng);
                 return true;
             } else if (item.getItemId() == R.id.call_rink) {
@@ -173,15 +163,19 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
         return false;
     }
 
+    /**
+     * Handle CAB actions for multiple rinks: add/remove from favorites only
+     *
+     * @param item
+     * @param rinkIds
+     * @return
+     */
     private boolean onActionItemClickedMulti(MenuItem item, String[] rinkIds) {
-        Log.v(TAG, "onActionItemClickedMulti");
-
         final int nbRinks = rinkIds.length;
         final ContentResolver contentResolver = mContext.getContentResolver();
 
         if (item.getItemId() == R.id.favorites_add) {
-            Log.v(TAG, "favorites_add");
-
+            // Batch operation to allow DB transaction
             final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
 
             for (int i = 0; i < nbRinks; i++) {
@@ -199,7 +193,7 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
             } catch (OperationApplicationException e) {
                 e.printStackTrace();
             } finally {
-                Log.v(TAG, "finally return true");
+                ((PatinoiresApp) mContext.getApplicationContext()).showToastText(R.string.toast_favorites_added_multi_brief, Toast.LENGTH_SHORT);
                 return true;
             }
         } else if (item.getItemId() == R.id.favorites_remove) {
@@ -211,10 +205,13 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
                     argsJoined += ",";
                 }
             }
-            Log.v(TAG, "argsJoined = " + argsJoined);
+
             contentResolver.delete(RinksContract.Favorites.CONTENT_URI,
                     RinksContract.FavoritesColumns.FAVORITE_RINK_ID + " IN(" + argsJoined + ") ", null);
             mListener.notifyAllTabsCAB(contentResolver);
+
+            ((PatinoiresApp) mContext.getApplicationContext()).showToastText(R.string.toast_favorites_removed_multi_brief, Toast.LENGTH_SHORT);
+            return true;
         }
 
         return false;
@@ -222,9 +219,7 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
 
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-        Log.v(TAG, "onDestroyActionMode");
-        // Here you can make any necessary updates to the activity when
-        // the CAB is removed. By default, selected items are deselected/unchecked.
+        // Clear selection on CAB destroy
         mAdapter.clearSelection();
     }
 
@@ -276,6 +271,9 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
         return rinkInfo;
     }
 
+    /**
+     * ListFragment must implement the following interface
+     */
     public interface onRinkActionsListener {
         public void addToFavorites(int rinkId);
 
