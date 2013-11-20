@@ -23,6 +23,7 @@
 
 package ca.mudar.patinoires.ui.fragment;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -35,6 +36,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.v4.app.ListFragment;
@@ -42,13 +44,13 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.Const.PrefsValues;
@@ -56,28 +58,31 @@ import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.providers.RinksContract;
 import ca.mudar.patinoires.providers.RinksContract.Favorites;
-import ca.mudar.patinoires.providers.RinksContract.FavoritesColumns;
 import ca.mudar.patinoires.providers.RinksContract.Parks;
 import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
-import ca.mudar.patinoires.ui.widgets.RinksCursorAdapter;
+import ca.mudar.patinoires.ui.view.ContextualActionbarListener;
+import ca.mudar.patinoires.ui.widget.RinksCursorAdapter;
 import ca.mudar.patinoires.utils.Helper;
 
-public abstract class BaseListFragment extends ListFragment implements LoaderCallbacks<Cursor> {
+public abstract class BaseListFragment extends ListFragment implements
+        LoaderCallbacks<Cursor>,
+        ContextualActionbarListener.onRinkActionsListener {
 
-    protected static final String TAG = "BaseListFragment";
-    protected PatinoiresApp mAppHelper;
-    protected Uri mContentUri;
+    private static final String TAG = "BaseListFragment";
     protected RinksCursorAdapter mAdapter;
-    protected Cursor cursor = null;
-    protected View rootView;
-    protected String mSort;
-    protected LocationManager locationManager;
-    protected LocationListener locationListener;
-    protected Criteria criteria;
-    protected OnRinkClickListener mListener;
-    boolean hasFollowLocationChanges = false;
+    protected ContextualActionbarListener mCABListener = null;
+    private PatinoiresApp mAppHelper;
+    private Uri mContentUri;
+    private Cursor cursor = null;
+    private View rootView;
+    private String mSort;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    private Criteria criteria;
+    private OnRinkClickListener mListener;
+    private boolean hasFollowLocationChanges = false;
 
     public BaseListFragment(Uri contentUri) {
         mContentUri = contentUri;
@@ -149,7 +154,6 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
 
         setListAdapter(mAdapter);
 
-        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -164,11 +168,44 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        registerForContextMenu(this.getListView());
+        getLoaderManager().initLoader(0, null, this);
+
+        if (Const.SUPPORTS_HONEYCOMB) {
+            createContextActionbar();
+        } else {
+            registerForContextMenu(this.getListView());
+        }
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+    public void onPause() {
+        super.onPause();
+
+        if (Const.SUPPORTS_HONEYCOMB) {
+            destroyContextActionbar();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    protected void createContextActionbar() {
+        getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+
+        mCABListener = new ContextualActionbarListener(getActivity(), this, mAdapter, false);
+        getListView().setMultiChoiceModeListener(mCABListener);
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void destroyContextActionbar() {
+        try {
+            mCABListener.clearActionMode();
+            mAdapter.clearSelection();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
         Cursor c = mAdapter.getCursor();
@@ -187,7 +224,6 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
         menu.findItem(R.id.favorites_remove).setVisible(isFavorite == 1);
         menu.findItem(R.id.map_view_rink).setVisible((geoLat != 0) && (geoLng != 0));
         menu.findItem(R.id.call_rink).setVisible(phone != null);
-
     }
 
     @Override
@@ -204,7 +240,6 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         Cursor c = mAdapter.getCursor();
-        ContentResolver contentResolver = getActivity().getContentResolver();
 
         int rinkId = c.getInt(RinksQuery.RINK_ID);
         Intent intent;
@@ -217,27 +252,11 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
 
                 return true;
             case R.id.favorites_add:
-                /**
-                 * Add to favorites, and update all ContentResolvers to update
-                 * the context menu for this same item.
-                 */
-                final ContentValues values = new ContentValues();
-                values.put(RinksContract.Favorites.FAVORITE_RINK_ID, rinkId);
-                contentResolver.insert(Favorites.CONTENT_URI, values);
-                mListener.notifyAllTabs(contentResolver);
+                addToFavorites(rinkId);
 
                 return true;
             case R.id.favorites_remove:
-                /**
-                 * Remove from favorites, and update all ContentResolvers to
-                 * update the context menu for this same item.
-                 */
-                String[] args = new String[]{
-                        Integer.toString(rinkId)
-                };
-                contentResolver.delete(Favorites.CONTENT_URI,
-                        FavoritesColumns.FAVORITE_RINK_ID + "=?", args);
-                mListener.notifyAllTabs(contentResolver);
+                removeFromFavorites(rinkId);
 
                 return true;
             case R.id.call_rink:
@@ -251,15 +270,55 @@ public abstract class BaseListFragment extends ListFragment implements LoaderCal
         }
     }
 
+    /**
+     * Add to favorites, and update all ContentResolvers to update
+     * the context menu for this same item.
+     */
+    public void addToFavorites(int rinkId) {
+        final ContentResolver contentResolver = getActivity().getContentResolver();
+
+        final ContentValues values = new ContentValues();
+        values.put(RinksContract.Favorites.FAVORITE_RINK_ID, rinkId);
+        contentResolver.insert(Favorites.CONTENT_URI, values);
+        mListener.notifyAllTabs(contentResolver);
+
+        mAppHelper.showToastText(R.string.toast_favorites_added_brief, Toast.LENGTH_SHORT);
+    }
+
+    /**
+     * Remove from favorites, and update all ContentResolvers to
+     * update the context menu for this same item.
+     */
+    public void removeFromFavorites(int rinkId) {
+        final ContentResolver contentResolver = getActivity().getContentResolver();
+
+        String[] args = new String[]{
+                Integer.toString(rinkId)
+        };
+        contentResolver.delete(Favorites.CONTENT_URI,
+                RinksContract.FavoritesColumns.FAVORITE_RINK_ID + "=?", args);
+        mListener.notifyAllTabs(contentResolver);
+
+        mAppHelper.showToastText(R.string.toast_favorites_removed_brief, Toast.LENGTH_SHORT);
+    }
+
+    public void goMapCAB(double lat, double lng) {
+        mListener.goMap(lat, lng);
+    }
+
+    public void notifyAllTabsCAB(ContentResolver contentResolver) {
+        mListener.notifyAllTabs(contentResolver);
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String filter = Helper.getSqliteConditionsFilter(mAppHelper.getConditionsFilter());
+        String filter = null;
 
         /**
-         * Favorite rinks are not filtered by Conditions.
+         * Apply conditions-filter to non-favorites lists
          */
-        if (mContentUri == Rinks.CONTENT_FAVORITES_URI) {
-            filter = null;
+        if (mContentUri != Rinks.CONTENT_FAVORITES_URI) {
+            filter = Helper.getSqliteConditionsFilter(mAppHelper.getConditionsFilter());
         }
 
         return new CursorLoader(getActivity().getApplicationContext(), mContentUri,

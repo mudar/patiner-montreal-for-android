@@ -21,7 +21,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires.ui.widgets;
+package ca.mudar.patinoires.ui.view;
 
 import android.app.Activity;
 import android.text.SpannableString;

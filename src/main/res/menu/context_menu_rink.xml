@@ -21,23 +21,23 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/favorites_add"
-        android:title="@string/menu_favorites_add"/>
+        android:title="@string/menu_favorites_add" />
 
     <item
         android:id="@+id/favorites_remove"
         android:title="@string/menu_favorites_remove"
-        android:visible="false"/>
+        android:visible="false" />
 
     <item
         android:id="@+id/map_view_rink"
-        android:title="@string/menu_map_view_rink"/>
+        android:title="@string/menu_map_view_rink" />
 
     <item
         android:id="@+id/call_rink"
-        android:title="@string/menu_call_rink"/>
+        android:title="@string/menu_call_rink" />
 
 </menu>

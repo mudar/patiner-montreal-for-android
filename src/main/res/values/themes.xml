@@ -38,7 +38,7 @@
         <item name="windowActionBarOverlay">true</item>
     </style>
 
-    <style name="PreferencesBaseTheme" parent="@android:style/Theme.Light">
+    <style name="PreferencesBaseTheme" parent="@android:style/Theme">
     </style>
 
 
@@ -71,7 +71,6 @@
     </style>
 
     <style name="PreferencesTheme" parent="@style/PreferencesBaseTheme">
-        <item name="android:listSeparatorTextViewStyle">@style/PrefsCategory</item>
     </style>
 
 </resources>

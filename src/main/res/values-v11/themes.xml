@@ -39,6 +39,7 @@
     </style>
 
     <style name="PreferencesBaseTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:listSeparatorTextViewStyle">@style/PrefsCategory</item>
         <item name="android:actionBarStyle">@style/PatinoiresActionBar</item>
         <item name="android:logo">@drawable/ic_logo_patinoires</item>
     </style>

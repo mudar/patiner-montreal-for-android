@@ -19,22 +19,32 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 -->
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:state_pressed="true"><shape>
-            <gradient android:angle="90" android:endColor="@color/listview_color_1" android:startColor="@color/listview_color_3" />
-        </shape></item>
-    <item android:state_focused="true"><shape>
-            <gradient android:angle="90" android:endColor="@color/listview_color_2" android:startColor="@color/listview_color_3" />
-        </shape></item>
-    <item android:state_selected="true"><shape>
-            <gradient android:angle="90" android:endColor="@color/listview_color_2" android:startColor="@color/listview_color_3" />
-        </shape></item>
-    <item><shape>
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="@color/listview_color_2" />
+        </shape>
+    </item>
+    <item android:state_focused="true">
+        <shape>
+            <solid android:color="@color/listview_color_1" />
+        </shape>
+    </item>
+    <item android:state_selected="true">
+        <shape>
+            <solid android:color="@color/listview_color_3" />
+        </shape>
+    </item>
+    <item>
+        <shape>
             <solid android:color="@color/background_1"></solid>
-        </shape></item>
+        </shape>
+    </item>
 
 </selector>

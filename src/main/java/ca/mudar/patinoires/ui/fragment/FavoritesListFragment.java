@@ -23,7 +23,12 @@
 
 package ca.mudar.patinoires.ui.fragment;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.widget.ListView;
+
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
+import ca.mudar.patinoires.ui.view.ContextualActionbarListener;
 
 public class FavoritesListFragment extends BaseListFragment {
 
@@ -31,4 +36,12 @@ public class FavoritesListFragment extends BaseListFragment {
         super(Rinks.CONTENT_FAVORITES_URI);
     }
 
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    protected void createContextActionbar() {
+        getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+
+        mCABListener = new ContextualActionbarListener(getActivity(), this, mAdapter, true);
+        getListView().setMultiChoiceModeListener(mCABListener);
+    }
 }

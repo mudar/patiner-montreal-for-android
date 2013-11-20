@@ -21,7 +21,7 @@
  * - Renamed package 
  */
 
-package ca.mudar.patinoires.ui.widgets;
+package ca.mudar.patinoires.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

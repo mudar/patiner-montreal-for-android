@@ -63,7 +63,7 @@ import ca.mudar.patinoires.providers.RinksContract;
 import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
 import ca.mudar.patinoires.ui.activity.RinkDetailsActivity;
-import ca.mudar.patinoires.ui.widgets.MyInfoWindowAdapter;
+import ca.mudar.patinoires.ui.view.MyInfoWindowAdapter;
 import ca.mudar.patinoires.utils.Helper;
 
 public class MapFragment extends SupportMapFragment implements

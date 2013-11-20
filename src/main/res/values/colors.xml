@@ -39,12 +39,10 @@
     <color name="background_1">#40ffffff</color>
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
-    <color name="listview_color_1">#a4c3de</color>
-    <color name="listview_color_2">#6785a5</color>
-    <color name="listview_color_3">#29466b</color>
+    <color name="listview_color_1">#6785a5</color>
+    <color name="listview_color_2">#d3e2ef</color>
+    <color name="listview_color_3">#a4c3de</color>
     <color name="listview_colorhint">#00000000</color>
-    <color name="separator_map_list">#e5e5e5</color>
-    <!-- <color name="separator_about">#606060</color> -->
     <color name="progressbar_background">#aaaaaa</color>
     <color name="progressbar_primary">#ffaa00</color>
     <color name="progressbar_secondary">#ff8000</color>

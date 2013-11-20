@@ -37,7 +37,7 @@
         android:progressDrawable="@drawable/progress_horizontal"
         android:visibility="invisible" />
 
-    <ca.mudar.patinoires.ui.widgets.DashboardLayout
+    <ca.mudar.patinoires.ui.view.DashboardLayout
         android:id="@+id/dashboard_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -65,6 +65,6 @@
             style="@style/DashboardButton"
             android:drawableTop="@drawable/btn_dashboard_favorites"
             android:text="@string/btn_favorites" />
-    </ca.mudar.patinoires.ui.widgets.DashboardLayout>
+    </ca.mudar.patinoires.ui.view.DashboardLayout>
 
 </LinearLayout>

@@ -123,6 +123,8 @@
     <string name="toast_map_not_ready">Loading Map…</string>
     <string name="toast_favorites_added">Added %s to favorites</string>
     <string name="toast_favorites_removed">Removed %s from favorites</string>
+    <string name="toast_favorites_added_brief">Added to favorites</string>
+    <string name="toast_favorites_removed_brief">Removed from favorites</string>
     <string name="toast_prefs_conditions_error">Please check at least one condition…</string>
     <string name="eula_title">GNU General Public License v3.0</string>
     <string name="eula_accept_btn">Accept</string>

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Patiner Montréal for Android. 
     Information about outdoor rinks in the city of Montréal: conditions,
     services, contact, map, etc.
@@ -21,25 +20,35 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:patinoires="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_rating"
-        android:icon="@drawable/ic_action_rating"
+        android:id="@+id/favorites_add"
+        android:icon="@drawable/ic_action_star_off"
+        android:orderInCategory="1"
         android:showAsAction="always"
-        android:title="@string/menu_rating"
-        patinoires:showAsAction="always" />
+        android:title="@string/menu_favorites_add"
+        android:visible="false" />
 
     <item
-        android:icon="@drawable/ic_action_share"
-        android:id="@+id/menu_share_app"
-        android:title="@string/menu_share"
-        patinoires:showAsAction="ifRoom" />
+        android:id="@+id/favorites_remove"
+        android:icon="@drawable/ic_action_star_on"
+        android:orderInCategory="2"
+        android:showAsAction="always"
+        android:title="@string/menu_favorites_remove" />
 
     <item
-        android:id="@+id/menu_eula"
-        android:title="@string/menu_eula"
-        patinoires:showAsAction="never" />
+        android:id="@+id/map_view_rink"
+        android:icon="@drawable/ic_action_compass"
+        android:orderInCategory="3"
+        android:showAsAction="always"
+        android:title="@string/menu_map_view_rink" />
+
+    <item
+        android:id="@+id/call_rink"
+        android:icon="@drawable/ic_action_call"
+        android:orderInCategory="4"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_call_rink" />
 
 </menu>

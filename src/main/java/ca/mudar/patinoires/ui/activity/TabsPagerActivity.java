@@ -76,19 +76,19 @@ public class TabsPagerActivity extends BaseActivity implements BaseListFragment.
         TabsAdapter mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
 
         mTabsAdapter.addTab(
-                mTabHost.newTabSpec(Const.TABS_TAG_SKATING).setIndicator(
-                        buildIndicator(R.drawable.ic_tab_skating)),
+                mTabHost.newTabSpec(Const.TABS_TAG_SKATING)
+                        .setIndicator(buildIndicator(R.drawable.ic_tab_skating)),
                 SkatingListFragment.class, null);
         mTabsAdapter.addTab(
-                mTabHost.newTabSpec(Const.TABS_TAG_HOCKEY).setIndicator(
-                        buildIndicator(R.drawable.ic_tab_hockey)), HockeyListFragment.class, null);
-        mTabsAdapter.addTab(
-                mTabHost.newTabSpec(Const.TABS_TAG_ALL).setIndicator(
-                        buildIndicator(R.drawable.ic_tab_all)), AllListFragment.class, null);
-        mTabsAdapter.addTab(
-                mTabHost.newTabSpec(Const.TABS_TAG_FAVORITES).setIndicator(
-                        buildIndicator(R.drawable.ic_tab_favorites)), FavoritesListFragment.class,
-                null);
+                mTabHost.newTabSpec(Const.TABS_TAG_HOCKEY)
+                        .setIndicator(buildIndicator(R.drawable.ic_tab_hockey)),
+                HockeyListFragment.class, null);
+        mTabsAdapter.addTab(mTabHost.newTabSpec(Const.TABS_TAG_ALL)
+                .setIndicator(buildIndicator(R.drawable.ic_tab_all)),
+                AllListFragment.class, null);
+        mTabsAdapter.addTab(mTabHost.newTabSpec(Const.TABS_TAG_FAVORITES)
+                .setIndicator(buildIndicator(R.drawable.ic_tab_favorites)),
+                FavoritesListFragment.class, null);
 
         int mCurrentTab = getIntent().getIntExtra(Const.INTENT_EXTRA_TABS_CURRENT, -1);
         if (mCurrentTab != -1) {
@@ -206,8 +206,7 @@ public class TabsPagerActivity extends BaseActivity implements BaseListFragment.
 
         @Override
         public void onTabChanged(String tabId) {
-            int position = mTabHost.getCurrentTab();
-            mViewPager.setCurrentItem(position);
+            mViewPager.setCurrentItem(mTabHost.getCurrentTab());
         }
 
         @Override
