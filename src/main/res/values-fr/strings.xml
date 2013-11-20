@@ -175,8 +175,8 @@
     <!--Share-->
     <string name="share_subject_skating">Patinage à la patinoire extérieure %s</string>
     <string name="share_subject_hockey">Jouer au hockey à la patinoire extérieure %s</string>
-    <string name="share_text_skating">Je vais patiner à la patinoire <xliff:g id="string">%s</xliff:g> http://patinermontreal.ca/patinoires/<xliff:g id="string">%s</xliff:g> via @patinermtl</string>
-    <string name="share_text_hockey">Je vais jouer au hockey à la patinoire <xliff:g id="string">%s</xliff:g> http://patinermontreal.ca/patinoires/<xliff:g id="string">%s</xliff:g> via @patinermtl</string>
+    <string name="share_text_skating">Je vais patiner à la patinoire <xliff:g id="string">%s</xliff:g>. http://patinermontreal.ca/patinoires/<xliff:g id="string">%s</xliff:g> via @patinermtl</string>
+    <string name="share_text_hockey">Je vais jouer au hockey à la patinoire <xliff:g id="string">%s</xliff:g>. http://patinermontreal.ca/patinoires/<xliff:g id="string">%s</xliff:g> via @patinermtl</string>
     <string name="share_subject_map">Patinoires extérieures à Montréal</string>
     <string name="share_text_map">Carte des patinoires extérieures à Montréal: patinage, hockey et conditions quotidiennes. http://patinermontreal.ca/ via @patinermtl</string>
     <string name="share_subject_app">Application android: Patiner Montréal</string>

@@ -27,6 +27,7 @@
     <!-- <color name="actionbar_text">#eeffffff</color> -->
     <color name="actionbar_background_1">#be1a3a61</color>
     <color name="actionbar_background_2">#be00152e</color>
+    <color name="actionbar_background_contextual">#be00152e</color>
     <color name="actionbar_focused">#1a3a61</color>
     <color name="actionbar_pressed">#00152e</color>
     <color name="body_text_1">#ff29466b</color>
