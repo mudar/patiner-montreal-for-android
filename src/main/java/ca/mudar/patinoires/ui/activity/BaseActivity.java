@@ -34,16 +34,15 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.googlemap.LocationUtils;
 import ca.mudar.patinoires.providers.RinksContract;
 import ca.mudar.patinoires.services.SyncService;
 import ca.mudar.patinoires.utils.ConnectionHelper;
 import ca.mudar.patinoires.utils.EulaHelper;
-import ca.mudar.patinoires.utils.LocationUtils;
 
 public class BaseActivity extends ActionBarActivity {
     protected static final String TAG = "BaseActivity";
@@ -162,10 +161,6 @@ public class BaseActivity extends ActionBarActivity {
             return true;
         } else if (item.getItemId() == R.id.menu_refresh) {
             triggerRefresh(null, true);
-            return true;
-        } else if (item.getItemId() == R.id.menu_search) {
-            // TODO Handle search
-            ((PatinoiresApp) getApplicationContext()).showToastText("Coming soon!", Toast.LENGTH_SHORT);
             return true;
         } else if (item.getItemId() == R.id.menu_about) {
             intent = new Intent(this, AboutActivity.class);

@@ -91,7 +91,6 @@
     <string name="dialog_updating_result_error">Update has encountered an error. Please try again.</string>
     <string name="dialog_network_connection_title">No connection!</string>
     <string name="dialog_network_connection_message">You need a network connection to update the rinks information. Please turn on mobile network or Wi-Fi in Settings…</string>
-    <string name="search_hint">Search rinks</string>
     <string name="search_results">Results for ’<xliff:g id="string">%s</xliff:g>’</string>
     <!-- <string name="prefs_category_display">Display Settings</string> -->
     <string name="prefs_breadcrumb">Settings</string>
@@ -105,16 +104,21 @@
     <string name="prefs_condition_closed">Closed</string>
     <string name="prefs_condition_unknown">Unknown</string>
     <string name="map_context_park_prefix">Parc </string>
-    <!-- NEW -->
+
     <string name="park_distance_iso">%.1f km</string>
     <string name="park_distance_iso_min">&lt; 100 m</string>
     <string name="park_distance_imp">%.1f mi</string>
     <string name="park_distance_imp_feet">%s ft</string>
     <string name="park_distance_imp_min">&lt; 200 ft</string>
+
+    <!--Toast messages-->
     <string name="toast_sync_error_debug">Sync error: %s</string>
     <string name="toast_sync_error">Server connection error!</string>
     <string name="toast_sync_finished">Update completed successfully</string>
     <string name="toast_playservices_restart">Restarting Patiner Montréal… Google Play services successfully update!</string>
+    <string name="toast_postal_code_processing">Processing…</string>
+    <string name="toast_search_error">Location %1$s not found</string>
+    <string name="toast_search_network_connection_error">Search requires an active Internet connection…</string>
 
     <string name="logo_open_data_content_desc">Montréal Ouvert</string>
     <string name="menu_favorites_toggle">Favorite rink</string>
@@ -185,4 +189,8 @@
     <string name="playservices_title">What is this about?</string>
     <string name="playservices_1">Google Play services lets Android apps from the Google Play Store integrate with Google+, Google Maps, and other Google services. To work correctly, some apps may require Google Play services to be present and up to date.</string>
     <string name="playservices_2">Google Play services is usually updated automatically on Android devices. In the event you use an app that requires the latest Google Play services, you will be redirected to install or update it manually from the Google Play Store.</string>
+
+    <!-- Search -->
+    <string name="search_hint">Address</string>
+
 </resources>

@@ -92,7 +92,6 @@
     <string name="dialog_updating_result_error">La mise à jour Le serveur a rencontré une erreur. Veuillez réessayer.</string>
     <string name="dialog_network_connection_title">Pas de connexion!</string>
     <string name="dialog_network_connection_message">Une connexion réseau est nécessaire pour la mise à jour des informations des patinoires. Veuillez activer votre connexion au réseau mobile ou Wi-Fi…</string>
-    <string name="search_hint">Rechercher les patinoires</string>
     <string name="search_results">Résultats pour « <xliff:g id="string">%s</xliff:g> »</string>
     <!-- <string name="prefs_category_display">Paramètres de l’affichage</string> -->
     <string name="prefs_breadcrumb">Paramètres</string>
@@ -106,16 +105,21 @@
     <string name="prefs_condition_closed">Fermées</string>
     <string name="prefs_condition_unknown">Inconnues</string>
     <string name="map_context_park_prefix">Parc </string>
-    <!-- NEW -->
+
     <string name="park_distance_iso">%.1f km</string>
     <string name="park_distance_iso_min">&lt; 100 m</string>
     <string name="park_distance_imp">%.1f mi</string>
     <string name="park_distance_imp_feet">%s pi</string>
     <string name="park_distance_imp_min">&lt; 200 pi</string>
+
+    <!--Toast messages-->
     <string name="toast_sync_error_debug">Sync error: %s</string>
     <string name="toast_sync_error">Erreur de connexion&#160;!</string>
     <string name="toast_sync_finished">Mise à jour terminée</string>
     <string name="toast_playservices_restart">Redémarrage de Patiner Montréal… Mise à jour réussie de Google Play services&#160;!</string>
+    <string name="toast_postal_code_processing">Recherche en cours…</string>
+    <string name="toast_search_error">Incapable de trouver %1$s</string>
+    <string name="toast_search_network_connection_error">Pour cette recherche, connectez-vous à internet…</string>
 
     <string name="logo_open_data_content_desc">Montréal Ouvert</string>
     <string name="menu_favorites_toggle">Patinoire favorite</string>
@@ -186,4 +190,8 @@
     <string name="playservices_title">De quoi s’agit-il&#160;?</string>
     <string name="playservices_1">Avec les services Google Play, les applications Android du Play Store s’intègrent dans Google+, Google Maps ainsi que d’autres services Google. Pour pouvoir fonctionner correctement, certaines applications peuvent nécessiter l’installation et la mise à jour des services Google Play.</string>
     <string name="playservices_2">Les services Google Play sont généralement mis à jour automatiquement sur les appareils Android. Si vous utilisez une application nécessitant la version la plus récente des services Google Play, vous êtes redirigé vers le Play Store où vous pouvez les installer ou les mettre à jour manuellement.</string>
+
+    <!-- Search -->
+    <string name="search_hint">Adresse</string>
+
 </resources>

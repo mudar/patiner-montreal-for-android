@@ -51,7 +51,7 @@
         android:icon="@drawable/ic_action_directions"
         android:orderInCategory="4"
         android:title="@string/menu_gmaps_directions"
-        patinoires:showAsAction="never" />
+        patinoires:showAsAction="ifRoom" />
 
 
 </menu>

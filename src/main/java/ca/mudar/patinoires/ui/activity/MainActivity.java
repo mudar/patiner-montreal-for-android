@@ -25,7 +25,6 @@ package ca.mudar.patinoires.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
@@ -39,36 +38,24 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-
 import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.googlemap.LocationAwarenessListener;
 import ca.mudar.patinoires.providers.RinksDatabase;
 import ca.mudar.patinoires.receivers.DetachableResultReceiver;
 import ca.mudar.patinoires.services.SyncService;
 import ca.mudar.patinoires.utils.ConnectionHelper;
 import ca.mudar.patinoires.utils.EulaHelper;
-import ca.mudar.patinoires.utils.LocationUtils;
 
-public class MainActivity extends BaseActivity implements
-        LocationListener,
-        GooglePlayServicesClient.ConnectionCallbacks,
-        GooglePlayServicesClient.OnConnectionFailedListener {
+public class MainActivity extends BaseActivity {
     protected static final String TAG = "MainActivity";
     private static boolean hasLoadedData;
     protected PatinoiresApp mAppHelper;
     protected SharedPreferences prefs;
-    boolean mUpdatesRequested = false;
     private SyncStatusUpdaterFragment mSyncStatusUpdaterFragment;
     private String lang;
-    private LocationRequest mLocationRequest;
-    // Stores the current instantiation of the location client in this object
-    private LocationClient mLocationClient;
+    private LocationAwarenessListener mLocationAwarenessListener;
 
     public static void finalizeLoadingData(Context context) {
 
@@ -113,18 +100,17 @@ public class MainActivity extends BaseActivity implements
         mAppHelper = (PatinoiresApp) getApplicationContext();
         lang = mAppHelper.getLanguage();
 
-
         setContentView(R.layout.activity_main);
         setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
 
-        initializePlayServices();
+        mLocationAwarenessListener = new LocationAwarenessListener(this);
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        mLocationClient.connect();
+        mLocationAwarenessListener.startConnection();
     }
 
     @Override
@@ -132,22 +118,17 @@ public class MainActivity extends BaseActivity implements
         super.onResume();
 
         if (!lang.equals(mAppHelper.getLanguage())) {
+            // Update UI if user has changed language in Settings
             lang = mAppHelper.getLanguage();
             this.onConfigurationChanged();
         }
 
         startRinkConditionsService();
-
-        mUpdatesRequested = true;
     }
 
     @Override
     public void onStop() {
-        // If the client is connected
-        if (mLocationClient.isConnected()) {
-            stopPeriodicUpdates();
-        }
-        mLocationClient.disconnect();
+        mLocationAwarenessListener.stopConnection();
 
         super.onStop();
     }
@@ -158,68 +139,6 @@ public class MainActivity extends BaseActivity implements
         inflater.inflate(R.menu.menu_dashboard, menu);
 
         return true;
-    }
-
-    /*
-  * Called by Location Services when the request to connect the
-  * client finishes successfully. At this point, you can
-  * request the current location or start periodic updates
-  */
-    @Override
-    public void onConnected(Bundle bundle) {
-        mAppHelper.setLocation(mLocationClient.getLastLocation());
-
-        if (mUpdatesRequested) {
-            startPeriodicUpdates();
-        }
-    }
-
-    /*
-     * Called by Location Services if the connection to the
-     * location client drops because of an error.
-     */
-    @Override
-    public void onDisconnected() {
-        // Nothing here. Play Services are not not strictly required
-    }
-
-    /*
-     * Called by Location Services if the attempt to
-     * Location Services fails.
-     */
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        /*
-         * Google Play services can resolve some errors it detects.
-         * If the error has a resolution, try sending an Intent to
-         * start a Google Play services activity that can resolve
-         * error.
-         */
-        if (connectionResult.hasResolution()) {
-            try {
-
-                // Start an Activity that tries to resolve the error
-                connectionResult.startResolutionForResult(
-                        this,
-                        LocationUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-
-                /*
-                * Thrown if Google Play services canceled the original
-                * PendingIntent
-                */
-
-            } catch (IntentSender.SendIntentException e) {
-                // Log the error
-                e.printStackTrace();
-            }
-        }
-        // else { // Nothing here. Play Services are not not strictly required }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        // Update the app's location
-        mAppHelper.setLocation(location);
     }
 
     /**
@@ -273,39 +192,6 @@ public class MainActivity extends BaseActivity implements
         } else {
             triggerRefresh(mSyncStatusUpdaterFragment.mReceiver, false);
         }
-    }
-
-    private void initializePlayServices() {
-        // Create a new global location parameters object
-        mLocationRequest = LocationRequest.create();
-
-        /*
-         * Set the update interval
-         */
-        mLocationRequest.setInterval(LocationUtils.UPDATE_INTERVAL_IN_MILLISECONDS);
-
-        // Use high accuracy
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        // Set the interval ceiling to one minute
-        mLocationRequest.setFastestInterval(LocationUtils.FAST_INTERVAL_CEILING_IN_MILLISECONDS);
-
-        // Note that location updates are off until the user turns them on
-        mUpdatesRequested = false;
-
-        /*
-         * Create a new location client, using the enclosing class to
-         * handle callbacks.
-         */
-        mLocationClient = new LocationClient(this, this, this);
-    }
-
-    private void startPeriodicUpdates() {
-        mLocationClient.requestLocationUpdates(mLocationRequest, this);
-    }
-
-    private void stopPeriodicUpdates() {
-        mLocationClient.removeLocationUpdates(this);
     }
 
     public static class SyncStatusUpdaterFragment extends Fragment implements

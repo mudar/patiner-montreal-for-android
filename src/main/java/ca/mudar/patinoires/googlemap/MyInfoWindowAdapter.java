@@ -21,7 +21,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ca.mudar.patinoires.ui.view;
+package ca.mudar.patinoires.googlemap;
 
 import android.app.Activity;
 import android.text.SpannableString;
@@ -49,14 +49,19 @@ public class MyInfoWindowAdapter implements InfoWindowAdapter {
     @Override
     public View getInfoContents(Marker marker) {
 
-        final String title = marker.getTitle();
-        final String snippet = marker.getSnippet();
-        final SpannableString snippetText = new SpannableString(snippet);
-
         final TextView titleUi = (TextView) mView.findViewById(R.id.title);
         final TextView snippetUi = ((TextView) mView.findViewById(R.id.snippet));
-        titleUi.setText(title);
-        snippetUi.setText(snippetText);
+
+        titleUi.setText(marker.getTitle());
+
+        final String snippet = marker.getSnippet();
+        if (snippet == null) {
+            snippetUi.setVisibility(View.GONE);
+        } else {
+            final SpannableString snippetText = new SpannableString(snippet);
+            snippetUi.setText(snippetText);
+            snippetUi.setVisibility(View.VISIBLE);
+        }
 
         return mView;
     }

@@ -87,6 +87,7 @@ public class Const {
     public static final int BUNDLE_SEARCH_ADDRESS_ERROR = 0x0;
     public static final String KEY_BUNDLE_ADDRESS_LAT = "bundle_address_lat";
     public static final String KEY_BUNDLE_ADDRESS_LNG = "bundle_address_lng";
+    public static final String KEY_BUNDLE_ADDRESS_DESC = "bundle_address_desc";
     public static final String LOCATION_PROVIDER = "my_default_provider";
     public static final long MILLISECONDS_TWO_HOURS = 7200000; // 1000*60*60*2
     public static final long MILLISECONDS_FOUR_HOURS = 14400000; // 1000*60*60*4

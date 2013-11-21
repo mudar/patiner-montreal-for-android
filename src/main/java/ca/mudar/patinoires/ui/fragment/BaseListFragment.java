@@ -68,7 +68,7 @@ import ca.mudar.patinoires.utils.Helper;
 
 public abstract class BaseListFragment extends ListFragment implements
         LoaderCallbacks<Cursor>,
-        ContextualActionbarListener.onRinkActionsListener {
+        ContextualActionbarListener.OnRinkActionsListener {
 
     private static final String TAG = "BaseListFragment";
     protected RinksCursorAdapter mAdapter;

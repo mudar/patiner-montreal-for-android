@@ -57,9 +57,9 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
     private boolean phoneNumberEnabled;
     private ActionMode mActionMode;
     private Context mContext;
-    private onRinkActionsListener mListener;
+    private OnRinkActionsListener mListener;
 
-    public ContextualActionbarListener(Context context, onRinkActionsListener listener, IMultiChoiceModeAdapter adapter, boolean isFavoritesList) {
+    public ContextualActionbarListener(Context context, OnRinkActionsListener listener, IMultiChoiceModeAdapter adapter, boolean isFavoritesList) {
         mContext = context;
         mAdapter = adapter;
         mIsFavoritesList = isFavoritesList;
@@ -274,7 +274,7 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
     /**
      * ListFragment must implement the following interface
      */
-    public interface onRinkActionsListener {
+    public interface OnRinkActionsListener {
         public void addToFavorites(int rinkId);
 
         public void removeFromFavorites(int rinkId);

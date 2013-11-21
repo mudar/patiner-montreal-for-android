@@ -20,7 +20,7 @@
  * - Renamed package
  */
 
-package ca.mudar.patinoires.utils;
+package ca.mudar.patinoires.googlemap;
 
 /**
  * Defines app-wide constants and utilities
