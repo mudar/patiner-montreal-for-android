@@ -38,7 +38,6 @@ import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -140,7 +139,7 @@ public class RinkDetailsFragment extends Fragment
         else {
             mRinkId = intent.getIntExtra(Const.INTENT_EXTRA_ID_RINK, -1);
         }
-        if ( mRinkId == -1) {
+        if (mRinkId == -1) {
             NavUtils.navigateUpFromSameTask(getActivity());
         }
 
@@ -202,7 +201,7 @@ public class RinkDetailsFragment extends Fragment
                  */
                 Location userLocation = mAppHelper.getLocation();
                 String sAddr = "";
-                if ( userLocation != null) {
+                if (userLocation != null) {
                     sAddr = Double.toString(userLocation.getLatitude()) + ","
                             + Double.toString(userLocation.getLongitude());
                 }
@@ -457,7 +456,7 @@ public class RinkDetailsFragment extends Fragment
                             updatedAt
                     ));
         } catch (ParseException e) {
-            Log.v(TAG, e.toString());
+            e.printStackTrace();
             visibilty = View.GONE;
         }
         mRootView.findViewById(R.id.l_borough_updated_at).setVisibility(visibilty);
@@ -522,7 +521,7 @@ public class RinkDetailsFragment extends Fragment
                 try {
                     rinkId = Integer.parseInt(m.group(1));
                 } catch (NumberFormatException e) {
-                    Log.v(TAG, e.toString());
+                    e.printStackTrace();
                 }
             }
         }

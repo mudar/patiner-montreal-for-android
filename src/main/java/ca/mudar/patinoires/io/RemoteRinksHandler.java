@@ -27,7 +27,6 @@ import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.telephony.PhoneNumberUtils;
 import android.text.format.DateFormat;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,8 +57,8 @@ public class RemoteRinksHandler extends JsonHandler {
     }
 
     @Override
-    public ArrayList<ContentProviderOperation> parse(JSONTokener jsonTokener,
-            ContentResolver resolver) throws JSONException, IOException {
+    public ArrayList<ContentProviderOperation> parse(JSONTokener jsonTokener, ContentResolver resolver)
+            throws JSONException, IOException {
         final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
 
         /**
@@ -93,7 +92,7 @@ public class RemoteRinksHandler extends JsonHandler {
             try {
                 borough = boroughs.getJSONObject(i);
             } catch (JSONException e) {
-                Log.d(TAG, e.toString());
+                e.printStackTrace();
                 continue;
             }
 
@@ -113,7 +112,7 @@ public class RemoteRinksHandler extends JsonHandler {
             builderBoroughs.withValue(BoroughsColumns.BOROUGH_UPDATED_AT,
                     borough.optString(RemoteTags.BOROUGH_UPDATED_AT));
             builderBoroughs.withValue(BoroughsColumns.BOROUGH_CREATED_AT, createdAt);
-           
+
             batch.add(builderBoroughs.build());
 
             /**
@@ -127,7 +126,7 @@ public class RemoteRinksHandler extends JsonHandler {
                 try {
                     rink = rinks.getJSONObject(j);
                 } catch (JSONException e) {
-                    Log.d(TAG, e.toString());
+                    e.printStackTrace();
                     continue;
                 }
 
@@ -169,7 +168,7 @@ public class RemoteRinksHandler extends JsonHandler {
                 builderParks.withValue(ParksColumns.PARK_CREATED_AT, createdAt);
 
                 batch.add(builderParks.build());
-                
+
                 /**
                  * Get Rink info
                  */
@@ -221,11 +220,9 @@ public class RemoteRinksHandler extends JsonHandler {
     private static interface RemoteTags {
 
         final String OBJECT_RINKS = "patinoires";
-
         final String BOROUGH_ID = "cle";
         final String BOROUGH_NAME = "nom_arr";
         final String BOROUGH_UPDATED_AT = "date_maj";
-
         final String RINK_ID = "id";
         final String RINK_NAME = "nom";
         final String RINK_KIND_ID = "genre";
@@ -234,12 +231,10 @@ public class RemoteRinksHandler extends JsonHandler {
         final String RINK_IS_RESURFACED = "resurface";
         final String RINK_IS_OPEN = "ouvert";
         final String RINK_CONDITION = "condition";
-
         final String PARK_NAME = "parc";
         final String PARK_ADDRESS = "adresse";
         final String PARK_PHONE = "tel";
         final String PARK_PHONE_EXT = "ext";
-
         final String PARK_LAT = "lat";
         final String PARK_LNG = "lng";
     }
@@ -250,16 +245,13 @@ public class RemoteRinksHandler extends JsonHandler {
         final String RINK_TYPE_PPL = "PPL"; // patin libre
         final String RINK_TYPE_PSE = "PSE"; // sport d'équipe
         final String RINK_TYPE_C = "C"; // citoyens
-
         final String RINK_TYPE_PSE_SUFFIX = "(PSE)";
         final String RINK_TYPE_PPL_SUFFIX = "(PPL)";
         final String RINK_TYPE_PP_SUFFIX = "(PP)";
         final String RINK_TYPE_C_SUFFIX = "(C)";
-
         final String RINK_CONDITION_EXCELLENT = "excellente";
         final String RINK_CONDITION_GOOD = "bonne";
         final String RINK_CONDITION_BAD = "mauvaise";
-
         final String BOOLEAN_TRUE = "true";
         final String BOOLEAN_FALSE = "false";
         final String STRING_NULL = "null";

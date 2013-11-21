@@ -23,42 +23,23 @@
 
 package ca.mudar.patinoires.providers;
 
-import ca.mudar.patinoires.providers.RinksContract.BoroughsColumns;
-import ca.mudar.patinoires.providers.RinksContract.FavoritesColumns;
-import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
-import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
-import ca.mudar.patinoires.Const;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import ca.mudar.patinoires.Const;
+import ca.mudar.patinoires.providers.RinksContract.BoroughsColumns;
+import ca.mudar.patinoires.providers.RinksContract.FavoritesColumns;
+import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
+import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
+
+
 public class RinksDatabase extends SQLiteOpenHelper {
     private static final String TAG = "RinksDatabase";
-
     private static final String DATABASE_NAME = "patinoires_mtl";
     private static final int DATABASE_VERSION = 36;
-
-    public static interface Tables {
-        final String BOROUGHS = "boroughs";
-        final String PARKS = "parks";
-        final String RINKS = "rinks";
-        final String FAVORITES = "favorites";
-
-        final String BOROUGHS_JOIN_PARKS_RINKS = "boroughs "
-                + "LEFT OUTER JOIN parks ON boroughs.borough_id=parks.borough_id "
-                + "LEFT OUTER JOIN rinks ON parks.park_id=rinks.park_id ";
-
-        final String BOROUGHS_JOIN_PARKS_RINKS_FAVORITES = "boroughs "
-                + "LEFT OUTER JOIN parks ON boroughs.borough_id=parks.park_borough_id "
-                + "LEFT OUTER JOIN rinks ON parks.park_id=rinks.rink_park_id "
-                + "LEFT OUTER JOIN favorites ON rinks.rink_rink_id=favorites.rink_id ";
-        final String PARKS_JOIN_RINKS_FAVORITES = "parks "
-                + "LEFT OUTER JOIN rinks ON parks.park_id=rinks.rink_park_id "
-                + "LEFT OUTER JOIN favorites ON rinks.rink_rink_id=favorites.rink_id ";
-    }
 
     public RinksDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -72,7 +53,7 @@ public class RinksDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.v(TAG, "Creating database tables. DB name: " + DATABASE_NAME);
-        Log.w(TAG, "Creating 4 database tables: " + Tables.BOROUGHS + ", " + Tables.PARKS + ", "
+        Log.v(TAG, "Creating 4 database tables: " + Tables.BOROUGHS + ", " + Tables.PARKS + ", "
                 + Tables.RINKS + " and " + Tables.FAVORITES);
 
         db.execSQL("CREATE TABLE " + Tables.BOROUGHS + " ( "
@@ -130,5 +111,22 @@ public class RinksDatabase extends SQLiteOpenHelper {
         // db.execSQL("DROP TABLE IF EXISTS " + Tables.FAVORITES);
 
         onCreate(db);
+    }
+
+    public static interface Tables {
+        final String BOROUGHS = "boroughs";
+        final String PARKS = "parks";
+        final String RINKS = "rinks";
+        final String FAVORITES = "favorites";
+        final String BOROUGHS_JOIN_PARKS_RINKS = "boroughs "
+                + "LEFT OUTER JOIN parks ON boroughs.borough_id=parks.borough_id "
+                + "LEFT OUTER JOIN rinks ON parks.park_id=rinks.park_id ";
+        final String BOROUGHS_JOIN_PARKS_RINKS_FAVORITES = "boroughs "
+                + "LEFT OUTER JOIN parks ON boroughs.borough_id=parks.park_borough_id "
+                + "LEFT OUTER JOIN rinks ON parks.park_id=rinks.rink_park_id "
+                + "LEFT OUTER JOIN favorites ON rinks.rink_rink_id=favorites.rink_id ";
+        final String PARKS_JOIN_RINKS_FAVORITES = "parks "
+                + "LEFT OUTER JOIN rinks ON parks.park_id=rinks.rink_park_id "
+                + "LEFT OUTER JOIN favorites ON rinks.rink_rink_id=favorites.rink_id ";
     }
 }

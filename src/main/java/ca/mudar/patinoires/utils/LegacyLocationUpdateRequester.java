@@ -20,7 +20,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.location.Criteria;
 import android.location.LocationManager;
-import android.util.Log;
 
 import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.utils.base.LocationUpdateRequester;
@@ -32,11 +31,10 @@ import ca.mudar.patinoires.utils.base.LocationUpdateRequester;
  */
 public class LegacyLocationUpdateRequester extends LocationUpdateRequester {
     protected static String TAG = "LegacyLocationUpdateRequester";
-
     protected AlarmManager alarmManager;
 
     protected LegacyLocationUpdateRequester(LocationManager locationManager,
-            AlarmManager alarmManager) {
+                                            AlarmManager alarmManager) {
         super(locationManager);
         this.alarmManager = alarmManager;
     }
@@ -46,7 +44,7 @@ public class LegacyLocationUpdateRequester extends LocationUpdateRequester {
      */
     @Override
     public void requestLocationUpdates(long minTime, long minDistance, Criteria criteria,
-            PendingIntent pendingIntent) {
+                                       PendingIntent pendingIntent) {
         // Prior to Gingerbread we needed to find the best provider manually.
         // Note that we aren't monitoring this provider to check if it becomes
         // disabled - this is handled by the calling Activity.
@@ -57,7 +55,7 @@ public class LegacyLocationUpdateRequester extends LocationUpdateRequester {
                 locationManager.requestLocationUpdates(provider, minTime, minDistance,
                         pendingIntent);
             } catch (IllegalArgumentException e) {
-                Log.v(TAG, e.getMessage());
+                e.printStackTrace();
             }
         }
     }
@@ -67,7 +65,7 @@ public class LegacyLocationUpdateRequester extends LocationUpdateRequester {
      */
     @Override
     public void requestPassiveLocationUpdates(long minTime, long minDistance,
-            PendingIntent pendingIntent) {
+                                              PendingIntent pendingIntent) {
         // Pre-Froyo there was no Passive Location Provider, so instead we will
         // set an inexact repeating, non-waking alarm
         // that will trigger once the minimum time between passive updates has

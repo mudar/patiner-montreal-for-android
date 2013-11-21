@@ -23,6 +23,17 @@
 
 package ca.mudar.patinoires.io;
 
+import android.content.ContentProviderOperation;
+import android.content.ContentResolver;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
 import ca.mudar.patinoires.providers.RinksContract.Boroughs;
 import ca.mudar.patinoires.providers.RinksContract.BoroughsColumns;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
@@ -30,17 +41,6 @@ import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
 import ca.mudar.patinoires.utils.ApiStringHelper;
 import ca.mudar.patinoires.utils.Lists;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
-import android.util.Log;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class RemoteConditionsUpdatesHandler extends JsonHandler {
     private static final String TAG = "RemoteConditionsUpdatesHandler";
@@ -50,8 +50,8 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
     }
 
     @Override
-    public ArrayList<ContentProviderOperation> parse(JSONTokener jsonTokener,
-            ContentResolver resolver) throws JSONException, IOException {
+    public ArrayList<ContentProviderOperation> parse(JSONTokener jsonTokener, ContentResolver resolver)
+            throws JSONException, IOException {
         final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
 
         // Random rand = new Random();
@@ -79,7 +79,7 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
             try {
                 borough = (JSONObject) boroughs.getJSONObject(i);
             } catch (JSONException e) {
-                Log.d(TAG, e.toString());
+                e.printStackTrace();
                 continue;
             }
 
@@ -88,7 +88,7 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
              */
             builderBoroughs = ContentProviderOperation.newUpdate(Boroughs.CONTENT_URI);
 
-            builderBoroughs.withSelection(BoroughsColumns.BOROUGH_NAME + "=?", new String[] {
+            builderBoroughs.withSelection(BoroughsColumns.BOROUGH_NAME + "=?", new String[]{
                     borough.optString(RemoteTags.BOROUGH_NAME)
             });
             builderBoroughs.withValue(BoroughsColumns.BOROUGH_UPDATED_AT,
@@ -107,7 +107,7 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
                 try {
                     rink = (JSONObject) rinks.getJSONObject(j);
                 } catch (JSONException e) {
-                    Log.d(TAG, e.toString());
+                    e.printStackTrace();
                     continue;
                 }
 
@@ -116,7 +116,7 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
                  */
                 builderRinks = ContentProviderOperation.newUpdate(Rinks.CONTENT_URI);
 
-                builderRinks.withSelection(RinksColumns.RINK_ID + "=?", new String[] {
+                builderRinks.withSelection(RinksColumns.RINK_ID + "=?", new String[]{
                         rink.optString(RemoteTags.RINK_ID)
                 });
 
@@ -149,10 +149,8 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
     private static interface RemoteTags {
 
         final String OBJECT_RINKS = "patinoires";
-
         final String BOROUGH_NAME = "nom_arr";
         final String BOROUGH_UPDATED_AT = "date_maj";
-
         final String RINK_ID = "id";
         final String RINK_IS_CLEARED = "deblaye";
         final String RINK_IS_FLOODED = "arrose";
@@ -166,7 +164,6 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
         final String RINK_CONDITION_EXCELLENT = "excellente";
         final String RINK_CONDITION_GOOD = "bonne";
         final String RINK_CONDITION_BAD = "mauvaise";
-
         final String BOOLEAN_TRUE = "true";
         final String BOOLEAN_FALSE = "false";
         final String STRING_NULL = "null";

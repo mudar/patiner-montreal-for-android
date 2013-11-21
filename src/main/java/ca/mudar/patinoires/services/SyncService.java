@@ -68,31 +68,87 @@ import ca.mudar.patinoires.providers.RinksContract;
 
 /**
  * Background {@link Service} that synchronizes data living in
- * {@link PlacemarkProvider}. Reads data from remote sources
+ * {@link .providers.RinksProvider}. Reads data from remote sources
  */
 public class SyncService extends IntentService {
-    private static final String TAG = "SyncService";
-
     public static final String EXTRA_STATUS_RECEIVER =
             "ca.mudar.patinoires.extra.STATUS_RECEIVER";
-
     public static final int STATUS_RUNNING = 0x1;
     public static final int STATUS_ERROR = 0x2;
     public static final int STATUS_FINISHED = 0x3;
     public static final int STATUS_IGNORED = 0x4;
-
+    private static final String TAG = "SyncService";
     private static final int SECOND_IN_MILLIS = (int) DateUtils.SECOND_IN_MILLIS;
-
     private static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
     private static final String ENCODING_GZIP = "gzip";
-
     private LocalExecutor mLocalExecutor;
     private RemoteExecutor mRemoteExecutor;
-
     private PatinoiresApp mAppHelper;
 
     public SyncService() {
         super(TAG);
+    }
+
+    /**
+     * Generate and return a {@link HttpClient} configured for general use,
+     * including setting an application-specific user-agent string.
+     */
+    public static HttpClient getHttpClient(Context context) {
+        final HttpParams params = new BasicHttpParams();
+
+        // Use generous timeouts for slow mobile networks
+        HttpConnectionParams.setConnectionTimeout(params, 20 * SECOND_IN_MILLIS);
+        HttpConnectionParams.setSoTimeout(params, 20 * SECOND_IN_MILLIS);
+
+        HttpConnectionParams.setSocketBufferSize(params, 8192);
+        HttpProtocolParams.setUserAgent(params, buildUserAgent(context));
+
+        final DefaultHttpClient client = new DefaultHttpClient(params);
+
+        client.addRequestInterceptor(new HttpRequestInterceptor() {
+            public void process(HttpRequest request, HttpContext context) {
+                // Add header to accept gzip content
+                if (!request.containsHeader(HEADER_ACCEPT_ENCODING)) {
+                    request.addHeader(HEADER_ACCEPT_ENCODING, ENCODING_GZIP);
+                }
+            }
+        });
+
+        client.addResponseInterceptor(new HttpResponseInterceptor() {
+            public void process(HttpResponse response, HttpContext context) {
+                // Inflate any responses compressed with gzip
+                final HttpEntity entity = response.getEntity();
+                final Header encoding = entity.getContentEncoding();
+                if (encoding != null) {
+                    for (HeaderElement element : encoding.getElements()) {
+                        if (element.getName().equalsIgnoreCase(ENCODING_GZIP)) {
+                            response.setEntity(new InflatingEntity(response.getEntity()));
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+
+        return client;
+    }
+
+    /**
+     * Build and return a user-agent string that can identify this application
+     * to remote servers. Contains the package name and version code.
+     */
+    private static String buildUserAgent(Context context) {
+        try {
+            final PackageManager manager = context.getPackageManager();
+            final PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+
+            // Some APIs require "(gzip)" in the user-agent string.
+            return info.packageName + "/" + info.versionName
+                    + " (" + info.versionCode + ") (gzip)";
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -159,21 +215,19 @@ public class SyncService extends IntentService {
 
                 Intent updateIntent = new Intent(context, DistanceUpdateService.class);
                 context.startService(updateIntent);
-            }
-            else if (doUpdate || (mAppHelper.getLastUpdateConditions() < System.currentTimeMillis()
+            } else if (doUpdate || (mAppHelper.getLastUpdateConditions() < System.currentTimeMillis()
                     - Const.MILLISECONDS_FOUR_HOURS)) {
                 mRemoteExecutor.executeGet(Const.URL_JSON_CONDITIONS_UPDATES,
                         new RemoteConditionsUpdatesHandler(RinksContract.CONTENT_AUTHORITY));
                 mAppHelper.setLastUpdateConditions();
-            }
-            else {
+            } else {
                 isIgnored = true;
             }
 
             Log.v(TAG, "Remote sync took " + (System.currentTimeMillis() - startRemote) + "ms");
 
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
 
             if (receiver != null) {
                 /**
@@ -187,68 +241,6 @@ public class SyncService extends IntentService {
 
         if (receiver != null) {
             receiver.send((isIgnored ? STATUS_IGNORED : STATUS_FINISHED), Bundle.EMPTY);
-        }
-    }
-
-    /**
-     * Generate and return a {@link HttpClient} configured for general use,
-     * including setting an application-specific user-agent string.
-     */
-    public static HttpClient getHttpClient(Context context) {
-        final HttpParams params = new BasicHttpParams();
-
-        // Use generous timeouts for slow mobile networks
-        HttpConnectionParams.setConnectionTimeout(params, 20 * SECOND_IN_MILLIS);
-        HttpConnectionParams.setSoTimeout(params, 20 * SECOND_IN_MILLIS);
-
-        HttpConnectionParams.setSocketBufferSize(params, 8192);
-        HttpProtocolParams.setUserAgent(params, buildUserAgent(context));
-
-        final DefaultHttpClient client = new DefaultHttpClient(params);
-
-        client.addRequestInterceptor(new HttpRequestInterceptor() {
-            public void process(HttpRequest request, HttpContext context) {
-                // Add header to accept gzip content
-                if (!request.containsHeader(HEADER_ACCEPT_ENCODING)) {
-                    request.addHeader(HEADER_ACCEPT_ENCODING, ENCODING_GZIP);
-                }
-            }
-        });
-
-        client.addResponseInterceptor(new HttpResponseInterceptor() {
-            public void process(HttpResponse response, HttpContext context) {
-                // Inflate any responses compressed with gzip
-                final HttpEntity entity = response.getEntity();
-                final Header encoding = entity.getContentEncoding();
-                if (encoding != null) {
-                    for (HeaderElement element : encoding.getElements()) {
-                        if (element.getName().equalsIgnoreCase(ENCODING_GZIP)) {
-                            response.setEntity(new InflatingEntity(response.getEntity()));
-                            break;
-                        }
-                    }
-                }
-            }
-        });
-
-        return client;
-    }
-
-    /**
-     * Build and return a user-agent string that can identify this application
-     * to remote servers. Contains the package name and version code.
-     */
-    private static String buildUserAgent(Context context) {
-        try {
-            final PackageManager manager = context.getPackageManager();
-            final PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
-
-            // Some APIs require "(gzip)" in the user-agent string.
-            return info.packageName + "/" + info.versionName
-                    + " (" + info.versionCode + ") (gzip)";
-        } catch (NameNotFoundException e) {
-            Log.e(TAG, e.getMessage());
-            return null;
         }
     }
 

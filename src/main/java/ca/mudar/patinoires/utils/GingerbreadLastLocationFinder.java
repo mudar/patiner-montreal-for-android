@@ -49,16 +49,32 @@ public class GingerbreadLastLocationFinder implements ILastLocationFinder {
 
     protected static String TAG = "LastLocationFinder";
     protected static String SINGLE_LOCATION_UPDATE_ACTION = "ca.mudar.patinoires.data.SINGLE_LOCATION_UPDATE_ACTION";
-
     protected PendingIntent singleUpatePI;
     protected LocationListener locationListener;
     protected LocationManager locationManager;
     protected Context context;
     protected Criteria criteria;
+    /**
+     * This {@link BroadcastReceiver} listens for a single location update
+     * before unregistering itself. The oneshot location update is returned via
+     * the {@link LocationListener} specified in setChangedLocationListener()
+     */
+    protected BroadcastReceiver singleUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String key = LocationManager.KEY_LOCATION_CHANGED;
+            Location location = (Location) intent.getExtras().get(key);
+
+            if (locationListener != null && location != null)
+                locationListener.onLocationChanged(location);
+
+            locationManager.removeUpdates(singleUpatePI);
+        }
+    };
 
     /**
      * Construct a new Gingerbread Last Location Finder.
-     * 
+     *
      * @param context Context
      */
     public GingerbreadLastLocationFinder(Context context) {
@@ -81,10 +97,10 @@ public class GingerbreadLastLocationFinder implements ILastLocationFinder {
      * Returns the most accurate and timely previously detected location. Where
      * the last result is beyond the specified maximum distance or latency a
      * one-off location update is returned via the {@link LocationListener}
-     * specified in {@link setChangedLocationListener}.
-     * 
+     * specified in setChangedLocationListener().
+     *
      * @param minDistance Minimum distance before we require a location update.
-     * @param minTime Minimum time required between location updates.
+     * @param minTime     Minimum time required between location updates.
      * @return The most accurate and / or timely previously detected location.
      */
     public Location getLastBestLocation(int minDistance, long minTime) {
@@ -106,8 +122,7 @@ public class GingerbreadLastLocationFinder implements ILastLocationFinder {
                     bestResult = location;
                     bestAccuracy = accuracy;
                     bestTime = time;
-                }
-                else if (time < minTime && bestAccuracy == Float.MAX_VALUE && time > bestTime) {
+                } else if (time < minTime && bestAccuracy == Float.MAX_VALUE && time > bestTime) {
                     bestResult = location;
                     bestTime = time;
                 }
@@ -127,48 +142,24 @@ public class GingerbreadLastLocationFinder implements ILastLocationFinder {
             try {
                 locationManager.requestSingleUpdate(criteria, singleUpatePI);
             } catch (IllegalArgumentException e) {
-                Log.v(TAG, e.getMessage());
+                e.printStackTrace();
             }
         }
 
         return bestResult;
     }
 
-    /**
-     * This {@link BroadcastReceiver} listens for a single location update
-     * before unregistering itself. The oneshot location update is returned via
-     * the {@link LocationListener} specified in
-     * {@link setChangedLocationListener}.
-     */
-    protected BroadcastReceiver singleUpdateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String key = LocationManager.KEY_LOCATION_CHANGED;
-            Location location = (Location) intent.getExtras().get(key);
-
-            if (locationListener != null && location != null)
-                locationListener.onLocationChanged(location);
-
-            locationManager.removeUpdates(singleUpatePI);
-        }
-    };
-
-    /**
-     * {@inheritDoc}
-     */
     public void setChangedLocationListener(LocationListener l) {
         locationListener = l;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void cancel() {
         locationManager.removeUpdates(singleUpatePI);
         try {
             context.unregisterReceiver(singleUpdateReceiver);
         } catch (IllegalArgumentException e) {
             Log.v(TAG, "Receiver already unregistered. " + e.getMessage());
+            // e.printStackTrace();
         }
 
     }

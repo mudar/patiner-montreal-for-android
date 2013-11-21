@@ -48,8 +48,16 @@ import ca.mudar.patinoires.providers.RinksContract.ParksColumns;
 import ca.mudar.patinoires.utils.Lists;
 
 public class DistanceUpdateService extends IntentService {
+    /**
+     * The cursor columns projection.
+     */
+    static final String[] PARKS_SUMMARY_PROJECTION = new String[]{
+            BaseColumns._ID,
+            ParksColumns.PARK_GEO_LAT,
+            ParksColumns.PARK_GEO_LNG,
+            ParksColumns.PARK_GEO_DISTANCE
+    };
     private static final String TAG = "DistanceUpdateService";
-
     protected ContentResolver contentResolver;
     protected SharedPreferences prefs;
     protected Editor prefsEditor;
@@ -124,8 +132,7 @@ public class DistanceUpdateService extends IntentService {
 
             if (lastLat.equals(Float.NaN) || lastLng.equals(Float.NaN)) {
                 doUpdate = true;
-            }
-            else {
+            } else {
                 Location lastLocation = new Location(Const.LOCATION_PROVIDER);
                 lastLocation.setLatitude(lastLat.doubleValue());
                 lastLocation.setLongitude(lastLng.doubleValue());
@@ -146,9 +153,9 @@ public class DistanceUpdateService extends IntentService {
                 contentResolver.applyBatch(RinksContract.CONTENT_AUTHORITY,
                         updateDistance(Parks.CONTENT_URI, latitude, longitude));
             } catch (RemoteException e) {
-                Log.e(TAG, e.getMessage());
+                e.printStackTrace();
             } catch (OperationApplicationException e) {
-                Log.e(TAG, e.getMessage());
+                e.printStackTrace();
             }
 
             /**
@@ -163,18 +170,8 @@ public class DistanceUpdateService extends IntentService {
                 - startLocal) + " ms");
     }
 
-    /**
-     * The cursor columns projection.
-     */
-    static final String[] PARKS_SUMMARY_PROJECTION = new String[] {
-            BaseColumns._ID,
-            ParksColumns.PARK_GEO_LAT,
-            ParksColumns.PARK_GEO_LNG,
-            ParksColumns.PARK_GEO_DISTANCE
-    };
-
     protected ArrayList<ContentProviderOperation> updateDistance(Uri contentUri,
-            double startLatitude, double startLongitude) {
+                                                                 double startLatitude, double startLongitude) {
         final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
 
         ContentProviderOperation.Builder builder = ContentProviderOperation
@@ -192,7 +189,7 @@ public class DistanceUpdateService extends IntentService {
             final String selection = BaseColumns._ID + " = ? ";
 
             while (queuedParks.moveToNext()) {
-                String[] queuedId = new String[] {
+                String[] queuedId = new String[]{
                         queuedParks.getString(indexId)
                 };
                 double endLat = queuedParks.getDouble(indexLat);

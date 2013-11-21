@@ -58,27 +58,21 @@ import ca.mudar.patinoires.utils.SelectionBuilder;
  */
 public class RinksProvider extends ContentProvider {
     private static final String TAG = "RinksProvider ";
-
-    private RinksDatabase mOpenHelper;
-
     private static final UriMatcher sUriMatcher = buildUriMatcher();
-
     private static final int BOROUGHS = 110;
     private static final int BOROUGHS_ID = 111;
-
     private static final int PARKS = 120;
     private static final int PARKS_ID = 121;
     private static final int PARKS_ID_RINKS = 122;
-
     private static final int RINKS = 130;
     private static final int RINKS_FAVORITES = 131;
     private static final int RINKS_SKATING = 132;
     private static final int RINKS_HOCKEY = 133;
     private static final int RINKS_ALL = 134;
     private static final int RINKS_ID = 135;
-
     private static final int FAVORITES = 140;
     private static final int FAVORITES_ID = 141;
+    private RinksDatabase mOpenHelper;
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -148,7 +142,7 @@ public class RinksProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
-            String sortOrder) {
+                        String sortOrder) {
 
         // TODO Replace this by Readable. Requires local JSON asset to initate
         // DB update.
@@ -201,6 +195,7 @@ public class RinksProvider extends ContentProvider {
                     getContext().getContentResolver().notifyChange(uri, null);
                 } catch (SQLiteConstraintException e) {
                     Log.v(TAG, "Rink is already a favorite");
+                    // e.printStackTrace();
                 }
                 return Favorites.buildFavoriteUri(values.getAsString(BaseColumns._ID));
             }
@@ -329,7 +324,7 @@ public class RinksProvider extends ContentProvider {
                         .where(Rinks.RINK_IS_FAVORITE + "=1");
             }
             case RINKS_SKATING: {
-                String[] args = new String[] {
+                String[] args = new String[]{
                         Integer.toString(DbValues.KIND_PP), Integer.toString(DbValues.KIND_PPL),
                         Integer.toString(DbValues.KIND_C)
                 };

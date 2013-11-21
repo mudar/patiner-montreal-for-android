@@ -28,7 +28,6 @@ import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,11 +36,11 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import ca.mudar.patinoires.Const;
+import ca.mudar.patinoires.Const.DbValues;
+import ca.mudar.patinoires.Const.UnitsDisplay;
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
-import ca.mudar.patinoires.Const.DbValues;
-import ca.mudar.patinoires.Const.UnitsDisplay;
 
 // TODO Refactor this into geohelper and iohelper
 public class Helper {
@@ -68,8 +67,7 @@ public class Helper {
                     imageResource = R.drawable.ic_rink_hockey_4;
                     break;
             }
-        }
-        else {
+        } else {
             switch (condition) {
                 case DbValues.CONDITION_EXCELLENT:
                     imageResource = R.drawable.ic_rink_skating_0;
@@ -164,14 +162,12 @@ public class Helper {
              * If all conditions are enabled, the sqlite filter is useless.
              */
             return null;
-        }
-        else {
+        } else {
             return " ( " + filter + " ) ";
         }
     }
 
-    public static String capitalize(final String string)
-    {
+    public static String capitalize(final String string) {
         if (string == null)
             throw new NullPointerException("string");
         if (string.equals(""))
@@ -192,7 +188,7 @@ public class Helper {
             }
             resultString = total.toString();
         } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
         }
         return resultString;
     }
@@ -222,7 +218,7 @@ public class Helper {
      * Get distance in Metric or Imperial units. Display changes depending on
      * the value: different approximationss in ft when > 1000. Very short
      * distances are not displayed to avoid problems with Location accuracy.
-     * 
+     *
      * @param c
      * @param fDistanceM The distance in Meters.
      * @return String Display the distance.
@@ -253,8 +249,7 @@ public class Helper {
                      * accuracy.
                      */
                     sDistance = res.getString(R.string.park_distance_imp_min);
-                }
-                else {
+                } else {
                     /**
                      * When displaying in feet, we round up by 100 ft for
                      * distances greater than 1000 ft and by 100 ft for smaller
@@ -264,24 +259,21 @@ public class Helper {
                     if (iDistanceFt > 1000) {
                         iDistanceFt = Math.round(iDistanceFt / UnitsDisplay.ACCURACY_FEET_FAR)
                                 * UnitsDisplay.ACCURACY_FEET_FAR;
-                    }
-                    else {
+                    } else {
                         iDistanceFt = Math.round(iDistanceFt / UnitsDisplay.ACCURACY_FEET_NEAR)
                                 * UnitsDisplay.ACCURACY_FEET_NEAR;
                     }
                     sDistance = String.format(res.getString(R.string.park_distance_imp_feet),
                             iDistanceFt);
                 }
-            }
-            else {
+            } else {
                 /**
                  * Display distance in Miles when greater than 1 mile.
                  */
                 sDistance = String.format(res.getString(R.string.park_distance_imp),
                         fDistanceMi);
             }
-        }
-        else {
+        } else {
             /**
              * International Units system, Meters and Km.
              */
@@ -291,8 +283,7 @@ public class Helper {
                  * Display "Less than 100 m".
                  */
                 sDistance = res.getString(R.string.park_distance_iso_min);
-            }
-            else {
+            } else {
                 /**
                  * No need to have a constant for 1 Km = 1000 M
                  */
@@ -305,33 +296,4 @@ public class Helper {
         return sDistance;
     }
 
-    /**
-     * Convert Location to GeoPoint
-     * 
-     * @param Location
-     * @return GeoPoint
-     */
-//    public static GeoPoint locationToGeoPoint(Location location) {
-    // TODO: refactor for gmaps api v2
-//        GeoPoint geoPoint = new GeoPoint((int) (location.getLatitude() * 1E6),
-//                (int) (location.getLongitude() * 1E6));
-//
-//        return geoPoint;
-//    }
-
-    /**
-     * Convert GeoPoint to Location
-     * 
-     * @param GeoPoint
-     * @return Location
-     */
-//    public static Location geoPointToLocation(GeoPoint geoPoint) {
-    // TODO: refactor for gmaps api v2
-//        Location location = new Location(Const.LOCATION_PROVIDER);
-//
-//        location.setLatitude(geoPoint.getLatitudeE6() / 1E6);
-//        location.setLongitude(geoPoint.getLongitudeE6() / 1E6);
-//
-//        return location;
-//    }
 }

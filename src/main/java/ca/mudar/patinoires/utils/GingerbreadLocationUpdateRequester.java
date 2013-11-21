@@ -23,7 +23,6 @@ package ca.mudar.patinoires.utils;
 import android.app.PendingIntent;
 import android.location.Criteria;
 import android.location.LocationManager;
-import android.util.Log;
 
 /**
  * Provides support for initiating active and passive location updates optimized
@@ -42,7 +41,7 @@ public class GingerbreadLocationUpdateRequester extends FroyoLocationUpdateReque
      */
     @Override
     public void requestLocationUpdates(long minTime, long minDistance, Criteria criteria,
-            PendingIntent pendingIntent) {
+                                       PendingIntent pendingIntent) {
         /**
          * Gingerbread supports a location update request that accepts criteria
          * directly. Note that we aren't monitoring this provider to check if it
@@ -52,7 +51,7 @@ public class GingerbreadLocationUpdateRequester extends FroyoLocationUpdateReque
         try {
             locationManager.requestLocationUpdates(minTime, minDistance, criteria, pendingIntent);
         } catch (IllegalArgumentException e) {
-            Log.v(TAG, e.getMessage());
+            e.printStackTrace();
         }
     }
 }

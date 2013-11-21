@@ -25,7 +25,6 @@ package ca.mudar.patinoires.utils;
 import android.app.PendingIntent;
 import android.location.Criteria;
 import android.location.LocationManager;
-import android.util.Log;
 
 import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.utils.base.LocationUpdateRequester;
@@ -47,7 +46,7 @@ public class FroyoLocationUpdateRequester extends LocationUpdateRequester {
      */
     @Override
     public void requestLocationUpdates(long minTime, long minDistance, Criteria criteria,
-            PendingIntent pendingIntent) {
+                                       PendingIntent pendingIntent) {
         String bestAvailableProvider = locationManager.getBestProvider(criteria, true);
 
         if (bestAvailableProvider != null) {
@@ -55,7 +54,7 @@ public class FroyoLocationUpdateRequester extends LocationUpdateRequester {
                 locationManager.requestLocationUpdates(bestAvailableProvider, minTime, minDistance,
                         pendingIntent);
             } catch (IllegalArgumentException e) {
-                Log.v(TAG, e.getMessage());
+                e.printStackTrace();
             }
         }
     }
@@ -65,7 +64,7 @@ public class FroyoLocationUpdateRequester extends LocationUpdateRequester {
      */
     @Override
     public void requestPassiveLocationUpdates(long minTime, long minDistance,
-            PendingIntent pendingIntent) {
+                                              PendingIntent pendingIntent) {
         /**
          * Froyo introduced the Passive Location Provider, which receives
          * updates whenever a 3rd party app receives location updates.

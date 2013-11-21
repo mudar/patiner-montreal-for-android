@@ -38,10 +38,10 @@ public interface ILastLocationFinder {
      * the location providers. Where the last result is beyond the acceptable
      * maximum distance or latency create a one-shot update of the current
      * location to be returned using the {@link LocationListener} passed in
-     * through {@link setChangedLocationListener}
-     * 
+     * through setChangedLocationListener()
+     *
      * @param minDistance Minimum distance before we require a location update.
-     * @param minTime Minimum time required between location updates.
+     * @param minTime     Minimum time required between location updates.
      * @return The most accurate and / or timely previously detected location.
      */
     public Location getLastBestLocation(int minDistance, long minTime);
@@ -49,7 +49,7 @@ public interface ILastLocationFinder {
     /**
      * Set the {@link LocationListener} that may receive a one-shot current
      * location update.
-     * 
+     *
      * @param l LocationListener
      */
     public void setChangedLocationListener(LocationListener l);

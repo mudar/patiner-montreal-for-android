@@ -46,7 +46,6 @@ import java.util.Map;
 public class SelectionBuilder {
     private static final String TAG = "SelectionBuilder";
     private static final boolean LOGV = false;
-
     private String mTable = null;
     private Map<String, String> mProjectionMap = Maps.newHashMap();
     private StringBuilder mSelection = new StringBuilder();
@@ -156,7 +155,7 @@ public class SelectionBuilder {
      * Execute query using the current internal state as {@code WHERE} clause.
      */
     public Cursor query(SQLiteDatabase db, String[] columns, String groupBy,
-            String having, String orderBy, String limit) {
+                        String having, String orderBy, String limit) {
         assertTable();
         if (columns != null) mapColumns(columns);
         if (LOGV) Log.v(TAG, "query(columns=" + Arrays.toString(columns) + ") " + this);
