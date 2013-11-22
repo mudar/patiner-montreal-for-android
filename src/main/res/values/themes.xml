@@ -23,6 +23,7 @@
 -->
 
 <resources>
+
     <style name="PatinoiresBaseTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <!--
             Theme customizations available in newer API levels can go in
@@ -38,8 +39,7 @@
         <item name="windowActionBarOverlay">true</item>
     </style>
 
-    <style name="PreferencesBaseTheme" parent="@android:style/Theme">
-    </style>
+    <style name="PreferencesBaseTheme" parent="@android:style/Theme"></style>
 
 
     <style name="PatinoiresTheme" parent="@style/PatinoiresBaseTheme">
@@ -52,8 +52,7 @@
         <item name="selectableItemBackground">@android:color/transparent</item>
     </style>
 
-    <style name="TabsPagerTheme" parent="@style/PatinoiresTheme">
-    </style>
+    <style name="TabsPagerTheme" parent="@style/PatinoiresTheme"></style>
 
     <style name="AboutTheme" parent="@style/PatinoiresTheme">
         <item name="android:textSize">@dimen/textSizeMedium</item>
@@ -61,16 +60,12 @@
         <item name="android:textColorLink">@color/hyperlink</item>
     </style>
 
-    <style name="EulaTheme" parent="@style/PatinoiresTheme">
-    </style>
+    <style name="EulaTheme" parent="@style/PatinoiresTheme"></style>
 
-    <style name="DetailsTheme" parent="@style/PatinoiresTheme">
-    </style>
+    <style name="DetailsTheme" parent="@style/PatinoiresTheme"></style>
 
-    <style name="MapTheme" parent="@style/MapBaseTheme">
-    </style>
+    <style name="MapTheme" parent="@style/MapBaseTheme"></style>
 
-    <style name="PreferencesTheme" parent="@style/PreferencesBaseTheme">
-    </style>
+    <style name="PreferencesTheme" parent="@style/PreferencesBaseTheme"></style>
 
 </resources>

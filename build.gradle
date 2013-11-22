@@ -13,7 +13,7 @@ repositories {
 }
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion "Google Inc.:Google APIs:19"
     buildToolsVersion "19.0.0"
 
     defaultConfig {
@@ -23,7 +23,6 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:19.0.0'
     compile 'com.android.support:appcompat-v7:19.0.0'
     compile 'com.google.android.gms:play-services:4.0.30'
 }

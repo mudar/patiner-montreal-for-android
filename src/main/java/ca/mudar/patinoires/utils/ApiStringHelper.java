@@ -23,6 +23,8 @@
 
 package ca.mudar.patinoires.utils;
 
+import java.util.Locale;
+
 import ca.mudar.patinoires.io.RemoteRinksHandler.RemoteValues;
 import ca.mudar.patinoires.Const.DbValues;
 
@@ -36,8 +38,8 @@ public class ApiStringHelper {
      * @return the index used in the DB for conditions
      */
     static public int getConditionIndex(String open, String condition) {
-        condition = condition.toLowerCase();
-        open = open.toLowerCase();
+        condition = condition.toLowerCase(Locale.US);
+        open = open.toLowerCase(Locale.US);
         if (open.equals(RemoteValues.BOOLEAN_FALSE)) {
             return DbValues.CONDITION_CLOSED;
         }

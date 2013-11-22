@@ -36,6 +36,7 @@ import org.json.JSONTokener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import ca.mudar.patinoires.Const.DbValues;
 import ca.mudar.patinoires.providers.RinksContract.Boroughs;
@@ -150,14 +151,14 @@ public class RemoteRinksHandler extends JsonHandler {
                 builderParks.withValue(ParksColumns.PARK_GEO_LAT, geoLat);
                 builderParks.withValue(ParksColumns.PARK_GEO_LNG, geoLng);
 
-                if (!rink.optString(RemoteTags.PARK_ADDRESS).trim().toLowerCase()
+                if (!rink.optString(RemoteTags.PARK_ADDRESS).trim().toLowerCase(Locale.US)
                         .equals(RemoteValues.STRING_NULL)) {
                     builderParks.withValue(ParksColumns.PARK_ADDRESS,
                             Helper.capitalize(rink.optString(RemoteTags.PARK_ADDRESS)));
                 }
 
                 String phone = rink.optString(RemoteTags.PARK_PHONE);
-                if (!phone.trim().toLowerCase().equals(RemoteValues.STRING_NULL)) {
+                if (!phone.trim().toLowerCase(Locale.US).equals(RemoteValues.STRING_NULL)) {
                     String phoneExtension = rink.optString(RemoteTags.PARK_PHONE_EXT).trim();
                     if (!phoneExtension.equals(RemoteValues.STRING_NULL)) {
                         phone = phone + PhoneNumberUtils.PAUSE + phoneExtension;

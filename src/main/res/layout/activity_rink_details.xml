@@ -22,15 +22,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_rink_details"
+    android:name="ca.mudar.patinoires.ui.fragment.RinkDetailsFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-    <fragment
-        android:id="@+id/fragment_rink_details"
-        android:name="ca.mudar.patinoires.ui.fragment.RinkDetailsFragment"
-        android:layout_width="0px"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
-
-</LinearLayout>
+    android:layout_height="match_parent" />

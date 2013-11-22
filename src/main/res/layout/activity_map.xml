@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
     Patiner Montréal for Android. 
     Information about outdoor rinks in the city of Montréal: conditions,
     services, contact, map, etc.
@@ -21,26 +22,20 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/map_root"
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_map"
+    android:name="ca.mudar.patinoires.ui.fragment.MapFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/fragment_map"
-        android:name="ca.mudar.patinoires.ui.fragment.MapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        map:cameraBearing="-34"
-        map:cameraTargetLat="45.5"
-        map:cameraTargetLng="-73.666667"
-        map:cameraZoom="10"
-        map:mapType="normal"
-        map:uiCompass="true"
-        map:uiRotateGestures="true"
-        map:uiScrollGestures="true"
-        map:uiTiltGestures="true"
-        map:uiZoomControls="true"
-        map:uiZoomGestures="true" />
-
-</LinearLayout>
+    android:layout_height="match_parent"
+    map:cameraBearing="-34"
+    map:cameraTargetLat="45.5"
+    map:cameraTargetLng="-73.666667"
+    map:cameraZoom="10"
+    map:mapType="normal"
+    map:uiCompass="true"
+    map:uiRotateGestures="true"
+    map:uiScrollGestures="true"
+    map:uiTiltGestures="true"
+    map:uiZoomControls="true"
+    map:uiZoomGestures="true" />

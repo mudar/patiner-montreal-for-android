@@ -23,7 +23,6 @@
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <string name="hello">Hello World, Patinoires!</string>
     <string name="app_name">Patiner Montréal</string>
     <string name="app_version">1.1</string>
     <string name="app_name_map">Patiner Montréal Map</string>

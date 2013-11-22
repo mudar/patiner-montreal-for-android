@@ -139,9 +139,9 @@ public class SearchViewQueryListener implements
             /**
              * Address not found! Display error message.
              */
-            final String errorMsg = String.format(mActivity.getResources().getString(
-                    R.string.toast_search_error,
-                    mSearchQuery));
+            final String errorMsg = String.format(
+                    mActivity.getResources().getString(R.string.toast_search_error),
+                    mSearchQuery);
             ((PatinoiresApp) mActivity.getApplicationContext()).showToastText(
                     errorMsg, Toast.LENGTH_LONG);
         }
@@ -195,7 +195,7 @@ public class SearchViewQueryListener implements
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                searchToggle(!hasFocus);
+                searchToggle(hasFocus);
             }
         });
     }
@@ -212,6 +212,7 @@ public class SearchViewQueryListener implements
 
     /**
      * Toggle collapse/expand the SearchView.
+     *
      * @param isDisplayed
      */
     public void searchToggle(boolean isDisplayed) {

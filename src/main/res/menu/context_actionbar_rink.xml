@@ -41,7 +41,7 @@
         android:id="@+id/map_view_rink"
         android:icon="@drawable/ic_action_compass"
         android:orderInCategory="3"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/menu_map_view_rink" />
 
     <item

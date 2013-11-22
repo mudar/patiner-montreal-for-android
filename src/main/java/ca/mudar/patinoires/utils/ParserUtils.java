@@ -40,6 +40,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import ca.mudar.patinoires.io.XmlHandler;
@@ -81,7 +82,7 @@ public class ParserUtils {
             // Strip out all parenthetical statements when requested.
             input = sParenPattern.matcher(input).replaceAll("");
         }
-        return sSanitizePattern.matcher(input.toLowerCase()).replaceAll("");
+        return sSanitizePattern.matcher(input.toLowerCase(Locale.US)).replaceAll("");
     }
 
     /**

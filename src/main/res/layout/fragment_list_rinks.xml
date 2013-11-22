@@ -19,7 +19,8 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -27,7 +28,7 @@
     android:layout_height="match_parent"
     android:cacheColorHint="@color/listview_colorhint"
     android:gravity="center"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <ListView
         android:id="@id/android:list"
@@ -41,8 +42,7 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" >
-    </ProgressBar>
+        android:layout_gravity="center"/>
 
     <TextView
         android:id="@+id/rinks_empty_list"
