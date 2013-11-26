@@ -25,29 +25,38 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <LinearLayout
-        android:paddingBottom="@dimen/bodyPaddingSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/bodyPaddingSmall"
+        android:paddingLeft="@dimen/root_horizontal_margin"
+        android:paddingRight="@dimen/root_horizontal_margin">
 
         <LinearLayout
             style="@style/AboutBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/bodyPaddingSmall"
                 android:text="@string/about_contents_intro_1" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/bodyPaddingSmall"
                 android:text="@string/about_contents_intro_2" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/about_contents_slogan" />
         </LinearLayout>
 
         <RelativeLayout
@@ -55,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/about_image"
@@ -73,6 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/about_image"
                 android:linksClickable="true"
+                android:paddingBottom="@dimen/bodyPaddingSmall"
                 android:text="@string/about_contents_credits_1" />
 
             <TextView
@@ -80,8 +90,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/about_contents_credits_1"
-                android:layout_toLeftOf="@+id/about_image"
                 android:linksClickable="true"
+                android:paddingBottom="@dimen/bodyPaddingSmall"
                 android:text="@string/about_contents_credits_2" />
 
             <TextView

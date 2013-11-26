@@ -24,10 +24,7 @@
 
 <resources>
 
-    <style name="PatinoiresTheme" parent="@style/PatinoiresBaseTheme">
-        <item name="android:windowBackground">@drawable/background_portrait</item>
-        <item name="selectableItemBackground">@drawable/actionbar_btn_selectable</item>
-        <item name="android:textColor">@color/dashboard_text</item>
-    </style>
+    <dimen name="root_horizontal_margin">128dp</dimen>
+    <dimen name="listview_horizontal_margin">16dp</dimen>
 
 </resources>

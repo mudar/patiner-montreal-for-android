@@ -42,13 +42,14 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
 
     <TextView
-        android:drawableBottom="@drawable/ic_star_on"
         android:id="@+id/rinks_empty_list"
-        android:layout_width="match_parent"
+        style="@style/EmptyListText"
+        android:layout_width="@dimen/widthEmptyList"
         android:layout_height="wrap_content"
+        android:drawableBottom="@drawable/ic_star_on"
         android:gravity="center"
         android:text="@string/empty_list_favorites"
         android:visibility="gone" />

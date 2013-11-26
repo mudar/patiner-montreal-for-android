@@ -26,7 +26,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:cacheColorHint="@color/listview_colorhint"
+    android:gravity="center"
     android:orientation="vertical">
+
     <ListView
         android:id="@id/android:list"
         android:layout_width="match_parent"
@@ -36,7 +38,8 @@
 
     <TextView
         android:id="@id/android:empty"
-        android:layout_width="match_parent"
+        style="@style/EmptyListText"
+        android:layout_width="@dimen/widthEmptyList"
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="@string/search_listview_hint" />

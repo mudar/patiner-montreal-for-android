@@ -89,12 +89,18 @@
         <!-- <item name="android:background">@drawable/about_separator_background</item> -->
     </style>
 
+
+    <style name="EmptyListText">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/textEmptyList</item>
+    </style>
+
     <style name="ListItem">
         <item name="android:cacheColorHint">#660000</item>
         <item name="android:background">@drawable/list_selector</item>
         <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>
-        <item name="android:paddingLeft">@dimen/paddingMedium</item>
-        <item name="android:paddingRight">@dimen/paddingMedium</item>
+        <item name="android:paddingLeft">@dimen/listview_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/listview_horizontal_margin</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
