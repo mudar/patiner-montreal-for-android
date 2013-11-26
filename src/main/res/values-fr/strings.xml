@@ -57,7 +57,9 @@
     <string name="btn_hockey">Hockey</string>
     <string name="btn_map">Carte</string>
     <string name="btn_favorites">Favoris</string>
-    <string name="list_no_rinks">Liste vide…</string>
+    <string name="empty_list">Aucune patinoire trouvée…</string>
+    <string name="empty_list_favorites">La liste des favoris est vide. Sauvegardez vos patinoires préférées ici pour y accéder plus rapidement…</string>
+    <string name="empty_list_Search">Aucun résultat trouvé…</string>
     <string name="tab_favorites">Favoris</string>
     <string name="tab_skating">Patinage</string>
     <string name="tab_hockey">Hockey</string>
@@ -191,6 +193,9 @@
     <string name="playservices_2">Les services Google Play sont généralement mis à jour automatiquement sur les appareils Android. Si vous utilisez une application nécessitant la version la plus récente des services Google Play, vous êtes redirigé vers le Play Store où vous pouvez les installer ou les mettre à jour manuellement.</string>
 
     <!-- Search -->
-    <string name="search_hint">Adresse</string>
+    <string name="search_hint_global">Rechercher les patinoires</string>
+    <string name="search_hint_actionbar">Adresse ou patinoire</string>
+    <string name="search_description">Patinoires extérieures à Montréal</string>
+    <string name="search_listview_hint">Veuillez saisir le nom de la patinoire…</string>
 
 </resources>

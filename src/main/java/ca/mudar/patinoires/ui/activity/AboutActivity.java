@@ -65,10 +65,6 @@ public class AboutActivity extends BaseActivity {
      */
     public static class AboutFragment extends Fragment {
 
-        public static AboutFragment newInstance() {
-            return new AboutFragment();
-        }
-
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             if (container == null) {

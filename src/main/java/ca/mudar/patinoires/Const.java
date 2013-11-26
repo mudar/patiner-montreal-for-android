@@ -78,11 +78,13 @@ public class Const {
     public static final int INTENT_REQ_CODE_EULA = 0x10;
     public static final String TAG_FRAGMENT_LIST = "tag_fragment_list";
     public static final String TAG_FRAGMENT_MAP = "tag_fragment_map";
+    public static final String TAG_FRAGMENT_SEARCH = "tag_fragment_search";
     public static final String KEY_INSTANCE_COORDS = "map_coordinates";
     public static final String KEY_INSTANCE_ZOOM = "map_zoom";
     public static final String KEY_INSTANCE_RINK_ID = "rink_id";
     public static final String KEY_BUNDLE_PROGRESS_INCREMENT = "bundle_progress_increment";
     public static final String KEY_BUNDLE_SEARCH_ADDRESS = "bundle_search_address";
+    public static final String KEY_BUNDLE_CURSOR_SELECTION = "bundle_cursor_selection";
     public static final int BUNDLE_SEARCH_ADDRESS_SUCCESS = 0x1;
     public static final int BUNDLE_SEARCH_ADDRESS_ERROR = 0x0;
     public static final String KEY_BUNDLE_ADDRESS_LAT = "bundle_address_lat";
@@ -130,6 +132,12 @@ public class Const {
     // Assets
     public static interface LocalAssets {
         final String LICENSE = "gpl-3.0-standalone.html";
+    }
+
+    // Search
+    public static interface Search {
+        final int MIN_LENGTH_SEARCH = 2;
+        final String SCHEME = "content";
     }
 
     public static interface DbValues {

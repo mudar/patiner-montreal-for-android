@@ -37,21 +37,38 @@ import android.provider.BaseColumns;
  * sync.
  */
 public class RinksContract {
-    private static final String TAG = "RinksContract";
     /**
      * Special value for {@link SyncColumns#UPDATED} indicating that an entry
      * has never been updated, or doesn't exist yet.
      */
     public static final long UPDATED_NEVER = -2;
-
     /**
      * Special value for {@link SyncColumns#UPDATED} indicating that the last
      * update time is unknown, usually when inserted from a local file source.
      */
     public static final long UPDATED_UNKNOWN = -1;
+    public static final String CONTENT_AUTHORITY = "ca.mudar.patinoires";
+    private static final String TAG = "RinksContract";
+    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    private static final String PATH_BOROUGHS = "boroughs";
+    private static final String PATH_PARKS = "parks";
+    private static final String PATH_RINKS = "rinks";
+    private static final String PATH_FAVORITES = "favorites";
+    // TODO Verify this duplicate!
+    private static final String PATH_RINKS_FAVORITES = "favorites";
+    private static final String PATH_RINKS_SKATING = "skating";
+    private static final String PATH_RINKS_HOCKEY = "hockey";
+    private static final String PATH_RINKS_ALL = "all";
+    // Search
+    private static final String PATH_RINKS_SEARCH = "recherche";
+
+    private RinksContract() {
+    }
 
     public static interface SyncColumns {
-        /** Last time this entry was updated or synchronized. */
+        /**
+         * Last time this entry was updated or synchronized.
+         */
         final String UPDATED = "updated";
     }
 
@@ -103,27 +120,11 @@ public class RinksContract {
         final String FAVORITE_IS_FAVORITE_MAPPED = "( favorites.rink_id IS NOT NULL )";
     }
 
-    public static final String CONTENT_AUTHORITY = "ca.mudar.patinoires";
-
-    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
-
-    private static final String PATH_BOROUGHS = "boroughs";
-    private static final String PATH_PARKS = "parks";
-    private static final String PATH_RINKS = "rinks";
-    private static final String PATH_FAVORITES = "favorites";
-    // TODO Verify this duplicate!
-    private static final String PATH_RINKS_FAVORITES = "favorites";
-    private static final String PATH_RINKS_SKATING = "skating";
-    private static final String PATH_RINKS_HOCKEY = "hockey";
-    private static final String PATH_RINKS_ALL = "all";
-
     public static class Boroughs implements BoroughsColumns, SyncColumns, BaseColumns {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_BOROUGHS).build();
-
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.patinoires.borough";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.patinoires.borough";
-
         public static final String DEFAULT_SORT = BoroughsColumns.BOROUGH_NAME + " ASC ";
 
         public static Uri buildBoroughUri(String id) {
@@ -138,12 +139,9 @@ public class RinksContract {
     public static class Parks implements ParksColumns, SyncColumns, BaseColumns {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_PARKS).build();
-
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.patinoires.park";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.patinoires.park";
-
         public static final String DEFAULT_SORT = ParksColumns.PARK_NAME + " ASC ";
-
         public static final String GROUP_BY_JOIN_TABLE = " GROUP BY " + ParksColumns.PARK_ID;
 
         public static Uri buildParkUri(String id) {
@@ -163,7 +161,6 @@ public class RinksContract {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_RINKS).build();
-
         public static final Uri CONTENT_FAVORITES_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_RINKS).appendPath(PATH_RINKS_FAVORITES).build();
         public static final Uri CONTENT_SKATING_URI = BASE_CONTENT_URI.buildUpon()
@@ -172,10 +169,11 @@ public class RinksContract {
                 .appendPath(PATH_RINKS).appendPath(PATH_RINKS_HOCKEY).build();
         public static final Uri CONTENT_ALL_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_RINKS).appendPath(PATH_RINKS_ALL).build();
+        public static final Uri CONTENT_SEARCH_URI = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_RINKS).appendPath(PATH_RINKS_SEARCH).build();
 
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.patinoires.rink";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.patinoires.rink";
-
         public static final String DEFAULT_SORT = RinksColumns.RINK_NAME + " ASC ";
 
         public static Uri buildRinkUri(String id) {
@@ -185,15 +183,17 @@ public class RinksContract {
         public static String getRinkId(Uri uri) {
             return uri.getPathSegments().get(1);
         }
+
+        public static String getSearchQuery(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
     }
 
     public static class Favorites implements FavoritesColumns, SyncColumns, BaseColumns {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_FAVORITES).build();
-
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.patinoires.favorite";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.patinoires.favorite";
-
         public static final String DEFAULT_SORT = FavoritesColumns.FAVORITE_RINK_ID + " ASC ";
 
         public static Uri buildFavoriteUri(String id) {
@@ -203,8 +203,5 @@ public class RinksContract {
         public static String getFavoriteId(Uri uri) {
             return uri.getPathSegments().get(1);
         }
-    }
-
-    private RinksContract() {
     }
 }

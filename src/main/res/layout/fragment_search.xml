@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Patiner Montréal for Android. 
+    Patiner Montréal for Android.
     Information about outdoor rinks in the city of Montréal: conditions,
     services, contact, map, etc.
 
@@ -22,13 +22,23 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:patinoires="http://schemas.android.com/apk/res-auto">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:cacheColorHint="@color/listview_colorhint"
+    android:orientation="vertical">
+    <ListView
+        android:id="@id/android:list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:cacheColorHint="@color/listview_colorhint" />
 
-    <item
-        android:id="@+id/menu_refresh"
-        android:orderInCategory="5"
-        android:title="@string/menu_refresh"
-        patinoires:showAsAction="never" />
+    <TextView
+        android:id="@id/android:empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/search_listview_hint" />
 
-</menu>
+</LinearLayout>

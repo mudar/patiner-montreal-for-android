@@ -31,10 +31,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -71,21 +69,20 @@ public abstract class BaseListFragment extends ListFragment implements
         ContextualActionbarListener.OnRinkActionsListener {
 
     private static final String TAG = "BaseListFragment";
+    protected int resLayoutListView;
     protected RinksCursorAdapter mAdapter;
     protected ContextualActionbarListener mCABListener = null;
     private PatinoiresApp mAppHelper;
     private Uri mContentUri;
-    private Cursor cursor = null;
+    private Cursor mCursor = null;
     private View rootView;
     private String mSort;
-    private LocationManager locationManager;
-    private LocationListener locationListener;
-    private Criteria criteria;
     private OnRinkClickListener mListener;
     private boolean hasFollowLocationChanges = false;
 
     public BaseListFragment(Uri contentUri) {
         mContentUri = contentUri;
+        resLayoutListView = R.layout.fragment_list_rinks;
     }
 
     /**
@@ -108,12 +105,6 @@ public abstract class BaseListFragment extends ListFragment implements
 
         mAppHelper = ((PatinoiresApp) getActivity().getApplicationContext());
 
-        locationManager = (LocationManager) getActivity().getSystemService(
-                Context.LOCATION_SERVICE);
-        locationListener = new MyLocationListener();
-        criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-
         SharedPreferences prefs = getActivity().getSharedPreferences(Const.APP_PREFS_NAME,
                 Context.MODE_PRIVATE);
         hasFollowLocationChanges = prefs
@@ -130,7 +121,7 @@ public abstract class BaseListFragment extends ListFragment implements
         if (mAppHelper.getListSort().equals(PrefsValues.LIST_SORT_DISTANCE) && (myLocation != null)) {
             mSort = Parks.PARK_GEO_DISTANCE + " ASC ";
             /**
-             * If sorting bydistance, disable the AlphabetIndexer.
+             * If sorting by distance, disable the AlphabetIndexer.
              */
             hasIndexer = false;
         }
@@ -142,7 +133,7 @@ public abstract class BaseListFragment extends ListFragment implements
 
         mAdapter = new RinksCursorAdapter(getActivity(),
                 R.layout.fragment_list_item_rinks,
-                cursor,
+                mCursor,
                 new String[]{
                         RinksColumns.RINK_NAME, RINK_DESC, ParksColumns.PARK_GEO_DISTANCE,
                         RinksColumns.RINK_ID
@@ -159,7 +150,7 @@ public abstract class BaseListFragment extends ListFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        rootView = inflater.inflate(R.layout.fragment_list_rinks, null);
+        rootView = inflater.inflate(resLayoutListView, null);
 
         return rootView;
     }

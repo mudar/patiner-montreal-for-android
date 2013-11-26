@@ -27,6 +27,7 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.widget.ListView;
 
+import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.ui.view.ContextualActionbarListener;
 
@@ -34,6 +35,7 @@ public class FavoritesListFragment extends BaseListFragment {
 
     public FavoritesListFragment() {
         super(Rinks.CONTENT_FAVORITES_URI);
+        super.resLayoutListView = R.layout.fragment_list_rinks_favorites;
     }
 
 

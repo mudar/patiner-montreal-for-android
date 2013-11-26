@@ -24,6 +24,8 @@
 package ca.mudar.patinoires.ui.view;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.location.Address;
 import android.location.Location;
 import android.os.Bundle;
@@ -94,7 +96,6 @@ public class SearchViewQueryListener implements
      */
     @Override
     public boolean onQueryTextChange(String query) {
-        // TODO autocomplete based on search history and rinks/parks names
         return false;
     }
 
@@ -110,8 +111,12 @@ public class SearchViewQueryListener implements
         }
 
         ((ActionBarActivity) mActivity).setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
-        final Bundle b = msg.getData();
 
+        if (mListener == null) {
+            return;
+        }
+
+        final Bundle b = msg.getData();
         if (b.getInt(Const.KEY_BUNDLE_SEARCH_ADDRESS) == Const.BUNDLE_SEARCH_ADDRESS_SUCCESS) {
             /**
              * Address is found, center map on location.
@@ -160,6 +165,7 @@ public class SearchViewQueryListener implements
              */
             address = GeoHelper.findAddressFromName(mActivity, mSearchQuery);
         } catch (IOException e) {
+            // TODO: check this on Samsung Galaxy SIII
             e.printStackTrace();
         }
 
@@ -189,8 +195,11 @@ public class SearchViewQueryListener implements
         mSearchMenuItem = item;
 
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchMenuItem);
-        searchView.setQueryHint(mActivity.getResources().getString(R.string.search_hint));
+        searchView.setQueryHint(mActivity.getResources().getString(R.string.search_hint_actionbar));
         searchView.setOnQueryTextListener(this);
+        SearchManager searchManager = (SearchManager) mActivity.getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(mActivity.getComponentName()));
+
         // Collapse when focus lost
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
             @Override

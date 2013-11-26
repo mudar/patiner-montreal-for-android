@@ -122,7 +122,7 @@ public class MapFragment extends SupportMapFragment
 
         inflater.inflate(R.menu.menu_map, menu);
 
-        MenuItem searchMenuItem = menu.findItem(R.id.menu_search);
+        MenuItem searchMenuItem = menu.findItem(R.id.menu_map_search);
         mSearchViewQueryListener.setSearchMenuItem(searchMenuItem);
     }
 

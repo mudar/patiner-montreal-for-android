@@ -56,7 +56,9 @@
     <string name="btn_hockey">Hockey</string>
     <string name="btn_map">Map</string>
     <string name="btn_favorites">Favorites</string>
-    <string name="list_no_rinks">Empty list…</string>
+    <string name="empty_list">No rinks found…</string>
+    <string name="empty_list_favorites">Favorites list is empty. Store your favorite rinks here for faster access…</string>
+    <string name="empty_list_Search">No results found…</string>
     <string name="tab_favorites">Favorites</string>
     <string name="tab_skating">Skating</string>
     <string name="tab_hockey">Hockey</string>
@@ -91,6 +93,7 @@
     <string name="dialog_network_connection_title">No connection!</string>
     <string name="dialog_network_connection_message">You need a network connection to update the rinks information. Please turn on mobile network or Wi-Fi in Settings…</string>
     <string name="search_results">Results for ’<xliff:g id="string">%s</xliff:g>’</string>
+
     <!-- <string name="prefs_category_display">Display Settings</string> -->
     <string name="prefs_breadcrumb">Settings</string>
     <string name="prefs_category_conditions">Rink Conditions</string>
@@ -190,6 +193,9 @@
     <string name="playservices_2">Google Play services is usually updated automatically on Android devices. In the event you use an app that requires the latest Google Play services, you will be redirected to install or update it manually from the Google Play Store.</string>
 
     <!-- Search -->
-    <string name="search_hint">Address</string>
+    <string name="search_hint_global">Search rinks</string>
+    <string name="search_hint_actionbar">Address or rink</string>
+    <string name="search_description">Montréal outdoor rinks</string>
+    <string name="search_listview_hint">Please enter rink name…</string>
 
 </resources>

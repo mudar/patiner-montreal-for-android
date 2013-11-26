@@ -24,6 +24,7 @@
 package ca.mudar.patinoires.providers;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
@@ -72,6 +73,9 @@ public class RinksProvider extends ContentProvider {
     private static final int RINKS_ID = 135;
     private static final int FAVORITES = 140;
     private static final int FAVORITES_ID = 141;
+    private static final int RINKS_SEARCH = 150;
+    private static final int RINKS_SUGGEST = 151;
+    private static final int RINKS_SUGGEST_ID = 152;
     private RinksDatabase mOpenHelper;
 
     private static UriMatcher buildUriMatcher() {
@@ -90,7 +94,11 @@ public class RinksProvider extends ContentProvider {
         matcher.addURI(authority, "rinks/skating", RINKS_SKATING);
         matcher.addURI(authority, "rinks/hockey", RINKS_HOCKEY);
         matcher.addURI(authority, "rinks/all", RINKS_ALL);
+        matcher.addURI(authority, "rinks/recherche", RINKS_SEARCH);
         matcher.addURI(authority, "rinks/*", RINKS_ID);
+
+        matcher.addURI(authority, SearchManager.SUGGEST_URI_PATH_QUERY, RINKS_SUGGEST);
+        matcher.addURI(authority, SearchManager.SUGGEST_URI_PATH_QUERY + "/*", RINKS_SUGGEST_ID);
 
         matcher.addURI(authority, "favorites", FAVORITES);
         matcher.addURI(authority, "favorites/*", FAVORITES_ID);
@@ -129,12 +137,17 @@ public class RinksProvider extends ContentProvider {
                 return Rinks.CONTENT_TYPE;
             case RINKS_ALL:
                 return Rinks.CONTENT_TYPE;
+            case RINKS_SEARCH:
+                return Rinks.CONTENT_TYPE;
             case RINKS_ID:
                 return Rinks.CONTENT_ITEM_TYPE;
             case FAVORITES:
                 return Favorites.CONTENT_TYPE;
             case FAVORITES_ID:
                 return Favorites.CONTENT_ITEM_TYPE;
+            case RINKS_SUGGEST:
+            case RINKS_SUGGEST_ID:
+                return SearchManager.SUGGEST_MIME_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -144,13 +157,11 @@ public class RinksProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
 
-        // TODO Replace this by Readable. Requires local JSON asset to initate
-        // DB update.
-        // final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final SQLiteDatabase db = mOpenHelper.getReadableDatabase();
 
         final int match = sUriMatcher.match(uri);
         final SelectionBuilder builder = buildExpandedSelection(uri, match);
+
         switch (match) {
             case PARKS: {
                 String groupBy = ParksColumns.PARK_ID;
@@ -159,9 +170,31 @@ public class RinksProvider extends ContentProvider {
                 c.setNotificationUri(getContext().getContentResolver(), uri);
                 return c;
             }
+            case RINKS_SUGGEST:
+            case RINKS_SUGGEST_ID: {
+                final String[] searchProjection = new String[]{
+                        BaseColumns._ID,
+                        SearchManager.SUGGEST_COLUMN_TEXT_1,
+                        SearchManager.SUGGEST_COLUMN_TEXT_2,
+                        SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID,
+                        SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA};
+
+                final Cursor c = builder.where(selection, selectionArgs)
+                        .query(db, searchProjection, Rinks.DEFAULT_SORT);
+                c.setNotificationUri(getContext().getContentResolver(), uri);
+
+                if (c == null) {
+                    return null;
+                } else if (!c.moveToFirst()) {
+                    c.close();
+                    return null;
+                }
+                return c;
+            }
             default: {
                 Cursor c = builder.where(selection, selectionArgs).query(db, projection, sortOrder);
                 c.setNotificationUri(getContext().getContentResolver(), uri);
+
                 return c;
             }
         }
@@ -306,6 +339,7 @@ public class RinksProvider extends ContentProvider {
                         .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_IS_FAVORITE_MAPPED)
                         .where(Parks.PARK_ID + "=?", parkId);
             }
+            case RINKS_SEARCH:
             case RINKS_ALL:
             case RINKS: {
                 return builder.table(Tables.BOROUGHS_JOIN_PARKS_RINKS_FAVORITES)
@@ -359,7 +393,36 @@ public class RinksProvider extends ContentProvider {
             }
             case FAVORITES_ID: {
                 final String favoriteId = Favorites.getFavoriteId(uri);
-                return builder.table(Tables.FAVORITES).where(BaseColumns._ID + "=?", favoriteId);
+                return builder.table(Tables.FAVORITES)
+                        .where(BaseColumns._ID + "=?", favoriteId);
+            }
+            case RINKS_SUGGEST:
+                return builder.table(Tables.RINKS_JOIN_FAVORITES)
+                        .mapToTable(Rinks._ID, Tables.RINKS)
+                        .mapToTable(Rinks.RINK_ID, Tables.RINKS)
+                        .map(SearchManager.SUGGEST_COLUMN_TEXT_1, Rinks.RINK_NAME)
+                        .map(SearchManager.SUGGEST_COLUMN_TEXT_2, Rinks.RINK_DESC_EN)
+                        .map(SearchManager.SUGGEST_COLUMN_TEXT_2, Rinks.RINK_DESC_FR)
+                        .map(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, Rinks.RINK_ID)
+                        .map(SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA, "NULL" )
+                        .where(Favorites.FAVORITE_ID + " IS NOT NULL ")
+                        .where(Rinks.RINK_ID + " IS NOT NULL ");
+            case RINKS_SUGGEST_ID: {
+                final String search = Rinks.getSearchQuery(uri);
+
+                return builder.table(Tables.RINKS)
+                        .mapToTable(Rinks._ID, Tables.RINKS)
+                        .mapToTable(Rinks.RINK_ID, Tables.RINKS)
+                        .map(SearchManager.SUGGEST_COLUMN_TEXT_1, Rinks.RINK_NAME)
+                        .map(SearchManager.SUGGEST_COLUMN_TEXT_2, Rinks.RINK_DESC_EN)
+                        .map(SearchManager.SUGGEST_COLUMN_TEXT_2, Rinks.RINK_DESC_FR)
+                        .map(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, Rinks.RINK_ID)
+                        .map(SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA, '"' + search + '"' )
+                        .where(Rinks.RINK_ID + " IS NOT NULL ")
+                        .where(Rinks.RINK_NAME + " LIKE ? OR " + Rinks.RINK_NAME + " LIKE ? OR " + Rinks.RINK_NAME + " LIKE ? ",
+                                search + "%",
+                                "% " + search + "%",
+                                "%-" + search + "%");
             }
             default: {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

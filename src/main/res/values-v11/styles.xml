@@ -34,4 +34,9 @@
         <item name="android:background">@drawable/btn_default_holo_light</item>
     </style>
 
+    <style name="SearchActionBar" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/actionbar_background_search</item>
+        <item name="android:displayOptions">showHome|useLogo</item>
+    </style>
+
 </resources>

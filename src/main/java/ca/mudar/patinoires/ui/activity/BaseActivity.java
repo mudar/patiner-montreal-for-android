@@ -162,6 +162,10 @@ public class BaseActivity extends ActionBarActivity {
         } else if (item.getItemId() == R.id.menu_refresh) {
             triggerRefresh(null, true);
             return true;
+        } else if (item.getItemId() == R.id.menu_search) {
+            intent = new Intent(this, SearchableActivity.class);
+            startActivity(intent);
+            return true;
         } else if (item.getItemId() == R.id.menu_about) {
             intent = new Intent(this, AboutActivity.class);
             startActivity(intent);

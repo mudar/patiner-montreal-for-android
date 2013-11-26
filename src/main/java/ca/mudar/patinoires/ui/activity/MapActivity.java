@@ -24,6 +24,7 @@
 package ca.mudar.patinoires.ui.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -114,6 +115,11 @@ public class MapActivity extends BaseActivity {
         } else {
             isCenterOnMyLocation = true;
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     @Override

@@ -45,4 +45,9 @@
         <item name="android:logo">@drawable/ic_logo_patinoires</item>
     </style>
 
+    <style name="SearchBaseTheme" parent="@style/PatinoiresTheme">
+        <item name="android:actionBarStyle">@style/SearchActionBar</item>
+        <item name="android:logo">@drawable/ic_logo_patinoires_narrow</item>
+    </style>
+
 </resources>

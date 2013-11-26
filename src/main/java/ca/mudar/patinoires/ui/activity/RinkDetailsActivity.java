@@ -40,8 +40,9 @@ import ca.mudar.patinoires.receivers.DetachableResultReceiver;
 import ca.mudar.patinoires.services.SyncService;
 import ca.mudar.patinoires.ui.fragment.RinkDetailsFragment;
 
-public class RinkDetailsActivity extends BaseActivity implements RinkDetailsFragment.OnRinkClickListener {
-    protected static final String TAG = "RinkDetailsActivity";
+public class RinkDetailsActivity extends BaseActivity implements
+        RinkDetailsFragment.OnRinkClickListener {
+    private static final String TAG = "RinkDetailsActivity";
     private SyncStatusUpdaterFragment mSyncStatusUpdaterFragment;
 
     @Override

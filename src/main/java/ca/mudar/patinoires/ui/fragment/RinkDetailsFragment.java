@@ -132,10 +132,6 @@ public class RinkDetailsFragment extends Fragment
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             mRinkId = getIdFromUri(intent.getData());
         }
-        // else if ((savedInstanceState != null)
-        // && savedInstanceState.containsKey(Const.KEY_INSTANCE_RINK_ID)) {
-        // mRinkId = savedInstanceState.getInt(Const.KEY_INSTANCE_RINK_ID);
-        // }
         else {
             mRinkId = intent.getIntExtra(Const.INTENT_EXTRA_ID_RINK, -1);
         }
@@ -514,7 +510,7 @@ public class RinkDetailsFragment extends Fragment
         if ((pathSegments.size() == 2)
                 && (pathSegments.get(0).equals(Const.INTENT_EXTRA_URL_PATH_FR)
                 || pathSegments.get(0).equals(Const.INTENT_EXTRA_URL_PATH_EN))) {
-            Pattern p = Pattern.compile("^([0-9]+)-");
+            Pattern p = Pattern.compile("^([0-9]+)-?");
             Matcher m = p.matcher(pathSegments.get(1));
 
             if (m.find()) {
