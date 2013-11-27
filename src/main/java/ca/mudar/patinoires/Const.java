@@ -74,7 +74,7 @@ public class Const {
     public static final String INTENT_EXTRA_ID_RINK = "id_rink";
     public static final String INTENT_EXTRA_URL_PATH_FR = "patinoires";
     public static final String INTENT_EXTRA_URL_PATH_EN = "rinks";
-    public static final String INTENT_EXTRA_ASSETS_SYNC = "sync_assets";
+    public static final String INTENT_EXTRA_LOCAL_SYNC = "sync_assets";
     public static final int INTENT_REQ_CODE_EULA = 0x10;
     public static final String TAG_FRAGMENT_LIST = "tag_fragment_list";
     public static final String TAG_FRAGMENT_MAP = "tag_fragment_map";

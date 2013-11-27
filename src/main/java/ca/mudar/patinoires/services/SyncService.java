@@ -167,7 +167,7 @@ public class SyncService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         boolean doUpdate = intent.getBooleanExtra(Const.INTENT_EXTRA_FORCE_UPDATE, false);
-        boolean hasLocalExecutor = intent.getBooleanExtra(Const.INTENT_EXTRA_ASSETS_SYNC, false);
+        boolean hasLocalExecutor = intent.getBooleanExtra(Const.INTENT_EXTRA_LOCAL_SYNC, false);
         boolean isIgnored = false;
 
         final ResultReceiver receiver = intent.getParcelableExtra(EXTRA_STATUS_RECEIVER);

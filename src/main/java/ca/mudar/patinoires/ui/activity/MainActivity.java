@@ -51,6 +51,7 @@ import ca.mudar.patinoires.utils.EulaHelper;
 public class MainActivity extends BaseActivity {
     protected static final String TAG = "MainActivity";
     private static boolean hasLoadedData;
+    private static boolean hasLoadedDataLocally = false;
     protected PatinoiresApp mAppHelper;
     protected SharedPreferences prefs;
     private SyncStatusUpdaterFragment mSyncStatusUpdaterFragment;
@@ -183,8 +184,9 @@ public class MainActivity extends BaseActivity {
             Intent intent = new Intent(Intent.ACTION_SYNC, null, getApplicationContext(),
                     SyncService.class);
             intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mSyncStatusUpdaterFragment.mReceiver);
-            if (!ConnectionHelper.hasConnection(this)) {
-                intent.putExtra(Const.INTENT_EXTRA_ASSETS_SYNC, true);
+            if (!ConnectionHelper.hasConnection(this) && !hasLoadedDataLocally) {
+                intent.putExtra(Const.INTENT_EXTRA_LOCAL_SYNC, true);
+                hasLoadedDataLocally = true;
             }
             startService(intent);
         } else {
@@ -231,7 +233,9 @@ public class MainActivity extends BaseActivity {
                     if (EulaHelper.hasAcceptedEula(getActivity().getApplicationContext()) && !hasSyncError) {
                         appHelper.showToastText(R.string.toast_sync_finished, Toast.LENGTH_SHORT);
                     }
-                    finalizeLoadingData(getActivity().getApplicationContext());
+                    if (!hasLoadedDataLocally) {
+                        finalizeLoadingData(getActivity().getApplicationContext());
+                    }
 
                     break;
                 }
