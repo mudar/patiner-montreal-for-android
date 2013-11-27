@@ -179,15 +179,13 @@ public class MainActivity extends BaseActivity {
      * receiver to the service.
      */
     private void startRinkConditionsService() {
-
-        // TODO Move this to a sync service listener.
-        if (!hasLoadedData
-                && (mSyncStatusUpdaterFragment != null)
-                && ConnectionHelper.hasConnection(this)) {
-
+        if (!hasLoadedData && (mSyncStatusUpdaterFragment != null)) {
             Intent intent = new Intent(Intent.ACTION_SYNC, null, getApplicationContext(),
                     SyncService.class);
             intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, mSyncStatusUpdaterFragment.mReceiver);
+            if (!ConnectionHelper.hasConnection(this)) {
+                intent.putExtra(Const.INTENT_EXTRA_ASSETS_SYNC, true);
+            }
             startService(intent);
         } else {
             triggerRefresh(mSyncStatusUpdaterFragment.mReceiver, false);

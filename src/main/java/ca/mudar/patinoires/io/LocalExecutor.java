@@ -22,19 +22,19 @@
 
 package ca.mudar.patinoires.io;
 
-import ca.mudar.patinoires.io.XmlHandler.HandlerException;
-import ca.mudar.patinoires.utils.ParserUtils;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 
+import org.json.JSONTokener;
+import org.xmlpull.v1.XmlPullParser;
+
 import java.io.IOException;
 import java.io.InputStream;
+
+import ca.mudar.patinoires.io.XmlHandler.HandlerException;
+import ca.mudar.patinoires.utils.ParserUtils;
 
 /**
  * Opens a local {@link Resources#getXml(int)} and passes the resulting
@@ -49,16 +49,14 @@ public class LocalExecutor {
         mResolver = resolver;
     }
 
-    public void execute(Context context, String assetName, XmlHandler handler)
+    public void execute(Context context, String assetName, JsonHandler handler)
             throws HandlerException {
         try {
             final InputStream input = context.getAssets().open(assetName);
-            final XmlPullParser parser = ParserUtils.newXmlPullParser(input);
+            final JSONTokener parser = ParserUtils.newJsonTokenerParser(input);
             handler.parseAndApply(parser, mResolver);
         } catch (HandlerException e) {
             throw e;
-        } catch (XmlPullParserException e) {
-            throw new HandlerException("Problem parsing local asset: " + assetName, e);
         } catch (IOException e) {
             throw new HandlerException("Problem parsing local asset: " + assetName, e);
         }

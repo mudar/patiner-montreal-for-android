@@ -166,9 +166,8 @@ public class SyncService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        // Log.v(TAG, "onHandleIntent");
-
         boolean doUpdate = intent.getBooleanExtra(Const.INTENT_EXTRA_FORCE_UPDATE, false);
+        boolean hasLocalExecutor = intent.getBooleanExtra(Const.INTENT_EXTRA_ASSETS_SYNC, false);
         boolean isIgnored = false;
 
         final ResultReceiver receiver = intent.getParcelableExtra(EXTRA_STATUS_RECEIVER);
@@ -182,37 +181,38 @@ public class SyncService extends IntentService {
             // Bulk of sync work, performed by executing several fetches from
             // local and online sources.
 
-            final long startLocal = System.currentTimeMillis();
+            final long startTime = System.currentTimeMillis();
 
-            /**
-             * Five Assets files to load, so progress goes by 20%.
-             */
             Bundle bundle = new Bundle();
+            // Five Assets files to load, so progress goes by 20 %.
 //            bundle.putInt(Const.KEY_BUNDLE_PROGRESS_INCREMENT, 20);
-
-            // Parse values from local cache first, since SecurityServices copy
-            // or network might be down.
 
             if (receiver != null) {
                 receiver.send(STATUS_RUNNING, bundle);
             }
-            // mLocalExecutor.execute(context, KmlLocalAssets.FIRE_HALLS,
-            // new RemotePlacemarksHandler(FireHalls.CONTENT_URI, true));
 
-            // Log.v(TAG, "Local sync duration: " + (System.currentTimeMillis()
-            // - startLocal) + " ms");
+            if (hasLocalExecutor || mAppHelper.getLastUpdateLocations() < System.currentTimeMillis() - Const.MILLISECONDS_FIVE_DAYS) {
+                /**
+                 * Load boroughs, parks and rinks data.
+                 * Conditions could be missing.
+                 */
 
-            // TODO: update data from remote source
-            // Always hit remote SecurityServices for any updates
-            final long startRemote = System.currentTimeMillis();
-
-            if (mAppHelper.getLastUpdateLocations() < System.currentTimeMillis()
-                    - Const.MILLISECONDS_FIVE_DAYS) {
-                mRemoteExecutor.executeGet(Const.URL_JSON_INITIAL_IMPORT,
-                        new RemoteRinksHandler(RinksContract.CONTENT_AUTHORITY));
+                if (hasLocalExecutor) {
+                    /**
+                     * Load data from local JSON asset.
+                     * Called on initial app start when no access to remote data.
+                     */
+                    mLocalExecutor.execute(context, Const.LocalAssets.RINKS_DATA,
+                            new RemoteRinksHandler(RinksContract.CONTENT_AUTHORITY));
+                } else {
+                    /**
+                     * Sync runks data from remote server.
+                     */
+                    mRemoteExecutor.executeGet(Const.URL_JSON_INITIAL_IMPORT,
+                            new RemoteRinksHandler(RinksContract.CONTENT_AUTHORITY));
+                }
 
                 mAppHelper.setLastUpdateLocations();
-
                 Intent updateIntent = new Intent(context, DistanceUpdateService.class);
                 context.startService(updateIntent);
             } else if (doUpdate || (mAppHelper.getLastUpdateConditions() < System.currentTimeMillis()
@@ -224,7 +224,7 @@ public class SyncService extends IntentService {
                 isIgnored = true;
             }
 
-            Log.v(TAG, "Remote sync took " + (System.currentTimeMillis() - startRemote) + "ms");
+            Log.v(TAG, "Sync duration: " + (System.currentTimeMillis() - startTime) + "ms");
 
         } catch (Exception e) {
             e.printStackTrace();
