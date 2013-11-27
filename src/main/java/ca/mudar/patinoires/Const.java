@@ -33,7 +33,6 @@ public class Const {
     public static final String URL_JSON_CONDITIONS_UPDATES = "http://patinermontreal.ca/conditions.json";
     public static final String URL_GMAPS_DIRECTIONS = "http://maps.google.com/maps?saddr=%s&daddr=%s&dirflg=r";
     public static final String URL_PLAYSTORE = "http://play.google.com/store/apps/details?id=ca.mudar.patinoires";
-
     public static final int TABS_INDEX_SKATING = 0x0;
     public static final int TABS_INDEX_HOCKEY = 0x1;
     public static final int TABS_INDEX_ALL = 0x2;
@@ -75,6 +74,7 @@ public class Const {
     public static final String INTENT_EXTRA_ID_RINK = "id_rink";
     public static final String INTENT_EXTRA_URL_PATH_FR = "patinoires";
     public static final String INTENT_EXTRA_URL_PATH_EN = "rinks";
+    public static final String INTENT_EXTRA_ASSETS_SYNC = "sync_assets";
     public static final int INTENT_REQ_CODE_EULA = 0x10;
     public static final String TAG_FRAGMENT_LIST = "tag_fragment_list";
     public static final String TAG_FRAGMENT_MAP = "tag_fragment_map";
@@ -94,15 +94,13 @@ public class Const {
     public static final long MILLISECONDS_TWO_HOURS = 7200000; // 1000*60*60*2
     public static final long MILLISECONDS_FOUR_HOURS = 14400000; // 1000*60*60*4
     public static final long MILLISECONDS_FIVE_DAYS = 432000000; // 1000*60*60*24*5
+    public static final String LINE_SEPARATOR = System.getProperty("line.separator");
     public static boolean SUPPORTS_JELLYBEAN = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
     public static boolean SUPPORTS_ICECREAMSANDWICH = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
     public static boolean SUPPORTS_HONEYCOMB = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     //    The following are useless based on minSdkVersion
     public static boolean SUPPORTS_GINGERBREAD = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD;
     public static boolean SUPPORTS_FROYO = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
-
-    public static final String LINE_SEPARATOR = System.getProperty("line.separator");
-
     /**
      * Location constants. Copied from
      * com.radioactiveyak.location_best_practices
@@ -132,6 +130,7 @@ public class Const {
     // Assets
     public static interface LocalAssets {
         final String LICENSE = "gpl-3.0-standalone.html";
+        final String RINKS_DATA = "rinks.json";
     }
 
     // Search
@@ -174,7 +173,6 @@ public class Const {
         final String CONDITIONS_SHOW_BAD = "prefs_show_bad";
         final String CONDITIONS_SHOW_CLOSED = "prefs_show_closed";
         final String CONDITIONS_SHOW_UNKNOWN = "prefs_show_unknown";
-//        final String LAST_FAST_UPDATE = "lastFastUpdateTime";
         final String HAS_ACCEPTED_EULA = "accepted_eula"; // maintain old prefs name
     }
 
