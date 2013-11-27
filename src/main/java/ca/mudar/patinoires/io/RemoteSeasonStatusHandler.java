@@ -25,7 +25,6 @@ package ca.mudar.patinoires.io;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,16 +44,11 @@ public class RemoteSeasonStatusHandler extends JsonHandler {
 
     @Override
     public boolean parse(JSONTokener jsonTokener) throws JSONException, IOException {
-        Log.v(TAG, "parse");
-
         JSONObject seasonInfo = new JSONObject(jsonTokener);
 
         final boolean isMaintenance = seasonInfo.optBoolean(RemoteTags.MAINTENANCE, false);
         final String seasonStatus = seasonInfo.optString(RemoteTags.SEASON, RemoteValues.SEASON_ON);
         final boolean isSeasonOn = seasonStatus.toLowerCase(Locale.US).equals(RemoteValues.SEASON_ON);
-
-        Log.v(TAG, "isMaintenance = " + isMaintenance);
-        Log.v(TAG, "seasonStatus = " + seasonStatus);
 
         return (isSeasonOn && !isMaintenance);
     }
