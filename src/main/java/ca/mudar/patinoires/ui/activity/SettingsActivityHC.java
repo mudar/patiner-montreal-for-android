@@ -53,6 +53,12 @@ public class SettingsActivityHC extends PreferenceActivity {
     protected static final String TAG = "MyPreferenceActivityHC";
     private PatinoiresApp mAppHelper;
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    @Override
+    protected boolean isValidFragment(String fragmentName) {
+        return SettingsFragment.class.getName().equals(fragmentName);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +107,7 @@ public class SettingsActivityHC extends PreferenceActivity {
      * language. This does not override the parent function because the Manifest
      * does not include configChanges.
      */
-    protected void onConfigurationChanged(String lg) {
+    private void onConfigurationChanged(String lg) {
 
         mAppHelper.setLanguage(lg);
         mAppHelper.updateUiLanguage();
@@ -118,10 +124,10 @@ public class SettingsActivityHC extends PreferenceActivity {
     public static class SettingsFragment extends PreferenceFragment implements
             OnSharedPreferenceChangeListener {
 
-        protected SharedPreferences mSharedPrefs;
         ListPreference tUnits;
         ListPreference tListSort;
         ListPreference tLanguage;
+        private SharedPreferences mSharedPrefs;
         private PatinoiresApp mAppHelper;
 
         @Override
@@ -245,6 +251,5 @@ public class SettingsActivityHC extends PreferenceActivity {
                 }
             }
         }
-
     }
 }
