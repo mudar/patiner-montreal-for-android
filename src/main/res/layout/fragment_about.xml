@@ -74,6 +74,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="@dimen/paddingLarge"
                 android:contentDescription="@string/logo_open_data_content_desc"
+                android:paddingLeft="@dimen/paddingMedium"
                 android:src="@string/logo_open_data" />
 
             <TextView
@@ -90,6 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/about_contents_credits_1"
+                android:layout_toLeftOf="@+id/about_image"
                 android:linksClickable="true"
                 android:paddingBottom="@dimen/paddingMedium"
                 android:text="@string/about_contents_credits_2" />
@@ -100,6 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/about_contents_credits_2"
                 android:linksClickable="true"
+                android:paddingBottom="@dimen/paddingMedium"
                 android:text="@string/about_contents_credits_3" />
 
             <TextView
