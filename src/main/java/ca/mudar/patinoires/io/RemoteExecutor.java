@@ -22,8 +22,7 @@
 
 package ca.mudar.patinoires.io;
 
-import ca.mudar.patinoires.io.XmlHandler.HandlerException;
-import ca.mudar.patinoires.utils.ParserUtils;
+import android.content.ContentResolver;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -34,10 +33,11 @@ import org.json.JSONTokener;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.content.ContentResolver;
-
 import java.io.IOException;
 import java.io.InputStream;
+
+import ca.mudar.patinoires.io.XmlHandler.HandlerException;
+import ca.mudar.patinoires.utils.ParserUtils;
 
 /**
  * Executes an {@link HttpUriRequest} and passes the result as an
@@ -121,6 +121,35 @@ public class RemoteExecutor {
             throw new HandlerException("Problem reading remote response for "
                     + request.getRequestLine(), e);
         }
+    }
 
+    public boolean executeCheck(String url, JsonHandler handler) throws HandlerException {
+        final HttpUriRequest request = new HttpGet(url);
+        boolean remoteResult = false;
+
+        try {
+            final HttpResponse resp = mHttpClient.execute(request);
+            final int status = resp.getStatusLine().getStatusCode();
+            if (status != HttpStatus.SC_OK) {
+                throw new HandlerException("Unexpected server response " + resp.getStatusLine()
+                        + " for " + request.getRequestLine());
+            }
+
+            final InputStream input = resp.getEntity().getContent();
+            try {
+                final JSONTokener parser = ParserUtils.newJsonTokenerParser(input);
+                remoteResult = handler.parseAndCheck(parser);
+            } finally {
+                if (input != null)
+                    input.close();
+            }
+        } catch (HandlerException e) {
+            throw e;
+        } catch (IOException e) {
+            throw new HandlerException("Problem reading remote response for "
+                    + request.getRequestLine(), e);
+        }
+
+        return remoteResult;
     }
 }

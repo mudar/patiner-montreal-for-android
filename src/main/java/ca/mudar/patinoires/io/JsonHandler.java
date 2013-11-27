@@ -27,15 +27,15 @@
 
 package ca.mudar.patinoires.io;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONTokener;
-
 import android.content.ContentProvider;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.OperationApplicationException;
 import android.os.RemoteException;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONTokener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,12 +45,11 @@ import java.util.ArrayList;
  * set of {@link ContentProviderOperation}. It catches exceptions and rethrows
  * them as {@link JSONHandlerException}. Any local {@link ContentProvider}
  * exceptions are considered unrecoverable.
- * <p>
+ * <p/>
  * This class is only designed to handle simple one-way synchronization.
  */
 public abstract class JsonHandler {
     private static final String TAG = "JSONHandler";
-
     private final String mAuthority;
 
     public JsonHandler(String authority) {
@@ -78,13 +77,27 @@ public abstract class JsonHandler {
         }
     }
 
+    public boolean parseAndCheck(JSONTokener jsonTokener) throws JsonHandlerException {
+        try {
+            return parse(jsonTokener);
+        } catch (IOException e) {
+            throw new JsonHandlerException("Problem reading response", e);
+        } catch (JSONException e) {
+            throw new JsonHandlerException("Problem parsing JSON response", e);
+        }
+    }
+
     /**
      * Parse the given {@link JSONTokener}, returning a set of
      * {@link ContentProviderOperation} that will bring the
      * {@link ContentProvider} into sync with the parsed data.
      */
     public abstract ArrayList<ContentProviderOperation> parse(JSONTokener jsonTokener,
-            ContentResolver resolver) throws JSONException, IOException;
+                                                              ContentResolver resolver) throws JSONException, IOException;
+
+    public boolean parse(JSONTokener jsonTokener) throws JSONException, IOException {
+        return false;
+    }
 
     /**
      * General {@link IOException} that indicates a problem occurred while

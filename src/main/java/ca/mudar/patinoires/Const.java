@@ -29,6 +29,7 @@ import android.os.Build;
 public class Const {
 
     public static final String APP_PREFS_NAME = "PatinoiresPrefsFile";
+    public static final String URL_JSON_SEASON_STATUS = "http://patinermontreal.ca/season.json";
     public static final String URL_JSON_INITIAL_IMPORT = "http://patinermontreal.ca/data.json";
     public static final String URL_JSON_CONDITIONS_UPDATES = "http://patinermontreal.ca/conditions.json";
     public static final String URL_GMAPS_DIRECTIONS = "http://maps.google.com/maps?saddr=%s&daddr=%s&dirflg=r";
@@ -173,6 +174,7 @@ public class Const {
         final String CONDITIONS_SHOW_BAD = "prefs_show_bad";
         final String CONDITIONS_SHOW_CLOSED = "prefs_show_closed";
         final String CONDITIONS_SHOW_UNKNOWN = "prefs_show_unknown";
+        final String IS_SEASON_OVER = "prefs_season_over";
         final String HAS_ACCEPTED_EULA = "accepted_eula"; // maintain old prefs name
     }
 

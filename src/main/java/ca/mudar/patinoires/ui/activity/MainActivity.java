@@ -231,7 +231,11 @@ public class MainActivity extends BaseActivity {
 
                     // TODO put this in an activity listener
                     if (EulaHelper.hasAcceptedEula(getActivity().getApplicationContext()) && !hasSyncError) {
-                        appHelper.showToastText(R.string.toast_sync_finished, Toast.LENGTH_SHORT);
+                        if (appHelper.isSeasonOver()) {
+                            appHelper.showToastText(R.string.toast_season_over, Toast.LENGTH_LONG);
+                        } else {
+                            appHelper.showToastText(R.string.toast_sync_finished, Toast.LENGTH_SHORT);
+                        }
                     }
                     if (!hasLoadedDataLocally) {
                         finalizeLoadingData(getActivity().getApplicationContext());

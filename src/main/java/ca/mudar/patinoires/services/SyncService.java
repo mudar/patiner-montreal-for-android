@@ -64,6 +64,7 @@ import ca.mudar.patinoires.io.LocalExecutor;
 import ca.mudar.patinoires.io.RemoteConditionsUpdatesHandler;
 import ca.mudar.patinoires.io.RemoteExecutor;
 import ca.mudar.patinoires.io.RemoteRinksHandler;
+import ca.mudar.patinoires.io.RemoteSeasonStatusHandler;
 import ca.mudar.patinoires.providers.RinksContract;
 
 /**
@@ -191,6 +192,8 @@ public class SyncService extends IntentService {
                 receiver.send(STATUS_RUNNING, bundle);
             }
 
+            boolean hasVerifySeasonStatus = false;
+
             if (hasLocalExecutor || mAppHelper.getLastUpdateLocations() < System.currentTimeMillis() - Const.MILLISECONDS_FIVE_DAYS) {
                 /**
                  * Load boroughs, parks and rinks data.
@@ -216,13 +219,29 @@ public class SyncService extends IntentService {
 
                 Intent updateIntent = new Intent(context, DistanceUpdateService.class);
                 context.startService(updateIntent);
-            } else if (doUpdate || (mAppHelper.getLastUpdateConditions() < System.currentTimeMillis()
-                    - Const.MILLISECONDS_FOUR_HOURS)) {
+
+                hasVerifySeasonStatus = true;
+            } else if (doUpdate
+                    || (mAppHelper.getLastUpdateConditions() < System.currentTimeMillis() - Const.MILLISECONDS_FOUR_HOURS)) {
                 mRemoteExecutor.executeGet(Const.URL_JSON_CONDITIONS_UPDATES,
                         new RemoteConditionsUpdatesHandler(RinksContract.CONTENT_AUTHORITY));
                 mAppHelper.setLastUpdateConditions();
+
+                if (mAppHelper.isSeasonOver()) {
+                    // Agressive check for season start, relaxed for the end of the season.
+                    hasVerifySeasonStatus = true;
+                }
             } else {
                 isIgnored = true;
+            }
+
+            if (hasVerifySeasonStatus) {
+                /**
+                 * Verify season status
+                 */
+                boolean isSeasonOn = mRemoteExecutor.executeCheck(Const.URL_JSON_SEASON_STATUS,
+                        new RemoteSeasonStatusHandler(null));
+                mAppHelper.setSeasonOver(!isSeasonOn);
             }
 
             Log.v(TAG, "Sync duration: " + (System.currentTimeMillis() - startTime) + "ms");

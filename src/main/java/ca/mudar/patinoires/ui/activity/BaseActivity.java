@@ -34,6 +34,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.PatinoiresApp;
@@ -54,7 +55,7 @@ public class BaseActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         final ActionBar ab = getSupportActionBar();
-        if ((Activity) this instanceof MainActivity) {
+        if (this instanceof MainActivity) {
             ab.setHomeButtonEnabled(false);
             ab.setDisplayHomeAsUpEnabled(false);
         } else {
@@ -134,7 +135,9 @@ public class BaseActivity extends ActionBarActivity {
                 getApplicationContext(),
                 SyncService.class);
         intent.putExtra(Const.INTENT_EXTRA_FORCE_UPDATE, forceUpdate);
-        if (receiver != null) {
+        if (forceUpdate && ((PatinoiresApp) getApplicationContext()).isSeasonOver()) {
+            ((PatinoiresApp) getApplicationContext()).showToastText(R.string.toast_season_over, Toast.LENGTH_SHORT);
+        } else if (receiver != null) {
             intent.putExtra(SyncService.EXTRA_STATUS_RECEIVER, receiver);
         }
         startService(intent);

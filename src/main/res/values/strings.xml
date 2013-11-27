@@ -117,6 +117,7 @@
     <string name="toast_sync_error_debug">Sync error: %s</string>
     <string name="toast_sync_error">Server connection error!</string>
     <string name="toast_sync_finished">Update completed successfully</string>
+    <string name="toast_season_over">The season is over… Will be back next Winter!</string>
     <string name="toast_playservices_restart">Restarting Patiner Montréal… Google Play services successfully update!</string>
     <string name="toast_postal_code_processing">Processing…</string>
     <string name="toast_search_error">Location %1$s not found</string>

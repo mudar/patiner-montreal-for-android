@@ -40,7 +40,8 @@ import ca.mudar.patinoires.services.DistanceUpdateService;
 
 public class PatinoiresApp extends Application {
     protected static final String TAG = "AppHelper";
-
+    // TODO: verify possible memory leakage of the following code
+    private static PatinoiresApp instance = null;
     // TODO Verify need for a global variable for mLocation since it's mainly in
     // the preferences.
     private Location mLocation;
@@ -51,11 +52,9 @@ public class PatinoiresApp extends Application {
     private String mLanguage;
     private Toast mToast;
     private boolean[] conditionsFilter = new boolean[5];
+    private boolean mIsSeasonOver;
     private SharedPreferences prefs;
     private Editor prefsEditor;
-
-    // TODO: verify possible memory leakage of the following code
-    private static PatinoiresApp instance = null;
 
     public static PatinoiresApp getInstance() {
         checkInstance();
@@ -88,6 +87,8 @@ public class PatinoiresApp extends Application {
         if (!mLanguage.equals(PrefsValues.LANG_EN) && !mLanguage.equals(PrefsValues.LANG_FR)) {
             mLanguage = PrefsValues.LANG_EN;
         }
+
+        mIsSeasonOver = prefs.getBoolean(PrefsNames.IS_SEASON_OVER, false);
 
         /**
          * Display/hide rinks based on their condition
@@ -260,4 +261,14 @@ public class PatinoiresApp extends Application {
         this.conditionsFilter[index] = condition;
     }
 
+    public boolean isSeasonOver() {
+        return mIsSeasonOver;
+    }
+
+    public void setSeasonOver(boolean isSeasonOver) {
+        mIsSeasonOver = isSeasonOver;
+
+        prefsEditor.putBoolean(PrefsNames.IS_SEASON_OVER, isSeasonOver);
+        prefsEditor.commit();
+    }
 }
