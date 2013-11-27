@@ -210,9 +210,10 @@ public class SyncService extends IntentService {
                      */
                     mRemoteExecutor.executeGet(Const.URL_JSON_INITIAL_IMPORT,
                             new RemoteRinksHandler(RinksContract.CONTENT_AUTHORITY));
+
+                    mAppHelper.setLastUpdateLocations();
                 }
 
-                mAppHelper.setLastUpdateLocations();
                 Intent updateIntent = new Intent(context, DistanceUpdateService.class);
                 context.startService(updateIntent);
             } else if (doUpdate || (mAppHelper.getLastUpdateConditions() < System.currentTimeMillis()
