@@ -200,6 +200,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ca.mudar.patinoires.ui.activity.MainActivity" />
         </activity>
+        <activity
+            android:name="ca.mudar.patinoires.ui.activity.SettingsNestedActivityHC"
+            android:exported="false"
+            android:label="@string/app_name_preferences"
+            android:parentActivityName="ca.mudar.patinoires.ui.activity.SettingsActivityHC"
+            android:theme="@style/PreferencesTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mudar.patinoires.ui.activity.SettingsActivityHC" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
         <activity
             android:name="ca.mudar.patinoires.ui.activity.SearchableActivity"

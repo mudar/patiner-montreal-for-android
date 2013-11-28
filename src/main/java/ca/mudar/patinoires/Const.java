@@ -164,6 +164,7 @@ public class Const {
         final String UNITS_SYSTEM = "prefs_units_system";
         final String LIST_SORT = "prefs_list_sort_by";
         final String FOLLOW_LOCATION_CHANGES = "prefs_follow_location_changes";
+        final String SYSTEM_WIDGET_SETTINGS = "prefs_system_widget_settings";
         final String LAST_UPDATE_TIME_LOCATIONS = "prefs_last_update_time_locations";
         final String LAST_UPDATE_TIME_CONDITIONS = "prefs_last_update_time_conditions";
         final String LAST_UPDATE_TIME_GEO = "prefs_last_update_time_geo";

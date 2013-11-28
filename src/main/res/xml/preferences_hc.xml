@@ -29,29 +29,9 @@
             android:key="prefs_conditions"
             android:summary="@string/prefs_condition_summary"
             android:title="@string/prefs_condition_title">
-            <PreferenceCategory android:title="@string/prefs_category_conditions">
-
-                <CheckBoxPreference
-                    android:defaultValue="true"
-                    android:key="prefs_show_excellent"
-                    android:title="@string/prefs_condition_excellent" />
-                <CheckBoxPreference
-                    android:defaultValue="true"
-                    android:key="prefs_show_good"
-                    android:title="@string/prefs_condition_good" />
-                <CheckBoxPreference
-                    android:defaultValue="true"
-                    android:key="prefs_show_bad"
-                    android:title="@string/prefs_condition_bad" />
-                <CheckBoxPreference
-                    android:defaultValue="true"
-                    android:key="prefs_show_closed"
-                    android:title="@string/prefs_condition_closed" />
-                <CheckBoxPreference
-                    android:defaultValue="true"
-                    android:key="prefs_show_unknown"
-                    android:title="@string/prefs_condition_unknown" />
-            </PreferenceCategory>
+            <intent android:action="android.intent.action.VIEW"
+                android:targetPackage="ca.mudar.patinoires"
+                android:targetClass="ca.mudar.patinoires.ui.activity.SettingsNestedActivityHC"/>
         </PreferenceScreen>
 
         <ListPreference

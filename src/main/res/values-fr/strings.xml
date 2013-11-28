@@ -144,6 +144,7 @@
     <!-- Prefs -->
     <string name="prefs_category_general">Paramètres généraux</string>
     <string name="prefs_category_performance">Performance</string>
+    <string name="prefs_category_extras">Extras</string>
     <string name="prefs_language_title">Langue</string>
     <string name="prefs_language_summary">Changer la langue de l’interface</string>
     <string name="prefs_language_dialog_title">Choix de langue</string>
@@ -162,6 +163,8 @@
     <string name="prefs_list_sort_distance">Distance</string>
     <string name="prefs_follow_location_title">Optimiser les mesures</string>
     <string name="prefs_follow_location_summary">Expérimental : actualisation en arrière-plan de la position géographique. Utile en déplacement.</string>
+    <string name="prefs_system_widget_title">Ajouter le widget</string>
+    <string name="prefs_system_widget_summary">À venir bientôt: les conditions de vos patinoires préférées sur l’écran d’accueil.</string>
     <string name="menu_gmaps_directions">Itinéraire</string>
     <string name="dialog_title_maps_chooser">Afficher l’itinéraire STM avec</string>
     <string name="accessibility_ic_close">Fermer</string>

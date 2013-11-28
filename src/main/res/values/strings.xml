@@ -144,6 +144,7 @@
     <!-- Prefs -->
     <string name="prefs_category_general">General Preferences</string>
     <string name="prefs_category_performance">Performance</string>
+    <string name="prefs_category_extras">Extras</string>
     <string name="prefs_language_title">Language</string>
     <string name="prefs_language_summary">Change the interface language</string>
     <string name="prefs_language_dialog_title">Set language</string>
@@ -162,6 +163,8 @@
     <string name="prefs_list_sort_distance">Distance</string>
     <string name="prefs_follow_location_title">Enhanced measurements</string>
     <string name="prefs_follow_location_summary">Experimental: Background location updates. Useful if on the move.</string>
+    <string name="prefs_system_widget_title">Add widget</string>
+    <string name="prefs_system_widget_summary">Coming soon: Conditions of your favorite rinks on the home screen.</string>
     <string name="menu_gmaps_directions">Directions</string>
     <string name="dialog_title_maps_chooser">Get STM itinerary using</string>
     <string name="accessibility_ic_close">Close</string>
