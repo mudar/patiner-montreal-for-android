@@ -148,7 +148,7 @@ public class MapClickListener implements
                 RinksContract.RinksColumns.RINK_DESC_FR,
                 RinksContract.RinksColumns.RINK_DESC_EN,
                 RinksContract.RinksColumns.RINK_CONDITION,
-                // RinksColumns.RINK_IS_FAVORITE
+                RinksContract.RinksColumns.RINK_IS_FAVORITE
         };
         // final int _ID = 0x0;
         final int RINK_ID = 0x1;
@@ -156,7 +156,7 @@ public class MapClickListener implements
         final int DESC_FR = 0x3;
         final int DESC_EN = 0x4;
         final int CONDITION = 0x5;
-        // final int IS_FAVORITE = 0x6;
+        final int IS_FAVORITE = 0x6;
     }
 
     private static class DialogListItemRink {
