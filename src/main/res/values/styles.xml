@@ -106,6 +106,8 @@
 
     <style name="ListItemTitle" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">@color/body_text_1</item>
+        <item name="android:paddingLeft">@dimen/paddingMedium</item>
+        <item name="android:paddingRight">@dimen/paddingMedium</item>
     </style>
 
     <style name="ListItemSummary" parent="@android:style/TextAppearance.Small">
