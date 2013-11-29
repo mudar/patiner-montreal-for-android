@@ -13,16 +13,28 @@ repositories {
 }
 
 android {
-    compileSdkVersion "Google Inc.:Google APIs:19"
+    compileSdkVersion 19
     buildToolsVersion "19.0.0"
 
     defaultConfig {
         minSdkVersion 10
         targetSdkVersion 19
     }
+    buildTypes {
+        release {
+            runProguard true
+            proguardFile getDefaultProguardFile('proguard-android-optimize.txt')
+        }
+    }
+    productFlavors {
+        defaultFlavor {
+            proguardFile 'proguard-rules.txt'
+        }
+    }
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:19.0.0'
+	compile 'com.android.support:support-v4:19.0.0'
+	compile 'com.android.support:appcompat-v7:19.0.0'
     compile 'com.google.android.gms:play-services:4.0.30'
 }
