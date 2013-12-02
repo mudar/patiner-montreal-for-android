@@ -121,7 +121,7 @@ public class SearchFragment extends ListFragment implements
                         RinksContract.RinksColumns.RINK_ID
                 },
                 new int[]{
-                        R.id.rink_name, R.id.rink_address, R.id.rink_distance
+                        R.id.rink_name, R.id.rink_desc, R.id.rink_distance
                 },
                 0, false);
         setListAdapter(mAdapter);
@@ -188,7 +188,7 @@ public class SearchFragment extends ListFragment implements
             if (query.isEmpty()) {
                 mEmptyListView.setText(R.string.search_listview_hint);
             } else {
-                mEmptyListView.setText(R.string.empty_list_Search);
+                mEmptyListView.setText(R.string.empty_list_search);
                 refreshRinksList(query);
                 return true;
             }

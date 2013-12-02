@@ -48,7 +48,7 @@
         android:scrollHorizontally="true" />
 
     <TextView
-        android:id="@+id/rink_address"
+        android:id="@+id/rink_desc"
         style="@style/ListItemSummary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

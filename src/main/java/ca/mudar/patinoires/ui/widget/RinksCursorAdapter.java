@@ -44,7 +44,7 @@ import ca.mudar.patinoires.ui.view.IMultiChoiceModeAdapter;
 import ca.mudar.patinoires.utils.Helper;
 
 public class RinksCursorAdapter extends SimpleCursorAdapter implements SectionIndexer, IMultiChoiceModeAdapter {
-    protected static final String TAG = "RinksCursorAdapter";
+    private static final String TAG = "RinksCursorAdapter";
     private final int bgSelected;
     private AlphabetIndexer mIndexer;
     private boolean hasIndexer;

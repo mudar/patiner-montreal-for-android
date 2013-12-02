@@ -77,6 +77,7 @@ public class Const {
     public static final String INTENT_EXTRA_URL_PATH_EN = "rinks";
     public static final String INTENT_EXTRA_LOCAL_SYNC = "sync_assets";
     public static final int INTENT_REQ_CODE_EULA = 0x10;
+    public static final String INTENT_ACTION_WIDGET_RINK = "ca.mudar.patinoires.widget_rink";
     public static final String TAG_FRAGMENT_LIST = "tag_fragment_list";
     public static final String TAG_FRAGMENT_MAP = "tag_fragment_map";
     public static final String TAG_FRAGMENT_SEARCH = "tag_fragment_search";

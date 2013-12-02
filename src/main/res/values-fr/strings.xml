@@ -33,6 +33,7 @@
     <string name="app_name_manifest">Patiner Montreal</string>
     <string name="app_name_about">À propos de Patiner Montréal</string>
     <string name="app_name_eula">Licence</string>
+    <string name="app_name_widget">Patiner MTL - favoris</string>
     <string name="menu_about">À propos</string>
     <string name="menu_preferences">Paramètres</string>
     <string name="menu_refresh">Rafraîchir</string>
@@ -59,7 +60,8 @@
     <string name="btn_favorites">Favoris</string>
     <string name="empty_list">Aucune patinoire trouvée…</string>
     <string name="empty_list_favorites">La liste des favoris est vide. Sauvegardez vos patinoires préférées ici pour y accéder plus rapidement…</string>
-    <string name="empty_list_Search">Aucun résultat trouvé…</string>
+    <string name="empty_list_search">Aucun résultat trouvé…</string>
+    <string name="empty_list_widget">La liste des favoris est vide. Sauvegardez vos patinoires préférées ici pour y accéder plus rapidement…</string>
     <string name="tab_favorites">Favoris</string>
     <string name="tab_skating">Patinage</string>
     <string name="tab_hockey">Hockey</string>

@@ -111,7 +111,7 @@ public class BaseActivity extends ActionBarActivity {
 //    }
 
     /**
-     * Display the Map
+     * Display Rink Details
      */
     public final void goRinkDetails(int id) {
 

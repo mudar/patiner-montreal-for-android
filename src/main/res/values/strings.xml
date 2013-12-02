@@ -32,6 +32,7 @@
     <string name="app_name_manifest">Patiner Montréal</string>
     <string name="app_name_about">About Patiner Montréal</string>
     <string name="app_name_eula">EULA</string>
+    <string name="app_name_widget">Patiner MTL Favorites</string>
     <string name="menu_about">About</string>
     <string name="menu_preferences">Settings</string>
     <string name="menu_refresh">Refresh</string>
@@ -58,7 +59,8 @@
     <string name="btn_favorites">Favorites</string>
     <string name="empty_list">No rinks found…</string>
     <string name="empty_list_favorites">Favorites list is empty. Store your favorite rinks here for faster access…</string>
-    <string name="empty_list_Search">No results found…</string>
+    <string name="empty_list_search">No results found…</string>
+    <string name="empty_list_widget">Favorites list is empty. Store your favorite rinks here for faster access…</string>
     <string name="tab_favorites">Favorites</string>
     <string name="tab_skating">Skating</string>
     <string name="tab_hockey">Hockey</string>

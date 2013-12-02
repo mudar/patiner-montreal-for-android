@@ -139,7 +139,7 @@ public abstract class BaseListFragment extends ListFragment implements
                         RinksColumns.RINK_ID
                 },
                 new int[]{
-                        R.id.rink_name, R.id.rink_address, R.id.rink_distance
+                        R.id.rink_name, R.id.rink_desc, R.id.rink_distance
                 },
                 0, hasIndexer);
 

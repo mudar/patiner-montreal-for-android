@@ -54,4 +54,9 @@
     <!--Tablets-->
     <dimen name="root_horizontal_margin">0dp</dimen>
     <dimen name="listview_horizontal_margin">8dp</dimen>
+    <!--Widget-->
+    <dimen name="widget_margin">8dp</dimen>
+    <dimen name="widget_inner_height">56dp</dimen>
+    <dimen name="widget_min_height">40dp</dimen>
+    <dimen name="widget_min_width">180dp</dimen>
 </resources>

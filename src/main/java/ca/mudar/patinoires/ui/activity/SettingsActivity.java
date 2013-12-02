@@ -29,10 +29,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceScreen;
-import android.provider.Settings;
 import android.widget.Toast;
 
 import java.util.Locale;
@@ -70,18 +67,6 @@ public class SettingsActivity extends PreferenceActivity implements
         tUnits = (ListPreference) findPreference(PrefsNames.UNITS_SYSTEM);
         tListSort = (ListPreference) findPreference(PrefsNames.LIST_SORT);
         tLanguage = (ListPreference) findPreference(PrefsNames.LANGUAGE);
-
-        /**
-         * Handle the widget setting
-         */
-        final PreferenceScreen widgetPrefScreen = (PreferenceScreen) findPreference(Const.PrefsNames.SYSTEM_WIDGET_SETTINGS);
-        widgetPrefScreen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                launchWidgetSettings();
-
-                return true;
-            }
-        });
     }
 
     @Override
@@ -200,12 +185,4 @@ public class SettingsActivity extends PreferenceActivity implements
         startActivity(intent);
     }
 
-    private void launchWidgetSettings() {
-        try {
-            startActivity(new Intent(Settings.ACTION_DISPLAY_SETTINGS));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 }
