@@ -27,11 +27,11 @@ import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import ca.mudar.patinoires.Const;
@@ -41,39 +41,11 @@ import ca.mudar.patinoires.ui.activity.RinkDetailsActivity;
 
 public class FavoritesWidgetProvider extends AppWidgetProvider {
     private static final String TAG = "FavoritesWidgetProvider";
-//    public static final String TOAST_ACTION = "com.example.android.stackwidget.TOAST_ACTION";
-//    public static final String EXTRA_ITEM = "com.example.android.stackwidget.EXTRA_ITEM";
 
-    @Override
-    public void onDeleted(Context context, int[] appWidgetIds) {
-        super.onDeleted(context, appWidgetIds);
-    }
-
-    @Override
-    public void onDisabled(Context context) {
-        super.onDisabled(context);
-    }
-
-    @Override
-    public void onEnabled(Context context) {
-        super.onEnabled(context);
-    }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        Log.v(TAG, "onReceive");
-//        AppWidgetManager mgr = AppWidgetManager.getInstance(context);
-//        if (intent.getAction().equals(Const.INTENT_ACTION_WIDGET_RINK)) {
-//            int rinkId = intent.getIntExtra(Const.INTENT_EXTRA_ID_RINK, -1);
-//            context.startActivity(goRinkDetailsIntent(context, rinkId));
-//        }
-        super.onReceive(context, intent);
-    }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Log.v(TAG, "onUpdate");
 
         for (int appWidgetId : appWidgetIds) {
             /**
@@ -84,11 +56,7 @@ public class FavoritesWidgetProvider extends AppWidgetProvider {
                     .putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
             final RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.appwidget_list_home_small);
-            if (Const.SUPPORTS_ICECREAMSANDWICH) {
-                rv.setRemoteAdapter(R.id.stack_view, intent);
-            } else {
-                rv.setRemoteAdapter(appWidgetId, R.id.stack_view, intent);
-            }
+            setRemoteAdapterCompat(rv, appWidgetId, R.id.stack_view, intent);
 
             /**
              * Set the empty view to be displayed if the collection is empty.
@@ -123,6 +91,19 @@ public class FavoritesWidgetProvider extends AppWidgetProvider {
         }
 
         super.onUpdate(context, appWidgetManager, appWidgetIds);
+    }
+
+    public static ComponentName getComponentName(Context context) {
+        return new ComponentName(context, FavoritesWidgetProvider.class);
+    }
+
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    private static void setRemoteAdapterCompat(RemoteViews rv, int appWidgetId, int viewId, Intent intent) {
+        if (Const.SUPPORTS_ICECREAMSANDWICH) {
+            rv.setRemoteAdapter(R.id.stack_view, intent);
+        } else {
+            rv.setRemoteAdapter(appWidgetId, viewId, intent);
+        }
     }
 
 }

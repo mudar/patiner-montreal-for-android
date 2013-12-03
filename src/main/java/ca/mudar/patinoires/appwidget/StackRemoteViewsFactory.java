@@ -26,16 +26,15 @@ package ca.mudar.patinoires.appwidget;
 import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.PatinoiresApp;
@@ -44,13 +43,15 @@ import ca.mudar.patinoires.providers.RinksContract;
 
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
-    private static final int mCount = 10;
-    private List<WidgetItem> mWidgetItems = new ArrayList<WidgetItem>();
+public class StackRemoteViewsFactory implements
+        RemoteViewsService.RemoteViewsFactory,
+        Loader.OnLoadCompleteListener<Cursor> {
+    private static final String TAG = "StackRemoteViewsFactory";
     private Context mContext;
     private int mAppWidgetId;
-    private PatinoiresApp mAppHelper;
+    private int indexRinkDescColumn;
     private Cursor mCursor;
+    private CursorLoader mLoader;
 
     public StackRemoteViewsFactory(Context context, Intent intent) {
         mContext = context;
@@ -58,29 +59,29 @@ public class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
                 AppWidgetManager.INVALID_APPWIDGET_ID);
     }
 
+    @Override
     public void onCreate() {
-
-        mAppHelper = ((PatinoiresApp) mContext.getApplicationContext());
-        // In onCreate() you setup any connections / cursors to your data source. Heavy lifting,
-        // for example downloading or creating content etc, should be deferred to onDataSetChanged()
-        // or getViewAt(). Taking more than 20 seconds in this call will result in an ANR.
-
-        // We sleep for 3 seconds here to show how the empty view appears in the interim.
-        // The empty view is set in the StackWidgetProvider and should be a sibling of the
-        // collection view.
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        indexRinkDescColumn = FavoriteRinksQuery.RINK_DESC_FR;
+        mLoader = new CursorLoader(
+                mContext,
+                RinksContract.Rinks.CONTENT_FAVORITES_URI,
+                FavoriteRinksQuery.PROJECTION,
+                null,
+                null,
+                RinksContract.Rinks.DEFAULT_SORT);
+        // mLoader.setUpdateThrottle(500);
+        mLoader.registerListener(mAppWidgetId, this);
+        mLoader.startLoading();
     }
 
+    @Override
     public void onDestroy() {
-        if (mCursor != null) {
-            mCursor.close();
+        if (mLoader != null) {
+            mLoader.reset();
         }
     }
 
+    @Override
     public int getCount() {
         if (mCursor == null) {
             return 0;
@@ -89,8 +90,8 @@ public class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
         }
     }
 
+    @Override
     public RemoteViews getViewAt(int position) {
-
         // We construct a remote views item based on our widget item xml file, and set the
         // text based on the position.
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.appwidget_list_item);
@@ -98,7 +99,7 @@ public class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
         if (mCursor.moveToPosition(position)) {
             WidgetItem rink = new WidgetItem(
                     mCursor.getString(FavoriteRinksQuery.RINK_NAME),
-                    mCursor.getString(FavoriteRinksQuery.RINK_DESC_EN),
+                    mCursor.getString(indexRinkDescColumn),
                     mCursor.getInt(FavoriteRinksQuery.RINK_ID),
                     mCursor.getInt(FavoriteRinksQuery.RINK_KIND_ID),
                     mCursor.getInt(FavoriteRinksQuery.RINK_CONDITION)
@@ -120,32 +121,51 @@ public class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
         return rv;
     }
 
+    @Override
     public RemoteViews getLoadingView() {
-        // You can create a custom loading view (for instance when getViewAt() is slow.) If you
-        // return null here, you will get the default loading view.
         return null;
     }
 
+    @Override
     public int getViewTypeCount() {
         return 1;
     }
 
+    @Override
     public long getItemId(int position) {
         return position;
     }
 
+    @Override
     public boolean hasStableIds() {
         return true;
     }
 
+    @Override
     public void onDataSetChanged() {
-        // Refresh the cursor
-        if (mCursor != null) {
-            mCursor.close();
+    }
+
+    @Override
+    public void onLoadComplete(Loader<Cursor> loader, Cursor cursor) {
+        if (cursor == null || cursor.isClosed()) {
+            return;
         }
-        mCursor = mContext.getContentResolver().query(
-                RinksContract.Rinks.CONTENT_FAVORITES_URI,
-                FavoriteRinksQuery.PROJECTION, null, null, null);
+        mCursor = cursor;
+
+        final PatinoiresApp mAppHelper = ((PatinoiresApp) mContext.getApplicationContext());
+        indexRinkDescColumn = (mAppHelper.getLanguage().equals(Const.PrefsValues.LANG_FR)
+                ? FavoriteRinksQuery.RINK_DESC_FR :
+                FavoriteRinksQuery.RINK_DESC_EN );
+
+        AppWidgetManager widgetManager = AppWidgetManager.getInstance(mContext);
+        if (mAppWidgetId == -1) {
+            int[] ids = widgetManager.getAppWidgetIds(FavoritesWidgetProvider
+                    .getComponentName(mContext));
+
+            widgetManager.notifyAppWidgetViewDataChanged(ids, R.id.stack_view);
+        } else {
+            widgetManager.notifyAppWidgetViewDataChanged(mAppWidgetId, R.id.stack_view);
+        }
     }
 
     public static interface FavoriteRinksQuery {
@@ -159,23 +179,15 @@ public class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
                 RinksContract.RinksColumns.RINK_DESC_FR,
                 RinksContract.RinksColumns.RINK_DESC_EN,
                 RinksContract.RinksColumns.RINK_CONDITION,
-                RinksContract.RinksColumns.RINK_IS_FAVORITE,
-                RinksContract.ParksColumns.PARK_GEO_LAT,
-                RinksContract.ParksColumns.PARK_GEO_LNG,
-                RinksContract.ParksColumns.PARK_GEO_DISTANCE,
-                RinksContract.ParksColumns.PARK_PHONE
+                RinksContract.RinksColumns.RINK_IS_FAVORITE
         };
-        final int _ID = 0;
+        // final int _ID = 0;
         final int RINK_ID = 1;
         final int RINK_KIND_ID = 2;
         final int RINK_NAME = 3;
         final int RINK_DESC_FR = 4;
         final int RINK_DESC_EN = 5;
         final int RINK_CONDITION = 6;
-        final int RINK_IS_FAVORITE = 7;
-        final int PARK_GEO_LAT = 8;
-        final int PARK_GEO_LNG = 9;
-        final int PARK_GEO_DISTANCE = 10;
-        final int PARK_PHONE = 11;
+        // final int RINK_IS_FAVORITE = 7;
     }
 }

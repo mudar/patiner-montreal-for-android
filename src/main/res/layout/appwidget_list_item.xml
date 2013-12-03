@@ -58,9 +58,8 @@
             style="@style/ListItemSummary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/rink_name"
-            android:layout_alignRight="@id/rink_name"
             android:layout_below="@+id/rink_name"
+            android:layout_toRightOf="@+id/l_rink_kind_id"
             android:ellipsize="end"
             android:lines="1"
             android:scrollHorizontally="true" />

@@ -131,8 +131,7 @@ public class RinkDetailsFragment extends Fragment
         // identical data onResume
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             mRinkId = getIdFromUri(intent.getData());
-        }
-        else {
+        } else {
             mRinkId = intent.getIntExtra(Const.INTENT_EXTRA_ID_RINK, -1);
         }
         if (mRinkId == -1) {
@@ -299,7 +298,7 @@ public class RinkDetailsFragment extends Fragment
         final String phone = cursor.getString(RinksQuery.PARK_PHONE);
 
         ((TextView) mRootView.findViewById(R.id.l_park_name)).setText(name);
-        if (address.equals(name)) {
+        if ((address == null) || address.isEmpty() || address.equals(name)) {
             /**
              * Avoid displaying useless duplicate information for the park
              * address.
