@@ -72,7 +72,7 @@ public class FavoritesWidgetProvider extends AppWidgetProvider {
             final Intent intent = new Intent(context, WidgetUpdateService.class)
                     .putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-            final RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.appwidget_list_home_small);
+            final RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.appwidget_list_favorites);
             setRemoteAdapterCompat(rv, appWidgetId, R.id.stack_view, intent);
 
             /**
