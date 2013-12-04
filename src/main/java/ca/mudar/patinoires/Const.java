@@ -165,7 +165,6 @@ public class Const {
         final String UNITS_SYSTEM = "prefs_units_system";
         final String LIST_SORT = "prefs_list_sort_by";
         final String FOLLOW_LOCATION_CHANGES = "prefs_follow_location_changes";
-        final String SYSTEM_WIDGET_SETTINGS = "prefs_system_widget_settings";
         final String LAST_UPDATE_TIME_LOCATIONS = "prefs_last_update_time_locations";
         final String LAST_UPDATE_TIME_CONDITIONS = "prefs_last_update_time_conditions";
         final String LAST_UPDATE_TIME_GEO = "prefs_last_update_time_geo";
@@ -178,6 +177,7 @@ public class Const {
         final String CONDITIONS_SHOW_UNKNOWN = "prefs_show_unknown";
         final String IS_SEASON_OVER = "prefs_season_over";
         final String HAS_ACCEPTED_EULA = "accepted_eula"; // maintain old prefs name
+        final String HAS_SEEN_WIDGET_TIP = "prefs_has_seen_widget_tip";
     }
 
     public static interface PrefsValues {

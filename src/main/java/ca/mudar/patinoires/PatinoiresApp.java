@@ -53,6 +53,7 @@ public class PatinoiresApp extends Application {
     private Toast mToast;
     private boolean[] conditionsFilter = new boolean[5];
     private boolean mIsSeasonOver;
+    private boolean mHasFavoriteRinks = false;
     private SharedPreferences prefs;
     private Editor prefsEditor;
 
@@ -269,6 +270,21 @@ public class PatinoiresApp extends Application {
         mIsSeasonOver = isSeasonOver;
 
         prefsEditor.putBoolean(PrefsNames.IS_SEASON_OVER, isSeasonOver);
+        prefsEditor.commit();
+    }
+
+    public boolean canDisplayWidgetTip() {
+        final boolean hasSeenWidgetTip = prefs.getBoolean(PrefsNames.HAS_SEEN_WIDGET_TIP, false);
+
+        return (!hasSeenWidgetTip && mHasFavoriteRinks);
+    }
+
+    public void setHasFavoriteRinks(boolean hasFavoriteRinks) {
+        mHasFavoriteRinks = hasFavoriteRinks;
+    }
+
+    public void setHasSeenWidgetTip(boolean hasSeenToast) {
+        prefsEditor.putBoolean(PrefsNames.HAS_SEEN_WIDGET_TIP, hasSeenToast);
         prefsEditor.commit();
     }
 }

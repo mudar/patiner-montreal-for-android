@@ -29,8 +29,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import ca.mudar.patinoires.Const;
+import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.ui.activity.MapActivity;
 import ca.mudar.patinoires.ui.activity.TabsPagerActivity;
@@ -71,6 +73,11 @@ public class DashboardFragment extends Fragment {
         root.findViewById(R.id.home_btn_favorites).setOnClickListener(
                 new View.OnClickListener() {
                     public void onClick(View view) {
+                        final PatinoiresApp appHelper = (PatinoiresApp) getActivity().getApplicationContext();
+                        if ( appHelper.canDisplayWidgetTip() ) {
+                            appHelper.showToastText(R.string.toast_new_widget, Toast.LENGTH_LONG);
+                            appHelper.setHasSeenWidgetTip(true);
+                        }
                         Intent intent = new Intent(getActivity().getApplicationContext(),
                                 TabsPagerActivity.class);
                         intent.putExtra(Const.INTENT_EXTRA_TABS_CURRENT, Const.TABS_INDEX_FAVORITES);

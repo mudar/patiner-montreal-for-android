@@ -32,12 +32,9 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
-import android.provider.Settings;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
@@ -150,18 +147,6 @@ public class SettingsActivityHC extends PreferenceActivity {
             tUnits = (ListPreference) findPreference(Const.PrefsNames.UNITS_SYSTEM);
             tListSort = (ListPreference) findPreference(Const.PrefsNames.LIST_SORT);
             tLanguage = (ListPreference) findPreference(Const.PrefsNames.LANGUAGE);
-
-            /**
-             * Handle the widget setting
-             */
-            final PreferenceScreen widgetPrefScreen = (PreferenceScreen) findPreference(Const.PrefsNames.SYSTEM_WIDGET_SETTINGS);
-            widgetPrefScreen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                public boolean onPreferenceClick(Preference preference) {
-                    launchWidgetSettings();
-
-                    return true;
-                }
-            });
         }
 
         @Override
@@ -235,12 +220,5 @@ public class SettingsActivityHC extends PreferenceActivity {
             }
         }
 
-        private void launchWidgetSettings() {
-            try {
-                startActivity(new Intent(Settings.ACTION_DISPLAY_SETTINGS));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

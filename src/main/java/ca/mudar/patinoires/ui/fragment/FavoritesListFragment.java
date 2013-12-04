@@ -24,9 +24,12 @@
 package ca.mudar.patinoires.ui.fragment;
 
 import android.annotation.TargetApi;
+import android.database.Cursor;
 import android.os.Build;
+import android.support.v4.content.Loader;
 import android.widget.ListView;
 
+import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
 import ca.mudar.patinoires.providers.RinksContract.Rinks;
 import ca.mudar.patinoires.ui.view.ContextualActionbarListener;
@@ -38,12 +41,20 @@ public class FavoritesListFragment extends BaseListFragment {
         super.resLayoutListView = R.layout.fragment_list_rinks_favorites;
     }
 
-
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     protected void createContextActionbar() {
         getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 
         mCABListener = new ContextualActionbarListener(getActivity(), this, mAdapter, true);
         getListView().setMultiChoiceModeListener(mCABListener);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        super.onLoadFinished(loader, data);
+
+        if (data.moveToFirst()) {
+            ((PatinoiresApp) getActivity().getApplicationContext()).setHasFavoriteRinks(true);
+        }
     }
 }

@@ -122,6 +122,7 @@
     <string name="toast_postal_code_processing">Recherche en cours…</string>
     <string name="toast_search_error">Incapable de trouver %1$s</string>
     <string name="toast_search_network_connection_error">Pour cette recherche, connectez-vous à internet…</string>
+    <string name="toast_new_widget">Vous pouvez aussi utiliser le widget pour afficher les favoris sur l’écran d’accueil&#160;!</string>
 
     <string name="logo_open_data_content_desc">Montréal Ouvert</string>
     <string name="menu_favorites_toggle">Patinoire favorite</string>
@@ -163,8 +164,6 @@
     <string name="prefs_list_sort_distance">Distance</string>
     <string name="prefs_follow_location_title">Optimiser les mesures</string>
     <string name="prefs_follow_location_summary">Expérimental : actualisation en arrière-plan de la position géographique. Utile en déplacement.</string>
-    <string name="prefs_system_widget_title">Ajouter le widget</string>
-    <string name="prefs_system_widget_summary">À venir bientôt: les conditions de vos patinoires préférées sur l’écran d’accueil.</string>
     <string name="menu_gmaps_directions">Itinéraire</string>
     <string name="dialog_title_maps_chooser">Afficher l’itinéraire STM avec</string>
     <string name="accessibility_ic_close">Fermer</string>

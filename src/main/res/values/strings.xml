@@ -122,6 +122,7 @@
     <string name="toast_postal_code_processing">Processing…</string>
     <string name="toast_search_error">Location %1$s not found</string>
     <string name="toast_search_network_connection_error">Search requires an active Internet connection…</string>
+    <string name="toast_new_widget">You can also try the Homescreen Widget to view your favorites!</string>
 
     <string name="logo_open_data_content_desc">Montréal Ouvert</string>
     <string name="menu_favorites_toggle">Favorite rink</string>
@@ -163,8 +164,6 @@
     <string name="prefs_list_sort_distance">Distance</string>
     <string name="prefs_follow_location_title">Enhanced measurements</string>
     <string name="prefs_follow_location_summary">Experimental: Background location updates. Useful if on the move.</string>
-    <string name="prefs_system_widget_title">Add widget</string>
-    <string name="prefs_system_widget_summary">Coming soon: Conditions of your favorite rinks on the home screen.</string>
     <string name="menu_gmaps_directions">Directions</string>
     <string name="dialog_title_maps_chooser">Get STM itinerary using</string>
     <string name="accessibility_ic_close">Close</string>
