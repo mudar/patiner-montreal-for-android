@@ -42,11 +42,28 @@ import ca.mudar.patinoires.ui.activity.RinkDetailsActivity;
 public class FavoritesWidgetProvider extends AppWidgetProvider {
     private static final String TAG = "FavoritesWidgetProvider";
 
+    public static ComponentName getComponentName(Context context) {
+        return new ComponentName(context, FavoritesWidgetProvider.class);
+    }
+
+    public static Intent getAppHomeIntent(Context context) {
+        final Intent openAppIntent = new Intent(context, MainActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        return openAppIntent;
+    }
+
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    private static void setRemoteAdapterCompat(RemoteViews rv, int appWidgetId, int viewId, Intent intent) {
+        if (Const.SUPPORTS_ICECREAMSANDWICH) {
+            rv.setRemoteAdapter(R.id.stack_view, intent);
+        } else {
+            rv.setRemoteAdapter(appWidgetId, viewId, intent);
+        }
+    }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-
         for (int appWidgetId : appWidgetIds) {
             /**
              * Specify the service to provide data for the collection widget.
@@ -62,7 +79,7 @@ public class FavoritesWidgetProvider extends AppWidgetProvider {
              * Set the empty view to be displayed if the collection is empty.
              * It must be a sibling view of the collection view.
              */
-            rv.setEmptyView(R.id.stack_view, R.id.empty_view);
+            rv.setEmptyView(R.id.stack_view, R.id.widget_loading);
 
 
             /**
@@ -80,10 +97,8 @@ public class FavoritesWidgetProvider extends AppWidgetProvider {
                     onClickPendingIntent);
 
             // MainActivity intent, on logo click
-            final Intent openAppIntent = new Intent(context, MainActivity.class)
-                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             final PendingIntent openAppPendingIntent = PendingIntent
-                    .getActivity(context, 0, openAppIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    .getActivity(context, 0, getAppHomeIntent(context), PendingIntent.FLAG_UPDATE_CURRENT);
             rv.setOnClickPendingIntent(R.id.widget_logo,
                     openAppPendingIntent);
 
@@ -92,18 +107,4 @@ public class FavoritesWidgetProvider extends AppWidgetProvider {
 
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
-
-    public static ComponentName getComponentName(Context context) {
-        return new ComponentName(context, FavoritesWidgetProvider.class);
-    }
-
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    private static void setRemoteAdapterCompat(RemoteViews rv, int appWidgetId, int viewId, Intent intent) {
-        if (Const.SUPPORTS_ICECREAMSANDWICH) {
-            rv.setRemoteAdapter(R.id.stack_view, intent);
-        } else {
-            rv.setRemoteAdapter(appWidgetId, viewId, intent);
-        }
-    }
-
 }

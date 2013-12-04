@@ -59,8 +59,6 @@
     <string name="btn_favorites">Favorites</string>
     <string name="empty_list">No rinks found…</string>
     <string name="empty_list_favorites">Favorites list is empty. Store your favorite rinks here for faster access…</string>
-    <string name="empty_list_search">No results found…</string>
-    <string name="empty_list_widget">Favorites list is empty. Store your favorite rinks here for faster access…</string>
     <string name="tab_favorites">Favorites</string>
     <string name="tab_skating">Skating</string>
     <string name="tab_hockey">Hockey</string>
@@ -203,5 +201,10 @@
     <string name="search_hint_actionbar">Address or rink</string>
     <string name="search_description">Montréal outdoor rinks</string>
     <string name="search_listview_hint">Please enter rink name…</string>
+    <string name="empty_list_search">No results found…</string>
+
+    <!--Widget-->
+    <string name="empty_list_widget">Patiner Montréal: Favorite rinks list is empty…</string>
+    <string name="widget_loading">Loading…</string>
 
 </resources>

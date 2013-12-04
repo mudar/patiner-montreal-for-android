@@ -25,15 +25,17 @@ package ca.mudar.patinoires.utils;
 
 import java.util.Locale;
 
-import ca.mudar.patinoires.io.RemoteRinksHandler.RemoteValues;
 import ca.mudar.patinoires.Const.DbValues;
+import ca.mudar.patinoires.io.RemoteRinksHandler.RemoteValues;
 
 public class ApiStringHelper {
+    private static final String TAG = "ApiStringHelper";
+
     /**
      * This function helps define "Open/Closed" as a 4th condition besides
      * excellent/good/bad. Logically, conditions cannot be "good" when the rink
      * is closed!
-     * 
+     *
      * @param condition Description (in words) of the condition
      * @return the index used in the DB for conditions
      */
@@ -42,17 +44,13 @@ public class ApiStringHelper {
         open = open.toLowerCase(Locale.US);
         if (open.equals(RemoteValues.BOOLEAN_FALSE)) {
             return DbValues.CONDITION_CLOSED;
-        }
-        else if (condition.equals(RemoteValues.RINK_CONDITION_EXCELLENT)) {
+        } else if (condition.equals(RemoteValues.RINK_CONDITION_EXCELLENT)) {
             return DbValues.CONDITION_EXCELLENT;
-        }
-        else if (condition.equals(RemoteValues.RINK_CONDITION_GOOD)) {
+        } else if (condition.equals(RemoteValues.RINK_CONDITION_GOOD)) {
             return DbValues.CONDITION_GOOD;
-        }
-        else if (condition.equals(RemoteValues.RINK_CONDITION_BAD)) {
+        } else if (condition.equals(RemoteValues.RINK_CONDITION_BAD)) {
             return DbValues.CONDITION_BAD;
-        }
-        else {
+        } else {
             /**
              * Default to Unknown condition.
              */
@@ -63,14 +61,11 @@ public class ApiStringHelper {
     public static int getTypeIndex(String type) {
         if (type.equals(RemoteValues.RINK_TYPE_PSE)) {
             return DbValues.KIND_PSE;
-        }
-        else if (type.equals(RemoteValues.RINK_TYPE_PP)) {
+        } else if (type.equals(RemoteValues.RINK_TYPE_PP)) {
             return DbValues.KIND_PP;
-        }
-        else if (type.equals(RemoteValues.RINK_TYPE_C)) {
+        } else if (type.equals(RemoteValues.RINK_TYPE_C)) {
             return DbValues.KIND_C;
-        }
-        else {
+        } else {
             /**
              * Default to Free skating.
              */
@@ -80,66 +75,73 @@ public class ApiStringHelper {
 
     /**
      * Manual translation.. yeah!
-     * 
+     *
      * @param descFr
      * @return Translation into English
      */
     static public String translateRinkDescription(String descFr) {
-
-        if (descFr.equals("Patinoire de patin libre")) {
+        if (descFr.equals("Sentier à patiner décoré")) {
+            return "Landskaped skating path";
+        } else if (descFr.equals("Patinoire ext. avec bandes")) {
+            return "Outdoor rink with boards";
+        } else if (descFr.equals("Patinoire naturelle")) {
+            return "Natural rink";
+        } else if (descFr.equals("Patinoire extérieure")) {
+            return "Outdoor rink";
+        } else if (descFr.equals("Rond de glace")
+                || descFr.equals("Anneau à patiner")) {
+            return "Skating ring";
+        } else if (descFr.equals("Sentier de glace")) {
+            return "Skating path";
+        } else if (descFr.equals("Patinoire Bleu Blanc Bouge")) {
+            return "Bleu Blanc Bouge rink";
+        } else if (descFr.equals("Grande patinoire de hockey")) {
+            return "Big hockey rink";
+        } else if (descFr.equals("Petite patinoire de hockey")) {
+            return "Small hockey rink";
+        } else if (descFr.equals("Patinoire de hockey")) {
+            return "Hockey rink";
+        } else if (descFr.equals("Patinoire de patin libre")) {
             return "Free skating rink";
-        }
-        else if (descFr.equals("Patinoire avec bandes")) {
+        } else if (descFr.equals("Patinoire avec bandes")
+                || descFr.equals("Patinoire à bandes")) {
             return "Rink with boards";
-        }
-        else if (descFr.equals("Patinoire décorative")) {
+        } else if (descFr.equals("Patinoire décorative")
+                || descFr.equals("Pati déco")) {
             return "Landskaped rink";
-        }
-        else if (descFr.equals("Aire de patinage libre")) {
+        } else if (descFr.equals("Aire de patinage libre")) {
             return "Free skating area";
-        }
-        else if (descFr.equals("Patinoire réfrigérée")) {
+        } else if (descFr.equals("Patinoire réfrigérée")) {
             return "Refrigerated rink";
-        }
-        else if (descFr.equals("Patinoire de patin libre no 1")) {
+        } else if (descFr.equals("Patinoire de patin libre no 1")) {
             return "Free skating rink #1";
-        }
-        else if (descFr.equals("Patinoire de patin libre no 2")) {
+        } else if (descFr.equals("Patinoire de patin libre no 2")) {
             return "Free skating rink #2";
-        }
-        else if (descFr.equals("Patinoire avec bandes no 1")) {
+        } else if (descFr.equals("Patinoire avec bandes no 1")) {
             return "Rink with boards #1";
-        }
-        else if (descFr.equals("Patinoire avec bandes no 2")) {
+        } else if (descFr.equals("Patinoire avec bandes no 2")) {
             return "Rink with boards #2";
-        }
-        else if (descFr.equals("Patinoire avec bandes no 3")) {
+        } else if (descFr.equals("Patinoire avec bandes no 3")) {
             return "Rink with boards #3";
-        }
-        else if (descFr.equals("Patinoire avec bandes nord")) {
+        } else if (descFr.equals("Patinoire avec bandes nord")
+                || descFr.equals("Patinoire avec bandes Nord")) {
             return "Rink with boards North";
-        }
-        else if (descFr.equals("Patinoire avec bandes sud")) {
+        } else if (descFr.equals("Patinoire avec bandes sud")
+                || descFr.equals("Patinoire avec bandes Sud")) {
             return "Rink with boards South";
-        }
-        else if (descFr.equals("Grande patinoire avec bandes")
+        } else if (descFr.equals("Grande patinoire avec bandes")
                 || descFr.equals("Patinoire avec bandes grande")) {
             return "Big rink with boards";
-        }
-        else if (descFr.equals("Petite patinoire avec bandes")
+        } else if (descFr.equals("Petite patinoire avec bandes")
                 || descFr.equals("Patinoire avec bandes petite")) {
             return "Small rink with boards";
-        }
-        else if (descFr.equals("Patinoire entretenue par les citoyens")) {
+        } else if (descFr.equals("Patinoire entretenue par les citoyens")) {
             return "Rink maintained by citizens";
-        }
-        else if (descFr.equals("Pat. avec bandes - près chalet")) {
+        } else if (descFr.equals("Pat. avec bandes - près chalet")) {
             return "Rink with boards - Near Chalet";
-        }
-        else if (descFr.equals("Pat. avec bandes - près 10e Avenue")) {
+        } else if (descFr.equals("Pat. avec bandes - près 10e Avenue")) {
             return "Rink with boards - Near 10th Avenue";
-        }
-        else {
+        } else {
             return descFr;
         }
     }

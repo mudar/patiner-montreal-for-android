@@ -60,8 +60,6 @@
     <string name="btn_favorites">Favoris</string>
     <string name="empty_list">Aucune patinoire trouvée…</string>
     <string name="empty_list_favorites">La liste des favoris est vide. Sauvegardez vos patinoires préférées ici pour y accéder plus rapidement…</string>
-    <string name="empty_list_search">Aucun résultat trouvé…</string>
-    <string name="empty_list_widget">La liste des favoris est vide. Sauvegardez vos patinoires préférées ici pour y accéder plus rapidement…</string>
     <string name="tab_favorites">Favoris</string>
     <string name="tab_skating">Patinage</string>
     <string name="tab_hockey">Hockey</string>
@@ -203,5 +201,10 @@
     <string name="search_hint_actionbar">Adresse ou patinoire</string>
     <string name="search_description">Patinoires extérieures à Montréal</string>
     <string name="search_listview_hint">Veuillez saisir le nom de la patinoire…</string>
+    <string name="empty_list_search">Aucun résultat trouvé…</string>
+
+    <!--Widget-->
+    <string name="empty_list_widget">Patiner Montréal : La liste des patinoires favorites est vide…</string>
+    <string name="widget_loading">Chargement en cours…</string>
 
 </resources>

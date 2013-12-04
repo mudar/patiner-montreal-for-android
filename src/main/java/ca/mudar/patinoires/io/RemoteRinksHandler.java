@@ -175,7 +175,16 @@ public class RemoteRinksHandler extends JsonHandler {
                  */
                 builderRinks = ContentProviderOperation.newInsert(Rinks.CONTENT_URI);
 
-                splitName = rink.optString(RemoteTags.RINK_NAME).split(",");
+                splitName = rink.optString(RemoteTags.RINK_NAME).split(RemoteValues.NAME_SEPARATOR_NORMAL);
+
+                if (splitName.length == 1) {
+                    // Comma not found, try " du parc "
+                    splitName = (rink.optString(RemoteTags.RINK_NAME).replace(RemoteValues.NAME_SEPARATOR_ERROR, RemoteValues.NAME_SEPARATOR_NORMAL)).split(",");
+                    if (splitName.length == 1) {
+                        continue;
+                    }
+                }
+
                 rinkName = splitName[1].replace(RemoteValues.RINK_TYPE_PSE_SUFFIX, "")
                         .replace(RemoteValues.RINK_TYPE_PPL_SUFFIX, "")
                         .replace(RemoteValues.RINK_TYPE_PP_SUFFIX, "")
@@ -226,6 +235,7 @@ public class RemoteRinksHandler extends JsonHandler {
         final String BOROUGH_UPDATED_AT = "date_maj";
         final String RINK_ID = "id";
         final String RINK_NAME = "nom";
+        // final String RINK_DESC = "description";
         final String RINK_KIND_ID = "genre";
         final String RINK_IS_CLEARED = "deblaye";
         final String RINK_IS_FLOODED = "arrose";
@@ -256,5 +266,7 @@ public class RemoteRinksHandler extends JsonHandler {
         final String BOOLEAN_TRUE = "true";
         final String BOOLEAN_FALSE = "false";
         final String STRING_NULL = "null";
+        final String NAME_SEPARATOR_NORMAL = ",";
+        final String NAME_SEPARATOR_ERROR = " du parc ";
     }
 }

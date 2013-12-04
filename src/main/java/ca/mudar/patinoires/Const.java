@@ -29,9 +29,9 @@ import android.os.Build;
 public class Const {
 
     public static final String APP_PREFS_NAME = "PatinoiresPrefsFile";
-    public static final String URL_JSON_SEASON_STATUS = "http://patinermontreal.ca/season.json";
-    public static final String URL_JSON_INITIAL_IMPORT = "http://patinermontreal.ca/data.json";
-    public static final String URL_JSON_CONDITIONS_UPDATES = "http://patinermontreal.ca/conditions.json";
+    public static final String URL_JSON_SEASON_STATUS = "http://patinoires.mudar.ca/api/season.json";
+    public static final String URL_JSON_INITIAL_IMPORT = "http://www.patinermontreal.ca/data.json";
+    public static final String URL_JSON_CONDITIONS_UPDATES = "http://www.patinermontreal.ca/conditions.json";
     public static final String URL_GMAPS_DIRECTIONS = "http://maps.google.com/maps?saddr=%s&daddr=%s&dirflg=r";
     public static final String URL_PLAYSTORE = "http://play.google.com/store/apps/details?id=ca.mudar.patinoires";
     public static final int TABS_INDEX_SKATING = 0x0;

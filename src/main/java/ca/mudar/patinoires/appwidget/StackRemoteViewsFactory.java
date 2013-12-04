@@ -47,6 +47,7 @@ public class StackRemoteViewsFactory implements
         RemoteViewsService.RemoteViewsFactory,
         Loader.OnLoadCompleteListener<Cursor> {
     private static final String TAG = "StackRemoteViewsFactory";
+    private static final int TYPE_COUNT = 3;  // Three types: loading, empty and listItem
     private Context mContext;
     private int mAppWidgetId;
     private int indexRinkDescColumn;
@@ -61,7 +62,8 @@ public class StackRemoteViewsFactory implements
 
     @Override
     public void onCreate() {
-        indexRinkDescColumn = FavoriteRinksQuery.RINK_DESC_FR;
+        updateDescriptionLanguage();
+
         mLoader = new CursorLoader(
                 mContext,
                 RinksContract.Rinks.CONTENT_FAVORITES_URI,
@@ -83,17 +85,36 @@ public class StackRemoteViewsFactory implements
 
     @Override
     public int getCount() {
+        // If there are no favorites, we still return 1 to represent the "No favorites found" view
         if (mCursor == null) {
-            return 0;
+            return 1;
         } else {
-            return mCursor.getCount();
+            return Math.max(1, mCursor.getCount());
         }
     }
 
     @Override
     public RemoteViews getViewAt(int position) {
-        // We construct a remote views item based on our widget item xml file, and set the
-        // text based on the position.
+        // We use getCount here so that it doesn't return null when empty
+        if (position < 0 || position >= getCount()) {
+            return null;
+        }
+
+        if (mCursor == null) {
+            RemoteViews views = new RemoteViews(mContext.getPackageName(),
+                    R.layout.appwidget_loading);
+            views.setOnClickFillInIntent(R.id.widget_loading, FavoritesWidgetProvider.getAppHomeIntent(mContext));
+            return views;
+        }
+        if (mCursor.getCount() == 0) {
+            RemoteViews views = new RemoteViews(mContext.getPackageName(),
+                    R.layout.appwidget_empty);
+            views.setOnClickFillInIntent(R.id.empty_list_widget, FavoritesWidgetProvider.getAppHomeIntent(mContext));
+            return views;
+        }
+
+        // We construct a remote views item based on our widget item xml file,
+        // and set the text based on the position.
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.appwidget_list_item);
 
         if (mCursor.moveToPosition(position)) {
@@ -128,7 +149,8 @@ public class StackRemoteViewsFactory implements
 
     @Override
     public int getViewTypeCount() {
-        return 1;
+        // We have three types: loading, empty and listItem
+        return TYPE_COUNT;
     }
 
     @Override
@@ -150,12 +172,10 @@ public class StackRemoteViewsFactory implements
         if (cursor == null || cursor.isClosed()) {
             return;
         }
+
         mCursor = cursor;
 
-        final PatinoiresApp mAppHelper = ((PatinoiresApp) mContext.getApplicationContext());
-        indexRinkDescColumn = (mAppHelper.getLanguage().equals(Const.PrefsValues.LANG_FR)
-                ? FavoriteRinksQuery.RINK_DESC_FR :
-                FavoriteRinksQuery.RINK_DESC_EN );
+        updateDescriptionLanguage();
 
         AppWidgetManager widgetManager = AppWidgetManager.getInstance(mContext);
         if (mAppWidgetId == -1) {
@@ -167,6 +187,14 @@ public class StackRemoteViewsFactory implements
             widgetManager.notifyAppWidgetViewDataChanged(mAppWidgetId, R.id.stack_view);
         }
     }
+
+    private void updateDescriptionLanguage() {
+        final PatinoiresApp mAppHelper = ((PatinoiresApp) mContext.getApplicationContext());
+        indexRinkDescColumn = (mAppHelper.getLanguage().equals(Const.PrefsValues.LANG_FR)
+                ? FavoriteRinksQuery.RINK_DESC_FR :
+                FavoriteRinksQuery.RINK_DESC_EN);
+    }
+
 
     public static interface FavoriteRinksQuery {
         // int _TOKEN = 0x10;

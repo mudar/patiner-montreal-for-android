@@ -25,33 +25,15 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/widget_margin_logo"
     android:padding="@dimen/widget_margin">
 
-    <StackView
-        android:id="@+id/stack_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginRight="@dimen/widget_margin_logo"
-        android:loopViews="false" />
-
     <TextView
-        android:id="@+id/widget_loading"
+        android:id="@+id/empty_list_widget"
         style="@style/WidgetMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/widget_margin_logo"
-        android:layout_marginRight="@dimen/widget_margin_loading"
-        android:clickable="false"
-        android:focusable="false"
-        android:text="@string/widget_loading" />
-
-    <ImageView
-        android:id="@+id/widget_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="2dp"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/btn_widget_logo" />
-
+        android:clickable="false"
+        android:focusable="false"
+        android:text="@string/empty_list_widget" />
 </FrameLayout>

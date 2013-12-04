@@ -74,7 +74,6 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_horizontal</item>
-        <!-- <item name="android:drawablePadding">@dimen/paddingSmall</item> -->
         <item name="android:textSize">@dimen/textSizeLarge</item>
         <item name="android:textColor">@color/dashboard_text</item>
         <item name="android:background">@null</item>
@@ -86,7 +85,6 @@
         <item name="android:paddingRight">@dimen/boxPaddingH</item>
         <item name="android:paddingTop">@dimen/boxPaddingV</item>
         <item name="android:paddingBottom">@dimen/boxPaddingV</item>
-        <!-- <item name="android:background">@drawable/about_separator_background</item> -->
     </style>
 
 
@@ -142,6 +140,15 @@
         <item name="android:paddingTop">@dimen/padding_prefs_category</item>
         <item name="android:paddingLeft">@dimen/padding_prefs_category</item>
         <item name="android:paddingBottom">@dimen/padding_prefs_category_bottom</item>
+    </style>
+
+    <!--Widget-->
+    <style name="WidgetMessage">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">@drawable/background_appwidget</item>
+        <item name="android:gravity">center|bottom</item>
+        <item name="android:textColor">@color/body_text_2</item>
+        <item name="android:textSize">@dimen/textSizeSmall</item>
     </style>
 
 </resources>

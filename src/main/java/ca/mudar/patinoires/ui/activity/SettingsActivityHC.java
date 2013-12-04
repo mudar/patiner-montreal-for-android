@@ -47,12 +47,12 @@ import java.util.Locale;
 import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.PatinoiresApp;
 import ca.mudar.patinoires.R;
+import ca.mudar.patinoires.providers.RinksContract;
 import ca.mudar.patinoires.utils.SettingsHelper;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class SettingsActivityHC extends PreferenceActivity {
-    protected static final String TAG = "MyPreferenceActivityHC";
-//    private PatinoiresApp mAppHelper;
+    private static final String TAG = "MyPreferenceActivityHC";
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
@@ -109,6 +109,10 @@ public class SettingsActivityHC extends PreferenceActivity {
 
         ((PatinoiresApp) getApplicationContext()).setLanguage(lg);
 
+        // Notify favorites URI, for the AppWidget
+        getApplicationContext().getContentResolver().notifyChange(RinksContract.Rinks.CONTENT_FAVORITES_URI, null);
+
+        // Restart Settings with a fade in/out
         this.finish();
         Intent intent = new Intent(getApplicationContext(), SettingsActivityHC.class);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

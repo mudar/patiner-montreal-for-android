@@ -32,7 +32,7 @@
     <!--<dimen name="bodyPaddingLarge">30dp</dimen>-->
     <dimen name="boxPaddingH">35dp</dimen>
     <dimen name="boxPaddingV">33dp</dimen>
-    <!--<dimen name="textSizeSmall">12sp</dimen>-->
+    <dimen name="textSizeSmall">12sp</dimen>
     <dimen name="textSizeMedium">15sp</dimen>
     <dimen name="textSizeLarge">18sp</dimen>
     <dimen name="textEmptyList">18sp</dimen>
@@ -59,4 +59,6 @@
     <dimen name="widget_inner_height">56dp</dimen>
     <dimen name="widget_min_height">40dp</dimen>
     <dimen name="widget_min_width">180dp</dimen>
+    <dimen name="widget_margin_logo">24dp</dimen>
+    <dimen name="widget_margin_loading">48dp</dimen>
 </resources>

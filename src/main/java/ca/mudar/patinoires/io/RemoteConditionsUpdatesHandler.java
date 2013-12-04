@@ -54,8 +54,6 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
             throws JSONException, IOException {
         final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
 
-        // Random rand = new Random();
-
         /**
          * Using 2 different builders for readability!
          */
@@ -77,7 +75,7 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
              * Get Borough info
              */
             try {
-                borough = (JSONObject) boroughs.getJSONObject(i);
+                borough = boroughs.getJSONObject(i);
             } catch (JSONException e) {
                 e.printStackTrace();
                 continue;
@@ -105,7 +103,7 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
 
             for (int j = 0; j < totalRinks; j++) {
                 try {
-                    rink = (JSONObject) rinks.getJSONObject(j);
+                    rink = rinks.getJSONObject(j);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     continue;
@@ -132,9 +130,6 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
                 builderRinks.withValue(RinksColumns.RINK_CONDITION,
                         ApiStringHelper.getConditionIndex(rink.optString(RemoteTags.RINK_IS_OPEN),
                                 rink.optString(RemoteTags.RINK_CONDITION)));
-                // int condition = rand.nextInt(4);
-                // builderRinks.withValue(RinksColumns.RINK_CONDITION,
-                // condition);
 
                 batch.add(builderRinks.build());
             }
