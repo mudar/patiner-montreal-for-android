@@ -15,3 +15,11 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+
+-keep public class * extends android.support.v4.app.Fragment { *; }
+-keep public class * extends android.support.v4.app.NavUtils { *; }
+-keep public class * extends android.support.v4.view.ViewPager { *; }
+-keep public class * extends android.support.v7.app.ActionBar { *; }
+-keep public class * extends android.support.v7.app.ActionActivity { *; }
+-keep public class * extends android.support.v7.widget.SearchView { *; }

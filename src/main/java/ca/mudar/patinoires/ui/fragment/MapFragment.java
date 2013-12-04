@@ -29,7 +29,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -165,17 +164,13 @@ public class MapFragment extends SupportMapFragment
      * @param mapCenter
      */
     protected void animateToPoint(Location mapCenter) {
-        Log.v(TAG, "animateToPoint");
         if (mMap == null) {
-            Log.v(TAG, "map is null!");
             return;
         }
         if (mapCenter != null) {
-            Log.v(TAG, "ZOOM_NEAR");
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
                     mapCenter.getLatitude(), mapCenter.getLongitude()), ZOOM_NEAR));
         } else {
-            Log.v(TAG, "ZOOM_DEFAULT + initialAnimateToPoint");
             mMap.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_NEAR));
             initialAnimateToPoint();
         }
@@ -187,8 +182,6 @@ public class MapFragment extends SupportMapFragment
      * defines the zoom.
      */
     protected void initialAnimateToPoint() {
-        Log.v(TAG, "initialAnimateToPoint");
-
         double coordinates[] = Const.MAPS_DEFAULT_COORDINATES;
         final double lat = coordinates[0];
         final double lng = coordinates[1];
@@ -198,16 +191,15 @@ public class MapFragment extends SupportMapFragment
             /**
              * Center on app's user location.
              */
-            Log.v(TAG, "initialAnimateToPoint lat = " +
-                    userLocation.getLatitude() + ". Lon = "
-                    + userLocation.getLongitude());
+//            Log.v(TAG, "initialAnimateToPoint lat = " +
+//                    userLocation.getLatitude() + ". Lon = "
+//                    + userLocation.getLongitude());
             mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(
                     userLocation.getLatitude(), userLocation.getLongitude())));
         } else {
             /**
              * Center on Downtown.
              */
-            Log.v(TAG, "initialAnimateToPoint. Center on Downtown");
             mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));
         }
 
@@ -216,7 +208,6 @@ public class MapFragment extends SupportMapFragment
              * The AppHelper knows the user location from a previous query, so
              * use the saved value.
              */
-            Log.v(TAG, "initialAnimateToPoint. mMapCenter != null");
             mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(
                     mMapCenter.getLatitude(), mMapCenter.getLongitude())));
         }
@@ -228,9 +219,6 @@ public class MapFragment extends SupportMapFragment
      * @param mapCenter The new location
      */
     public void setMapCenter(Location mapCenter) {
-        Log.v(TAG, "setMapCenter");
-        if (mapCenter != null)
-            Log.v(TAG, "lat = " + mapCenter.getLatitude() + " lng = " + mapCenter.getLongitude());
         initLocation = mapCenter;
         animateToPoint(mapCenter);
     }

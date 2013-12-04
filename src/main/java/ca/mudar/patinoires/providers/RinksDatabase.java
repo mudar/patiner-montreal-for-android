@@ -39,7 +39,7 @@ import ca.mudar.patinoires.providers.RinksContract.RinksColumns;
 public class RinksDatabase extends SQLiteOpenHelper {
     private static final String TAG = "RinksDatabase";
     private static final String DATABASE_NAME = "patinoires_mtl";
-    private static final int DATABASE_VERSION = 36;
+    private static final int DATABASE_VERSION = 10;
 
     public RinksDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

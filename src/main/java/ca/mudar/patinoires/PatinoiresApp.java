@@ -276,7 +276,7 @@ public class PatinoiresApp extends Application {
     public boolean canDisplayWidgetTip() {
         final boolean hasSeenWidgetTip = prefs.getBoolean(PrefsNames.HAS_SEEN_WIDGET_TIP, false);
 
-        return (!hasSeenWidgetTip && mHasFavoriteRinks);
+        return (!hasSeenWidgetTip && mHasFavoriteRinks && Const.SUPPORTS_HONEYCOMB);
     }
 
     public void setHasFavoriteRinks(boolean hasFavoriteRinks) {
