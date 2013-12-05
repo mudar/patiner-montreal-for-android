@@ -40,6 +40,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -63,8 +64,8 @@ public class MapFragment extends SupportMapFragment
     protected static final int INDEX_OVERLAY_MY_LOCATION = 0x0;
     protected static final int INDEX_OVERLAY_PLACEMARKS = 0x1;
     // protected static final float ZOOM_DEFAULT = 12f;
-    private static final float ZOOM_NEAR = 17f;
-    private static final float ZOOM_MIN = 16f;
+    private static final float ZOOM_NEAR = 16f;
+    private static final float ZOOM_FAR = 11f;
     private static final float HUE_MARKER = 228f;
     private static final float HUE_MARKER_STARRED = BitmapDescriptorFactory.HUE_YELLOW;
     private static final float DISTANCE_MARKER_HINT = 50f;
@@ -171,7 +172,6 @@ public class MapFragment extends SupportMapFragment
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
                     mapCenter.getLatitude(), mapCenter.getLongitude()), ZOOM_NEAR));
         } else {
-            mMap.moveCamera(CameraUpdateFactory.zoomTo(ZOOM_NEAR));
             initialAnimateToPoint();
         }
     }
@@ -187,20 +187,17 @@ public class MapFragment extends SupportMapFragment
         final double lng = coordinates[1];
 
         final Location userLocation = mAppHelper.getLocation();
-        if (userLocation != null) {
+        if (userLocation != null && isWithinMontrealArea(userLocation)) {
             /**
-             * Center on app's user location.
+             * Center on app's user location, with a near zoom.
              */
-//            Log.v(TAG, "initialAnimateToPoint lat = " +
-//                    userLocation.getLatitude() + ". Lon = "
-//                    + userLocation.getLongitude());
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(
-                    userLocation.getLatitude(), userLocation.getLongitude())));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+                    userLocation.getLatitude(), userLocation.getLongitude()), ZOOM_NEAR));
         } else {
             /**
-             * Center on Downtown.
+             * Center on Downtown, with a far zoom.
              */
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), ZOOM_FAR));
         }
 
         if (mMapCenter != null) {
@@ -208,8 +205,8 @@ public class MapFragment extends SupportMapFragment
              * The AppHelper knows the user location from a previous query, so
              * use the saved value.
              */
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(
-                    mMapCenter.getLatitude(), mMapCenter.getLongitude())));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
+                    mMapCenter.getLatitude(), mMapCenter.getLongitude()), ZOOM_NEAR));
         }
     }
 
@@ -221,27 +218,6 @@ public class MapFragment extends SupportMapFragment
     public void setMapCenter(Location mapCenter) {
         initLocation = mapCenter;
         animateToPoint(mapCenter);
-    }
-
-    /**
-     * Sets the map center on the user real location with a near zoom.
-     */
-    public void resetMapCenter() {
-        searchedMarker = null;
-        if (!mMap.isMyLocationEnabled()) {
-            mMap.setMyLocationEnabled(true);
-        }
-        mMap.setLocationSource(null);
-        setMapCenterZoomed(mAppHelper.getLocation());
-    }
-
-    /**
-     * Sets the map center on the location with a near zoom. Used for Address
-     * Search and Tab re-selection.
-     */
-    public void setMapCenterZoomed(Location mapCenter) {
-        // mMapController.setZoom(ZOOM_NEAR);
-        setMapCenter(mapCenter);
     }
 
     /**
@@ -273,6 +249,22 @@ public class MapFragment extends SupportMapFragment
 
         dbAsyncTask = new DbAsyncTask();
         dbAsyncTask.execute(queryFilter);
+    }
+
+    private boolean isWithinMontrealArea(Location location) {
+        final LatLngBounds montrealBounds = new LatLngBounds(
+                new LatLng(Const.MAPS_GEOCODER_LIMITS[0], Const.MAPS_GEOCODER_LIMITS[1]),
+                new LatLng(Const.MAPS_GEOCODER_LIMITS[2], Const.MAPS_GEOCODER_LIMITS[3])
+        );
+
+        final boolean isInMontreal = montrealBounds.contains(new LatLng(location.getLatitude(), location.getLongitude()));
+
+        if (!isInMontreal) {
+            // User is not in Montreal, so we disable the MyLocation button on the map.
+            mMap.setMyLocationEnabled(false);
+        }
+
+        return isInMontreal;
     }
 
     private int getPaddingTop() {

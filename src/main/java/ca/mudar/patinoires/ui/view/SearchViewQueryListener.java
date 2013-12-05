@@ -126,7 +126,7 @@ public class SearchViewQueryListener implements
             location.setLongitude(b.getDouble(Const.KEY_BUNDLE_ADDRESS_LNG));
             final String desc = b.getString(Const.KEY_BUNDLE_ADDRESS_DESC);
 
-            mListener.setMapCenterZoomed(location);
+            mListener.setMapCenter(location);
 
             /**
              * Add marker for found location
@@ -238,7 +238,7 @@ public class SearchViewQueryListener implements
      * ListFragment must implement the following interface
      */
     public interface OnAddressFoundListener {
-        public void setMapCenterZoomed(Location location);
+        public void setMapCenter(Location location);
 
         public Marker addMapMarker(MarkerOptions options);
     }

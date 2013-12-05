@@ -44,8 +44,7 @@ import ca.mudar.patinoires.utils.ConnectionHelper;
 
 
 public class MapActivity extends BaseActivity {
-    protected static final String TAG = "MapActivity";
-
+    private static final String TAG = "MapActivity";
     private MapFragment mMapFragment;
     /**
      * Location
@@ -57,7 +56,6 @@ public class MapActivity extends BaseActivity {
      */
     private LocationAwarenessListener mLocationAwarenessListener;
     private boolean isPlayservicesOutdated;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -149,9 +147,9 @@ public class MapActivity extends BaseActivity {
             ConnectionHelper.showDialogNoConnection(this);
         }
 
+        FragmentManager fm = getSupportFragmentManager();
+        mMapFragment = (MapFragment) fm.findFragmentById(R.id.fragment_map);
         if (initLocation != null || isCenterOnMyLocation) {
-            FragmentManager fm = getSupportFragmentManager();
-            mMapFragment = (MapFragment) fm.findFragmentById(R.id.fragment_map);
             mMapFragment.setMapCenter(initLocation);
         }
     }
@@ -183,8 +181,7 @@ public class MapActivity extends BaseActivity {
         if (mMapFragment != null) {
             if (keyCode == KeyEvent.KEYCODE_MENU) {
                 mMapFragment.searchToggle(false);
-            }
-            else if (keyCode == KeyEvent.KEYCODE_SEARCH) {
+            } else if (keyCode == KeyEvent.KEYCODE_SEARCH) {
                 mMapFragment.searchToggle(true);
             }
         }
