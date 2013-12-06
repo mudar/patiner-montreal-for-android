@@ -44,16 +44,14 @@ public class FavoritesDashClockExtension extends DashClockExtension {
     @Override
     protected void onInitialize(boolean isReconnect) {
         super.onInitialize(isReconnect);
-    }
 
-    public void changeMessage() {
-        onUpdateData(UPDATE_REASON_CONTENT_CHANGED);
+        addWatchContentUris(new String[]{
+                RinksContract.Rinks.CONTENT_FAVORITES_URI.toString()
+        });
     }
 
     @Override
     protected void onUpdateData(int reason) {
-        // Get preference value.
-
         final DashClockItem rink = getNearestFavoriteRink();
 
         if (rink == null) {
@@ -64,7 +62,7 @@ public class FavoritesDashClockExtension extends DashClockExtension {
     }
 
     /**
-     * publishUpdate
+     * publishUpdate. Display information of nearest favorite rink.
      */
     private void publishUpdateExtensionData(DashClockItem rink) {
 
@@ -107,6 +105,11 @@ public class FavoritesDashClockExtension extends DashClockExtension {
         return onClickIntent;
     }
 
+    /**
+     * Load favorite rinks data from Cursor, sorted by distance. We return the first (nearest) item.
+     *
+     * @return DashClockItem
+     */
     private DashClockItem getNearestFavoriteRink() {
         Cursor c = getApplicationContext().getContentResolver().query(
                 RinksContract.Rinks.CONTENT_FAVORITES_URI,
@@ -116,20 +119,25 @@ public class FavoritesDashClockExtension extends DashClockExtension {
                 RinksContract.Parks.PARK_GEO_DISTANCE + " ASC "
         );
 
+        if (c == null) {
+            return null;
+        }
+
+        DashClockItem rink = null;
         if (c.moveToFirst()) {
             final int indexRinkDescColumn = (((PatinoiresApp) getApplicationContext()).getLanguage().equals(Const.PrefsValues.LANG_FR)
                     ? FavoriteRinksQuery.RINK_DESC_FR :
                     FavoriteRinksQuery.RINK_DESC_EN);
 
-            DashClockItem rink = new DashClockItem(
+            rink = new DashClockItem(
                     c.getString(FavoriteRinksQuery.RINK_NAME),
                     c.getString(indexRinkDescColumn),
                     c.getInt(FavoriteRinksQuery.RINK_ID),
                     c.getInt(FavoriteRinksQuery.RINK_KIND_ID),
                     c.getInt(FavoriteRinksQuery.RINK_CONDITION));
-
-            return rink;
         }
-        return null;
+        c.close();
+
+        return rink;
     }
 }
