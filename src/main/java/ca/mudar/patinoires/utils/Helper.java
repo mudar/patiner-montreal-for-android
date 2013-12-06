@@ -113,6 +113,31 @@ public class Helper {
         return bgResource;
     }
 
+
+    public static String getConditionText(Resources resources, int condition) {
+        int conditionIndex;
+
+        switch (condition) {
+            case DbValues.CONDITION_EXCELLENT:
+                conditionIndex = R.string.rink_details_condition_excellent;
+                break;
+            case DbValues.CONDITION_GOOD:
+                conditionIndex = R.string.rink_details_condition_good;
+                break;
+            case DbValues.CONDITION_BAD:
+                conditionIndex = R.string.rink_details_condition_bad;
+                break;
+            case DbValues.CONDITION_CLOSED:
+                conditionIndex = R.string.rink_details_condition_closed;
+                break;
+            default:
+                conditionIndex = R.string.rink_details_condition_unknown;
+                break;
+        }
+
+        return (String) resources.getText(conditionIndex);
+    }
+
     public static int getConditionTextColor(int condition) {
         int colorResource;
         switch (condition) {

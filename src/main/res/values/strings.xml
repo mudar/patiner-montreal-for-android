@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
     Patiner Montréal for Android. 
     Information about outdoor rinks in the city of Montréal: conditions,
     services, contact, map, etc.
@@ -70,7 +71,12 @@
     <string name="dialog_links_conditions_pdf"><a href="http://ville.montreal.qc.ca/portal/page?_pageid=5977,41729602&amp;_dad=portal&amp;_schema=PORTAL">Conditions at winter activity sites</a></string>
     <string name="dialog_links_rinks_contact"><a href="http://www11.ville.montreal.qc.ca/sherlock2/servlet/template/sherlock%2CAfficherDocumentInternet.vm/nodocument/154">Skating rinks contact information</a></string>
     <string name="rink_details_conditions">Conditions: %s</string>
-    <string name="rink_details_surface">Ice surface:  %s</string>
+    <string name="rink_details_condition_excellent">Excellent</string>
+    <string name="rink_details_condition_good">Good</string>
+    <string name="rink_details_condition_bad">Bad</string>
+    <string name="rink_details_condition_closed">Closed</string>
+    <string name="rink_details_condition_unknown">Unknown</string>
+    <string name="rink_details_surface">Ice surface: %s</string>
     <string name="rink_details_is_cleared">Cleared</string>
     <string name="rink_details_is_flooded">Flooded</string>
     <string name="rink_details_is_resurfaced">Resurfaced</string>
@@ -93,13 +99,10 @@
     <string name="dialog_network_connection_title">No connection!</string>
     <string name="dialog_network_connection_message">You need a network connection to update the rinks information. Please turn on mobile network or Wi-Fi in Settings…</string>
     <string name="search_results">Results for ’<xliff:g id="string">%s</xliff:g>’</string>
-
-    <!-- <string name="prefs_category_display">Display Settings</string> -->
     <string name="prefs_breadcrumb">Settings</string>
     <string name="prefs_category_conditions">Rink Conditions</string>
     <string name="prefs_condition_title">Conditions</string>
     <string name="prefs_condition_summary">Display or hide rinks based on conditions, in lists and map</string>
-    <!-- <string name="prefs_condition_dialog_title">Rink Condition</string> -->
     <string name="prefs_condition_excellent">Excellent</string>
     <string name="prefs_condition_good">Good</string>
     <string name="prefs_condition_bad">Bad</string>
@@ -205,5 +208,9 @@
     <!--Widget-->
     <string name="empty_list_widget">Patiner Montréal: Favorite rinks list is empty…</string>
     <string name="widget_loading">Loading…</string>
+
+    <!--DashClock-->
+    <string name="dashclock_title">Patiner Montréal</string>
+    <string name="dashclock_content_desc">Displays conditions of your nearest favorite rink.</string>
 
 </resources>

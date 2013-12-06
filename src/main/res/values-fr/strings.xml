@@ -41,13 +41,13 @@
     <string name="menu_refresh_rink">Rafraîchir</string>
     <string name="menu_view_map">Carte</string>
     <string name="menu_search">Rechercher</string>
-    <string name="menu_rating">Évaluer</string>
-    <string name="menu_eula">Licence</string>
     <string name="menu_select_conditions">Conditions</string>
     <string name="menu_share_map">Partager</string>
     <string name="menu_favorites_add">Ajouter aux favoris</string>
     <string name="menu_favorites_remove">Supprimer des favrois</string>
     <string name="menu_share">Partager</string>
+    <string name="menu_rating">Évaluer</string>
+    <string name="menu_eula">Licence</string>
     <string name="menu_call_rink">Appeler</string>
     <string name="menu_map_view_rink">Situer sur la carte</string>
     <string name="context_menu_favorites_add">Ajouter aux favoris</string>
@@ -71,6 +71,11 @@
     <string name="dialog_links_conditions_pdf"><a href="http://ville.montreal.qc.ca/portal/page?_pageid=5798,40305564&amp;_dad=portal&amp;_schema=PORTAL">Conditions des sites hivernaux</a></string>
     <string name="dialog_links_rinks_contact"><a href="http://www11.ville.montreal.qc.ca/sherlock2/servlet/template/sherlock%2CAfficherDocumentInternet.vm/nodocument/154">Coordonnées des patinoires</a></string>
     <string name="rink_details_conditions">Conditions : %s</string>
+    <string name="rink_details_condition_excellent">Excellentes</string>
+    <string name="rink_details_condition_good">Bonnes</string>
+    <string name="rink_details_condition_bad">Mauvaises</string>
+    <string name="rink_details_condition_closed">Fermée</string>
+    <string name="rink_details_condition_unknown">Inconnues</string>
     <string name="rink_details_surface">Surface : %s</string>
     <string name="rink_details_is_cleared">Déblayée</string>
     <string name="rink_details_is_flooded">Arrosée</string>
@@ -94,12 +99,10 @@
     <string name="dialog_network_connection_title">Pas de connexion!</string>
     <string name="dialog_network_connection_message">Une connexion réseau est nécessaire pour la mise à jour des informations des patinoires. Veuillez activer votre connexion au réseau mobile ou Wi-Fi…</string>
     <string name="search_results">Résultats pour « <xliff:g id="string">%s</xliff:g> »</string>
-    <!-- <string name="prefs_category_display">Paramètres de l’affichage</string> -->
     <string name="prefs_breadcrumb">Paramètres</string>
     <string name="prefs_category_conditions">Conditions de la patinoire</string>
     <string name="prefs_condition_title">Conditions</string>
     <string name="prefs_condition_summary">Afficher ou cacher les patinoires selon l’état de la glace, dans les listes et sur la carte</string>
-    <!-- <string name="prefs_condition_dialog_title">Rink Condition</string> -->
     <string name="prefs_condition_excellent">Excellentes</string>
     <string name="prefs_condition_good">Bonnes</string>
     <string name="prefs_condition_bad">Mauvaises</string>
@@ -205,5 +208,9 @@
     <!--Widget-->
     <string name="empty_list_widget">Patiner Montréal : La liste des patinoires favorites est vide…</string>
     <string name="widget_loading">Chargement en cours…</string>
+
+    <!--DashClock-->
+    <string name="dashclock_title">Patiner Montréal</string>
+    <string name="dashclock_content_desc">Afficher les conditions de votre patinoire favorite la plus proche.</string>
 
 </resources>

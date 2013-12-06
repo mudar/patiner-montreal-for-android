@@ -364,7 +364,7 @@ public class RinkDetailsFragment extends Fragment
         TextView vCondition = (TextView) mRootView.findViewById(R.id.l_rink_condition);
         vCondition.setText(String.format(
                 mResources.getString(R.string.rink_details_conditions),
-                getConditionText(condition)
+                Helper.getConditionText(mResources, condition)
         ));
 
         if (Const.SUPPORTS_JELLYBEAN) {
@@ -524,29 +524,6 @@ public class RinkDetailsFragment extends Fragment
         return rinkId;
     }
 
-    private String getConditionText(int condition) {
-        int conditionIndex;
-
-        switch (condition) {
-            case DbValues.CONDITION_EXCELLENT:
-                conditionIndex = R.string.prefs_condition_excellent;
-                break;
-            case DbValues.CONDITION_GOOD:
-                conditionIndex = R.string.prefs_condition_good;
-                break;
-            case DbValues.CONDITION_BAD:
-                conditionIndex = R.string.prefs_condition_bad;
-                break;
-            case DbValues.CONDITION_CLOSED:
-                conditionIndex = R.string.prefs_condition_closed;
-                break;
-            default:
-                conditionIndex = R.string.prefs_condition_unknown;
-                break;
-        }
-
-        return (String) mResources.getText(conditionIndex);
-    }
 
     private String getSurfaceText(int isCleared, int isFlooded, int isResurfaced) {
         int surfaceIndex;
