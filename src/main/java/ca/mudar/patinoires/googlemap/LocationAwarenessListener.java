@@ -24,7 +24,9 @@
 package ca.mudar.patinoires.googlemap;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
@@ -35,22 +37,29 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 
+import ca.mudar.patinoires.Const;
 import ca.mudar.patinoires.PatinoiresApp;
+import ca.mudar.patinoires.services.DistanceUpdateService;
 
 public class LocationAwarenessListener implements LocationListener,
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener {
-    final private Context mContext;
+    private final static String TAG = "LocationAwarenessListener";
+    private final Context mContext;
     private final PatinoiresApp mAppHelper;
     private LocationRequest mLocationRequest;
     // Stores the current instantiation of the location client in this object
     private LocationClient mLocationClient;
+    private boolean mHasPassiveLocationUpdates;
 
-    public LocationAwarenessListener(Context context) {
+    public LocationAwarenessListener(Context context, boolean hasPassiveLocationUpdates) {
         mContext = context;
         mAppHelper = (PatinoiresApp) context.getApplicationContext();
+        mHasPassiveLocationUpdates = hasPassiveLocationUpdates;
 
-        initializePlayServices();
+        // We always initialize the Active locationClient.
+        // When stopped, we check if the passive locationClient needs to be started.
+        initializeActiveLocationClient();
     }
 
     /**
@@ -62,7 +71,6 @@ public class LocationAwarenessListener implements LocationListener,
     public void onLocationChanged(Location location) {
         // Update the app's location
         mAppHelper.setLocation(location);
-
     }
 
     @Override
@@ -95,45 +103,53 @@ public class LocationAwarenessListener implements LocationListener,
          */
         if (connectionResult.hasResolution()) {
             try {
-
                 // Start an Activity that tries to resolve the error
                 connectionResult.startResolutionForResult(
                         (Activity) mContext,
                         LocationUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-
-                /*
-                * Thrown if Google Play services canceled the original
-                * PendingIntent
-                */
-
             } catch (IntentSender.SendIntentException e) {
-                // Log the error
+                // Thrown if Google Play services canceled the original PendingIntent.
                 e.printStackTrace();
             }
         }
         // else { // Nothing here. Play Services are not not strictly required }
     }
 
-    private void initializePlayServices() {
+    private void initializeActiveLocationClient() {
         // Create a new global location parameters object
         mLocationRequest = LocationRequest.create();
 
-        /*
-         * Set the update interval
-         */
-        mLocationRequest.setInterval(LocationUtils.UPDATE_INTERVAL_IN_MILLISECONDS);
+        // Set the update interval
+        mLocationRequest.setInterval(LocationUtils.UPDATE_INTERVAL_ACTIVE_IN_MILLIS);
 
         // Use high accuracy
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        // Set the interval ceiling to one minute
-        mLocationRequest.setFastestInterval(LocationUtils.FAST_INTERVAL_CEILING_IN_MILLISECONDS);
+        // Set the interval ceiling to one second
+        mLocationRequest.setFastestInterval(LocationUtils.FAST_INTERVAL_CEILING_ACTIVE_IN_MILLIS);
 
-        /*
-         * Create a new location client, using the enclosing class to
-         * handle callbacks.
-         */
+        // Create a new location client, using the enclosing class to handle callbacks.
         mLocationClient = new LocationClient(mContext, this, this);
+    }
+
+    private void initializePassiveLocationClient() {
+        mLocationRequest = LocationRequest.create();
+
+        // Set the passive update interval
+        mLocationRequest.setInterval(LocationUtils.UPDATE_INTERVAL_PASSIVE_IN_MILLIS);
+
+        // Use balanced-power accuracy
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_NO_POWER);
+
+        // Set the passive interval ceiling to twenty seconds
+        mLocationRequest.setFastestInterval(LocationUtils.FAST_INTERVAL_CEILING_PASSIVE_IN_MILLIS);
+
+        Intent updateIntent = new Intent(mContext, DistanceUpdateService.class);
+        updateIntent.setAction(Const.INTENT_ACTION_PASSIVE_LOCATION);
+        PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, updateIntent, PendingIntent.FLAG_NO_CREATE);
+
+        // Create a new location client, using the pending intent service to handle callbacks.
+        mLocationClient.requestLocationUpdates(mLocationRequest, pendingIntent);
     }
 
     public void startConnection() {
@@ -154,5 +170,10 @@ public class LocationAwarenessListener implements LocationListener,
 
     public void stopPeriodicUpdates() {
         mLocationClient.removeLocationUpdates(this);
+
+        if (mHasPassiveLocationUpdates) {
+            // We start the passive location updates when activity leaves foreground
+            initializePassiveLocationClient();
+        }
     }
 }

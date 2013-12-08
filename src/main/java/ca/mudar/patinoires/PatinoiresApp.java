@@ -126,7 +126,6 @@ public class PatinoiresApp extends Application {
      * partial distance updates.
      */
     public void initializeLocation() {
-        // TODO replace this by a listener or synch tasks
         mLocation = null;
 
         prefsEditor.putFloat(PrefsNames.LAST_UPDATE_LAT, Float.NaN);

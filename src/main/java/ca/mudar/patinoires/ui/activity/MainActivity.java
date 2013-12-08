@@ -53,7 +53,6 @@ public class MainActivity extends BaseActivity {
     private static boolean hasLoadedData;
     private static boolean hasLoadedDataLocally = false;
     protected PatinoiresApp mAppHelper;
-    protected SharedPreferences prefs;
     private SyncStatusUpdaterFragment mSyncStatusUpdaterFragment;
     private String lang;
     private LocationAwarenessListener mLocationAwarenessListener;
@@ -74,9 +73,9 @@ public class MainActivity extends BaseActivity {
         /**
          * Make sure the distance is updated on first load!
          */
-        Location l = appHelper.getLocation();
+        final Location loc = appHelper.getLocation();
         appHelper.initializeLocation();
-        appHelper.setLocation(l);
+        appHelper.setLocation(loc);
     }
 
     @Override
@@ -89,7 +88,8 @@ public class MainActivity extends BaseActivity {
          * SharedPreferences are used to verify determine if syncService is
          * required for initial launch or on database upgrade.
          */
-        prefs = getSharedPreferences(Const.APP_PREFS_NAME, Context.MODE_PRIVATE);
+        final SharedPreferences prefs = getSharedPreferences(Const.APP_PREFS_NAME,
+                Context.MODE_PRIVATE);
         hasLoadedData = prefs.getBoolean(Const.PrefsNames.HAS_LOADED_DATA, false);
         int dbVersionPrefs = prefs.getInt(Const.PrefsNames.VERSION_DATABASE, -1);
 
@@ -104,7 +104,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
 
-        mLocationAwarenessListener = new LocationAwarenessListener(this);
+        mLocationAwarenessListener = new LocationAwarenessListener(this, true);
     }
 
     @Override

@@ -367,7 +367,7 @@ public class RinkDetailsFragment extends Fragment
                 Helper.getConditionText(mResources, condition)
         ));
 
-        if (Const.SUPPORTS_JELLYBEAN) {
+        if (Const.SUPPORTS_JELLY_BEAN) {
             vCondition.setBackground(mResources.getDrawable(Helper.getConditionBackground(condition)));
         } else {
             vCondition.setBackgroundResource(Helper.getConditionBackground(condition));

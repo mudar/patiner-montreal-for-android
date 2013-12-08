@@ -92,7 +92,7 @@ public class MapActivity extends BaseActivity {
             isCenterOnMyLocation = true;
         }
 
-        mLocationAwarenessListener = new LocationAwarenessListener(this);
+        mLocationAwarenessListener = new LocationAwarenessListener(this, false);
     }
 
     @Override

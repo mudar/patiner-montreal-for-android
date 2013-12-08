@@ -70,7 +70,8 @@ public class RinksProvider extends ContentProvider {
     private static final int RINKS_SKATING = 132;
     private static final int RINKS_HOCKEY = 133;
     private static final int RINKS_ALL = 134;
-    private static final int RINKS_ID = 135;
+    private static final int RINKS_NEAREST_FAVORITE = 135;
+    private static final int RINKS_ID = 136;
     private static final int FAVORITES = 140;
     private static final int FAVORITES_ID = 141;
     private static final int RINKS_SEARCH = 150;
@@ -91,6 +92,7 @@ public class RinksProvider extends ContentProvider {
 
         matcher.addURI(authority, "rinks", RINKS);
         matcher.addURI(authority, "rinks/favorites", RINKS_FAVORITES);
+        matcher.addURI(authority, "rinks/nearestfavorite", RINKS_NEAREST_FAVORITE);
         matcher.addURI(authority, "rinks/skating", RINKS_SKATING);
         matcher.addURI(authority, "rinks/hockey", RINKS_HOCKEY);
         matcher.addURI(authority, "rinks/all", RINKS_ALL);
@@ -143,6 +145,7 @@ public class RinksProvider extends ContentProvider {
                 return Rinks.CONTENT_ITEM_TYPE;
             case FAVORITES:
                 return Favorites.CONTENT_TYPE;
+            case RINKS_NEAREST_FAVORITE:
             case FAVORITES_ID:
                 return Favorites.CONTENT_ITEM_TYPE;
             case RINKS_SUGGEST:
@@ -349,6 +352,7 @@ public class RinksProvider extends ContentProvider {
                         .map(Rinks.RINK_IS_FAVORITE, Favorites.FAVORITE_IS_FAVORITE_MAPPED)
                         .where(Rinks.RINK_ID + " IS NOT NULL ");
             }
+            case RINKS_NEAREST_FAVORITE:
             case RINKS_FAVORITES: {
                 return builder.table(Tables.BOROUGHS_JOIN_PARKS_RINKS_FAVORITES)
                         .mapToTable(Rinks._ID, Tables.RINKS)

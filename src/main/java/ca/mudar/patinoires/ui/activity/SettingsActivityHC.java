@@ -106,8 +106,9 @@ public class SettingsActivityHC extends PreferenceActivity {
 
         ((PatinoiresApp) getApplicationContext()).setLanguage(lg);
 
-        // Notify favorites URI, for the AppWidget
+        // Notify favorites URI, for the AppWidget and DashClock widgets
         getApplicationContext().getContentResolver().notifyChange(RinksContract.Rinks.CONTENT_FAVORITES_URI, null);
+        getApplicationContext().getContentResolver().notifyChange(RinksContract.Rinks.CONTENT_NEAREST_FAVORITE_URI, null);
 
         // Restart Settings with a fade in/out
         this.finish();

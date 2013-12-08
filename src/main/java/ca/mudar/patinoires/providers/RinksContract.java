@@ -58,6 +58,7 @@ public class RinksContract {
     private static final String PATH_RINKS_FAVORITES = "favorites";
     private static final String PATH_RINKS_SKATING = "skating";
     private static final String PATH_RINKS_HOCKEY = "hockey";
+    private static final String PATH_RINKS_NEAREST_FAVORITE = "nearestfavorite";
     private static final String PATH_RINKS_ALL = "all";
     // Search
     private static final String PATH_RINKS_SEARCH = "recherche";
@@ -171,6 +172,8 @@ public class RinksContract {
                 .appendPath(PATH_RINKS).appendPath(PATH_RINKS_ALL).build();
         public static final Uri CONTENT_SEARCH_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_RINKS).appendPath(PATH_RINKS_SEARCH).build();
+        public static final Uri CONTENT_NEAREST_FAVORITE_URI = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_RINKS).appendPath(PATH_RINKS_NEAREST_FAVORITE).build();
 
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.patinoires.rink";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.patinoires.rink";

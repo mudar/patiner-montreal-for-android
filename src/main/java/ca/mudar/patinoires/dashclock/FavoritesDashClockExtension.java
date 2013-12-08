@@ -46,7 +46,7 @@ public class FavoritesDashClockExtension extends DashClockExtension {
         super.onInitialize(isReconnect);
 
         addWatchContentUris(new String[]{
-                RinksContract.Rinks.CONTENT_FAVORITES_URI.toString()
+                RinksContract.Rinks.CONTENT_NEAREST_FAVORITE_URI.toString()
         });
     }
 
@@ -112,7 +112,7 @@ public class FavoritesDashClockExtension extends DashClockExtension {
      */
     private DashClockItem getNearestFavoriteRink() {
         Cursor c = getApplicationContext().getContentResolver().query(
-                RinksContract.Rinks.CONTENT_FAVORITES_URI,
+                RinksContract.Rinks.CONTENT_NEAREST_FAVORITE_URI,
                 StackRemoteViewsFactory.FavoriteRinksQuery.PROJECTION,
                 null,
                 null,

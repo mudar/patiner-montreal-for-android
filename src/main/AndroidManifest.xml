@@ -273,23 +273,6 @@
                 android:value="@string/dashclock_content_desc" />
         </service>
 
-
-        <receiver android:name="ca.mudar.patinoires.receivers.LocationChangedReceiver" />
-        <receiver android:name="ca.mudar.patinoires.receivers.PassiveLocationChangedReceiver" />
-        <receiver
-            android:name="ca.mudar.patinoires.receivers.ConnectivityChangedReceiver"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name="ca.mudar.patinoires.receivers.PowerStateChangedReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BATTERY_LOW" />
-                <action android:name="android.intent.action.BATTERY_OKAY" />
-            </intent-filter>
-        </receiver>
-
         <receiver
             android:name="ca.mudar.patinoires.appwidget.FavoritesWidgetProvider"
             android:enabled="@bool/has_honeycomb"

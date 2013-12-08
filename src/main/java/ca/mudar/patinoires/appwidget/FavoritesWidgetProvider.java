@@ -54,7 +54,7 @@ public class FavoritesWidgetProvider extends AppWidgetProvider {
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private static void setRemoteAdapterCompat(RemoteViews rv, int appWidgetId, int viewId, Intent intent) {
-        if (Const.SUPPORTS_ICECREAMSANDWICH) {
+        if (Const.SUPPORTS_ICE_CREAM_SANDWICH) {
             rv.setRemoteAdapter(R.id.stack_view, intent);
         } else {
             rv.setRemoteAdapter(appWidgetId, viewId, intent);

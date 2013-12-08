@@ -230,6 +230,7 @@ public class BaseActivity extends ActionBarActivity {
          * We start by the favorites!
          */
         resolver.notifyChange(RinksContract.Rinks.CONTENT_FAVORITES_URI, null);
+        resolver.notifyChange(RinksContract.Rinks.CONTENT_NEAREST_FAVORITE_URI, null);
 
         resolver.notifyChange(RinksContract.Rinks.CONTENT_SKATING_URI, null);
         resolver.notifyChange(RinksContract.Rinks.CONTENT_HOCKEY_URI, null);

@@ -38,6 +38,8 @@ import android.os.RemoteException;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import com.google.android.gms.location.LocationClient;
+
 import java.util.ArrayList;
 
 import ca.mudar.patinoires.Const;
@@ -85,8 +87,8 @@ public class DistanceUpdateService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         final long startLocal = System.currentTimeMillis();
 
-        Double latitude = intent.getDoubleExtra(Const.INTENT_EXTRA_GEO_LAT, Double.NaN);
-        Double longitude = intent.getDoubleExtra(Const.INTENT_EXTRA_GEO_LNG, Double.NaN);
+        Double latitude = null;
+        Double longitude = null;
 
         /**
          * Check to see if this is a forced update. Currently not in use in the
@@ -94,15 +96,30 @@ public class DistanceUpdateService extends IntentService {
          */
         boolean doUpdate = intent.getBooleanExtra(Const.INTENT_EXTRA_FORCE_UPDATE, false);
 
-        if (latitude.equals(Double.NaN) || longitude.equals(Double.NaN)) {
+        /**
+         * First check if it's a passivce location update
+         */
+        if (Const.INTENT_ACTION_PASSIVE_LOCATION.equals(intent.getAction())) {
+            final Location location = intent.getParcelableExtra(LocationClient.KEY_LOCATION_CHANGED);
+            if (location != null) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
 
+                doUpdate = false;
+            }
+        } else {
+            latitude = intent.getDoubleExtra(Const.INTENT_EXTRA_GEO_LAT, Double.NaN);
+            longitude = intent.getDoubleExtra(Const.INTENT_EXTRA_GEO_LNG, Double.NaN);
+        }
+
+        if (latitude.equals(Double.NaN) || longitude.equals(Double.NaN)
+                || (latitude == null) || (longitude == null)) {
             /**
              * Intent extras are empty, force update if we have lat/lng in
              * Prefs.
              */
-
-            Float lastLat = prefs.getFloat(PrefsNames.LAST_UPDATE_LAT, Float.NaN);
-            Float lastLng = prefs.getFloat(PrefsNames.LAST_UPDATE_LNG, Float.NaN);
+            final Float lastLat = prefs.getFloat(PrefsNames.LAST_UPDATE_LAT, Float.NaN);
+            final Float lastLng = prefs.getFloat(PrefsNames.LAST_UPDATE_LNG, Float.NaN);
 
             if (lastLat.equals(Float.NaN) || lastLng.equals(Float.NaN)) {
                 return;
@@ -119,21 +136,21 @@ public class DistanceUpdateService extends IntentService {
          * if so, enforce a new update.
          */
         if (!doUpdate) {
-            Location newLocation = new Location(Const.LOCATION_PROVIDER);
+            final Location newLocation = new Location(Const.LOCATION_PROVIDER);
             newLocation.setLatitude(latitude);
             newLocation.setLongitude(longitude);
 
             /**
              * Retrieve the last update time and place.
              */
-            long lastTime = prefs.getLong(PrefsNames.LAST_UPDATE_TIME_GEO, Long.MIN_VALUE);
-            Float lastLat = prefs.getFloat(PrefsNames.LAST_UPDATE_LAT, Float.NaN);
-            Float lastLng = prefs.getFloat(PrefsNames.LAST_UPDATE_LNG, Float.NaN);
+            final long lastTime = prefs.getLong(PrefsNames.LAST_UPDATE_TIME_GEO, Long.MIN_VALUE);
+            final Float lastLat = prefs.getFloat(PrefsNames.LAST_UPDATE_LAT, Float.NaN);
+            final Float lastLng = prefs.getFloat(PrefsNames.LAST_UPDATE_LNG, Float.NaN);
 
             if (lastLat.equals(Float.NaN) || lastLng.equals(Float.NaN)) {
                 doUpdate = true;
             } else {
-                Location lastLocation = new Location(Const.LOCATION_PROVIDER);
+                final Location lastLocation = new Location(Const.LOCATION_PROVIDER);
                 lastLocation.setLatitude(lastLat.doubleValue());
                 lastLocation.setLongitude(lastLng.doubleValue());
 
@@ -152,6 +169,7 @@ public class DistanceUpdateService extends IntentService {
             try {
                 contentResolver.applyBatch(RinksContract.CONTENT_AUTHORITY,
                         updateDistance(Parks.CONTENT_URI, latitude, longitude));
+                contentResolver.notifyChange(RinksContract.Rinks.CONTENT_NEAREST_FAVORITE_URI, null);
             } catch (RemoteException e) {
                 e.printStackTrace();
             } catch (OperationApplicationException e) {
@@ -165,17 +183,18 @@ public class DistanceUpdateService extends IntentService {
             prefsEditor.putFloat(PrefsNames.LAST_UPDATE_LNG, longitude.floatValue());
             prefsEditor.putLong(PrefsNames.LAST_UPDATE_TIME_GEO, System.currentTimeMillis());
             prefsEditor.commit();
+
+            Log.v(TAG, "Distance calculation took " + (System.currentTimeMillis() - startLocal) + " ms");
+        } else {
+            // Log.v(TAG, "Skipped distance calculation");
         }
-        Log.v(TAG, "Distance calculation took " + (System.currentTimeMillis()
-                - startLocal) + " ms");
     }
 
     protected ArrayList<ContentProviderOperation> updateDistance(Uri contentUri,
                                                                  double startLatitude, double startLongitude) {
         final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
 
-        ContentProviderOperation.Builder builder = ContentProviderOperation
-                .newUpdate(contentUri);
+        ContentProviderOperation.Builder builder;
 
         Cursor queuedParks = contentResolver.query(contentUri, PARKS_SUMMARY_PROJECTION,
                 null, null, ParksColumns.PARK_GEO_DISTANCE);
