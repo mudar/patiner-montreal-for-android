@@ -119,13 +119,13 @@ public class LocationAwarenessListener implements LocationListener,
         // Create a new global location parameters object
         mLocationRequest = LocationRequest.create();
 
-        // Set the update interval
+        // Set the update interval to five seconds
         mLocationRequest.setInterval(LocationUtils.UPDATE_INTERVAL_ACTIVE_IN_MILLIS);
 
         // Use high accuracy
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        // Set the interval ceiling to one second
+        // Set the interval ceiling to two seconds
         mLocationRequest.setFastestInterval(LocationUtils.FAST_INTERVAL_CEILING_ACTIVE_IN_MILLIS);
 
         // Create a new location client, using the enclosing class to handle callbacks.
@@ -135,18 +135,18 @@ public class LocationAwarenessListener implements LocationListener,
     private void initializePassiveLocationClient() {
         mLocationRequest = LocationRequest.create();
 
-        // Set the passive update interval
+        // Set the passive update interval to fifteen minutes
         mLocationRequest.setInterval(LocationUtils.UPDATE_INTERVAL_PASSIVE_IN_MILLIS);
 
         // Use balanced-power accuracy
         mLocationRequest.setPriority(LocationRequest.PRIORITY_NO_POWER);
 
-        // Set the passive interval ceiling to twenty seconds
+        // Set the passive interval ceiling to five minutes
         mLocationRequest.setFastestInterval(LocationUtils.FAST_INTERVAL_CEILING_PASSIVE_IN_MILLIS);
 
         Intent updateIntent = new Intent(mContext, DistanceUpdateService.class);
         updateIntent.setAction(Const.INTENT_ACTION_PASSIVE_LOCATION);
-        PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, updateIntent, PendingIntent.FLAG_NO_CREATE);
+        PendingIntent pendingIntent = PendingIntent.getService(mContext, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Create a new location client, using the pending intent service to handle callbacks.
         mLocationClient.requestLocationUpdates(mLocationRequest, pendingIntent);
