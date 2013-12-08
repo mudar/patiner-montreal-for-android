@@ -198,6 +198,7 @@ public class RinksContract {
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.patinoires.favorite";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.patinoires.favorite";
         public static final String DEFAULT_SORT = FavoritesColumns.FAVORITE_RINK_ID + " ASC ";
+        public static final String NEAREST_FAVORITE_QUERY_LIMIT = "1";
 
         public static Uri buildFavoriteUri(String id) {
             return CONTENT_URI.buildUpon().appendPath(id).build();

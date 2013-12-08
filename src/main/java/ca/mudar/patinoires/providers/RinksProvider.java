@@ -173,6 +173,16 @@ public class RinksProvider extends ContentProvider {
                 c.setNotificationUri(getContext().getContentResolver(), uri);
                 return c;
             }
+            case RINKS_NEAREST_FAVORITE: {
+                // This allows adding a "LIMIT 1" to the query
+                String orderBy = RinksContract.Parks.PARK_GEO_DISTANCE + " ASC ";
+                Cursor c = builder.query(db, projection, null,
+                        null, orderBy, Favorites.NEAREST_FAVORITE_QUERY_LIMIT);
+
+                c.setNotificationUri(getContext().getContentResolver(), uri);
+
+                return c;
+            }
             case RINKS_SUGGEST:
             case RINKS_SUGGEST_ID: {
                 final String[] searchProjection = new String[]{
@@ -408,7 +418,7 @@ public class RinksProvider extends ContentProvider {
                         .map(SearchManager.SUGGEST_COLUMN_TEXT_2, Rinks.RINK_DESC_EN)
                         .map(SearchManager.SUGGEST_COLUMN_TEXT_2, Rinks.RINK_DESC_FR)
                         .map(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, Rinks.RINK_ID)
-                        .map(SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA, "NULL" )
+                        .map(SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA, "NULL")
                         .where(Favorites.FAVORITE_ID + " IS NOT NULL ")
                         .where(Rinks.RINK_ID + " IS NOT NULL ");
             case RINKS_SUGGEST_ID: {
@@ -421,7 +431,7 @@ public class RinksProvider extends ContentProvider {
                         .map(SearchManager.SUGGEST_COLUMN_TEXT_2, Rinks.RINK_DESC_EN)
                         .map(SearchManager.SUGGEST_COLUMN_TEXT_2, Rinks.RINK_DESC_FR)
                         .map(SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID, Rinks.RINK_ID)
-                        .map(SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA, '"' + search + '"' )
+                        .map(SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA, '"' + search + '"')
                         .where(Rinks.RINK_ID + " IS NOT NULL ")
                         .where(Rinks.RINK_NAME + " LIKE ? OR " + Rinks.RINK_NAME + " LIKE ? OR " + Rinks.RINK_NAME + " LIKE ? ",
                                 search + "%",

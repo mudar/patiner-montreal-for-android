@@ -116,7 +116,7 @@ public class FavoritesDashClockExtension extends DashClockExtension {
                 StackRemoteViewsFactory.FavoriteRinksQuery.PROJECTION,
                 null,
                 null,
-                RinksContract.Parks.PARK_GEO_DISTANCE + " ASC "
+                null
         );
 
         if (c == null) {
