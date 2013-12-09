@@ -156,7 +156,7 @@ public class PatinoiresApp extends Application {
 //        Log.v(TAG, "setLocation");
         if (location != null) {
 //            Log.v(TAG, "new location = " + location.getLatitude() + "," + location.getLongitude());
-            if ((mLocation == null) || (this.mLocation.distanceTo(location) > Const.MAX_DISTANCE)) {
+            if ((mLocation == null) || (this.mLocation.distanceTo(location) > Const.MIN_DISTANCE)) {
                 Intent intent = new Intent(this.getApplicationContext(),
                         DistanceUpdateService.class);
                 intent.putExtra(Const.INTENT_EXTRA_GEO_LAT, location.getLatitude());

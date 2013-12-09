@@ -45,9 +45,9 @@ public final class LocationUtils {
             DateUtils.SECOND_IN_MILLIS * 2;
     // Passive Update interval in milliseconds
     public static final long UPDATE_INTERVAL_PASSIVE_IN_MILLIS =
-            DateUtils.MINUTE_IN_MILLIS * 15;   // fifteen minutes. This is equal to Const.MAX_TIME
+            DateUtils.HOUR_IN_MILLIS * 1;   // One hour
     // A fast ceiling of passive update intervals, used when the app is visible
     public static final long FAST_INTERVAL_CEILING_PASSIVE_IN_MILLIS =
-            DateUtils.MINUTE_IN_MILLIS * 5;    // five minutes
+            DateUtils.MINUTE_IN_MILLIS * 15;    // fifteen minutes. This is equal to Const.MIN_TIME
 
 }

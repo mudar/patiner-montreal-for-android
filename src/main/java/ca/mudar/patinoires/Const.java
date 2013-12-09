@@ -23,8 +23,8 @@
 
 package ca.mudar.patinoires;
 
-import android.app.AlarmManager;
 import android.os.Build;
+import android.text.format.DateUtils;
 
 public class Const {
 
@@ -95,10 +95,10 @@ public class Const {
     // The default search radius when searching for places nearby.
     public static int DEFAULT_RADIUS = 150;
     // The maximum distance the user should travel between location updates.
-    public static int MAX_DISTANCE = DEFAULT_RADIUS / 2;
-    // The maximum time that should pass before the user gets a location update.
-    public static long MAX_TIME = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
-    public static int DB_MAX_DISTANCE = MAX_DISTANCE / 2;
+    public static int MIN_DISTANCE = DEFAULT_RADIUS / 2;
+    // The maximum time that should pass before the user gets a passive location update.
+    public static long MAX_TIME = DateUtils.MINUTE_IN_MILLIS * 15;
+    public static int DB_MIN_DISTANCE = MIN_DISTANCE / 2;
 
     // Assets
     public static interface LocalAssets {

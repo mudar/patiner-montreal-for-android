@@ -135,13 +135,13 @@ public class LocationAwarenessListener implements LocationListener,
     private void initializePassiveLocationClient() {
         mLocationRequest = LocationRequest.create();
 
-        // Set the passive update interval to fifteen minutes
+        // Set the passive update interval to one hour
         mLocationRequest.setInterval(LocationUtils.UPDATE_INTERVAL_PASSIVE_IN_MILLIS);
 
         // Use balanced-power accuracy
         mLocationRequest.setPriority(LocationRequest.PRIORITY_NO_POWER);
 
-        // Set the passive interval ceiling to five minutes
+        // Set the passive interval ceiling to fifteen minutes
         mLocationRequest.setFastestInterval(LocationUtils.FAST_INTERVAL_CEILING_PASSIVE_IN_MILLIS);
 
         Intent updateIntent = new Intent(mContext, DistanceUpdateService.class);

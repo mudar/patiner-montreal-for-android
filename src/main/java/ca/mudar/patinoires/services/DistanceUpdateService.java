@@ -159,7 +159,7 @@ public class DistanceUpdateService extends IntentService {
                  * update.
                  */
                 if ((lastTime < System.currentTimeMillis() - Const.MAX_TIME)
-                        || (lastLocation.distanceTo(newLocation) > Const.MAX_DISTANCE)) {
+                        || (lastLocation.distanceTo(newLocation) > Const.MIN_DISTANCE)) {
                     doUpdate = true;
                 }
             }
@@ -231,7 +231,7 @@ public class DistanceUpdateService extends IntentService {
                  * Compare the new distance to the old one, to avoid the db
                  * write operation if not necessary.
                  */
-                if (Math.abs(oldDistance - distance) > Const.DB_MAX_DISTANCE) {
+                if (Math.abs(oldDistance - distance) > Const.DB_MIN_DISTANCE) {
                     builder = ContentProviderOperation.newUpdate(contentUri);
                     builder.withValue(ParksColumns.PARK_GEO_DISTANCE, distance);
                     builder.withSelection(selection, queuedId);
