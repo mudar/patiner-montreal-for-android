@@ -39,7 +39,7 @@ public class GeoHelper {
     public static Address findAddressFromName(Context c, String name) throws IOException {
         Geocoder geocoder = new Geocoder(c);
 
-        if (geocoder.isPresent()) {
+        if (!geocoder.isPresent()) {
             throw new IOException("Service not Present", null);
         }
 

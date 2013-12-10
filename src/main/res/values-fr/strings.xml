@@ -25,7 +25,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <string name="app_name">Patiner Montréal</string>
-    <string name="app_version">1.1</string>
+    <string name="app_version">1.2</string>
     <string name="app_name_map">Carte de Patiner Montréal</string>
     <string name="app_name_details">Patinoire de Patiner Montréal</string>
     <string name="app_name_search">Recherche de Patiner Montréal</string>
