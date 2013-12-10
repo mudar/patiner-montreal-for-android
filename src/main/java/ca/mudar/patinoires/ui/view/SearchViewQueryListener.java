@@ -57,6 +57,8 @@ public class SearchViewQueryListener implements
         SearchMessageHandler.OnMessageHandledListener,
         Runnable {
     protected static final String TAG = "SearchViewQueryListener";
+    protected static final String EXCEPTION_MSG_SUFFIX = "(Android system error)";
+    protected static final int QUERY_MIN_LENGTH = 2;
     final private Activity mActivity;
     private MenuItem mSearchMenuItem;
     private String mSearchQuery;
@@ -79,8 +81,11 @@ public class SearchViewQueryListener implements
     public boolean onQueryTextSubmit(String query) {
         mSearchQuery = query;
 
-        searchToggle(false);
+        if ((mSearchQuery == null) || (mSearchQuery.length() < QUERY_MIN_LENGTH)) {
+            return false;
+        }
 
+        searchToggle(false);
         if (ConnectionHelper.hasConnection(mActivity)) {
             showSearchProcessing();
         } else {
@@ -139,7 +144,12 @@ public class SearchViewQueryListener implements
                     .icon(BitmapDescriptorFactory
                             .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)).visible(true));
             searchedMarker.showInfoWindow();
-
+        } else if ((b.getInt(Const.KEY_BUNDLE_SEARCH_ADDRESS) == Const.BUNDLE_SEARCH_SERVICE_ERROR)
+                && (b.getString(Const.KEY_BUNDLE_SERVICE_ERROR_MSG) != null)) {
+            ((PatinoiresApp) mActivity.getApplicationContext()).showToastText(
+                    b.getString(Const.KEY_BUNDLE_SERVICE_ERROR_MSG) + Const.LINE_SEPARATOR + EXCEPTION_MSG_SUFFIX,
+                    Toast.LENGTH_LONG);
+            mSearchMenuItem.setVisible(false);
         } else {
             /**
              * Address not found! Display error message.
@@ -158,37 +168,41 @@ public class SearchViewQueryListener implements
      */
     @Override
     public void run() {
+        final Message msg = handler.obtainMessage();
+        final Bundle b = new Bundle();
+
         Address address = null;
+
         try {
             /**
              * Geocode search. Takes time and not very reliable!
              */
             address = GeoHelper.findAddressFromName(mActivity, mSearchQuery);
+
+            if (address == null) {
+                /**
+                 * Send error message to handler.
+                 */
+                b.putInt(Const.KEY_BUNDLE_SEARCH_ADDRESS, Const.BUNDLE_SEARCH_ADDRESS_ERROR);
+            } else {
+                /**
+                 * Send success message to handler with the found geocoordinates.
+                 */
+                b.putInt(Const.KEY_BUNDLE_SEARCH_ADDRESS, Const.BUNDLE_SEARCH_ADDRESS_SUCCESS);
+                b.putDouble(Const.KEY_BUNDLE_ADDRESS_LAT, address.getLatitude());
+                b.putDouble(Const.KEY_BUNDLE_ADDRESS_LNG, address.getLongitude());
+                b.putString(Const.KEY_BUNDLE_ADDRESS_DESC, address.getAddressLine(0));
+            }
         } catch (IOException e) {
-            // TODO: check this on Samsung Galaxy SIII
             e.printStackTrace();
+            b.putInt(Const.KEY_BUNDLE_SEARCH_ADDRESS, Const.BUNDLE_SEARCH_SERVICE_ERROR);
+            if (e.getMessage() != null && !e.getMessage().isEmpty()) {
+                b.putString(Const.KEY_BUNDLE_SERVICE_ERROR_MSG, e.getMessage());
+            }
+        } finally {
+            msg.setData(b);
+            handler.sendMessage(msg);
         }
-
-        final Message msg = handler.obtainMessage();
-        final Bundle b = new Bundle();
-
-        if (address == null) {
-            /**
-             * Send error message to handler.
-             */
-            b.putInt(Const.KEY_BUNDLE_SEARCH_ADDRESS, Const.BUNDLE_SEARCH_ADDRESS_ERROR);
-        } else {
-            /**
-             * Send success message to handler with the found geocoordinates.
-             */
-            b.putInt(Const.KEY_BUNDLE_SEARCH_ADDRESS, Const.BUNDLE_SEARCH_ADDRESS_SUCCESS);
-            b.putDouble(Const.KEY_BUNDLE_ADDRESS_LAT, address.getLatitude());
-            b.putDouble(Const.KEY_BUNDLE_ADDRESS_LNG, address.getLongitude());
-            b.putString(Const.KEY_BUNDLE_ADDRESS_DESC, address.getAddressLine(0));
-        }
-        msg.setData(b);
-
-        handler.sendMessage(msg);
     }
 
     public void setSearchMenuItem(MenuItem item) {

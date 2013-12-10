@@ -104,7 +104,8 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         setSupportProgressBarIndeterminateVisibility(Boolean.FALSE);
 
-        mLocationAwarenessListener = new LocationAwarenessListener(this, true);
+        mLocationAwarenessListener = new LocationAwarenessListener(this,
+                prefs.getBoolean(Const.PrefsNames.FOLLOW_LOCATION_CHANGES, false));
     }
 
     @Override

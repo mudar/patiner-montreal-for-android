@@ -166,7 +166,7 @@
     <string name="prefs_list_sort_name">Alphabetical order</string>
     <string name="prefs_list_sort_distance">Distance</string>
     <string name="prefs_follow_location_title">Enhanced measurements</string>
-    <string name="prefs_follow_location_summary">Experimental: Background location updates. Useful if on the move.</string>
+    <string name="prefs_follow_location_summary">Background location updates. Useful on the move and for DashClock extension.</string>
     <string name="menu_gmaps_directions">Directions</string>
     <string name="dialog_title_maps_chooser">Get STM itinerary using</string>
     <string name="accessibility_ic_close">Close</string>

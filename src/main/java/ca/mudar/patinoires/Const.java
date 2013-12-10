@@ -76,11 +76,13 @@ public class Const {
     public static final String INTENT_ACTION_PASSIVE_LOCATION = "ca.mudar.patinoires.passive_location";
     public static final String TAG_FRAGMENT_SEARCH = "tag_fragment_search";
     public static final String KEY_BUNDLE_SEARCH_ADDRESS = "bundle_search_address";
+    public static final int BUNDLE_SEARCH_SERVICE_ERROR = 0x2;
     public static final int BUNDLE_SEARCH_ADDRESS_SUCCESS = 0x1;
     public static final int BUNDLE_SEARCH_ADDRESS_ERROR = 0x0;
     public static final String KEY_BUNDLE_ADDRESS_LAT = "bundle_address_lat";
     public static final String KEY_BUNDLE_ADDRESS_LNG = "bundle_address_lng";
     public static final String KEY_BUNDLE_ADDRESS_DESC = "bundle_address_desc";
+    public static final String KEY_BUNDLE_SERVICE_ERROR_MSG = "geocoder_error_msg";
     public static final String LOCATION_PROVIDER = "my_default_provider";
     public static final long MILLISECONDS_FOUR_HOURS = 14400000; // 1000*60*60*4
     public static final long MILLISECONDS_FIVE_DAYS = 432000000; // 1000*60*60*24*5

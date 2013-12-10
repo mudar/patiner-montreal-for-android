@@ -38,6 +38,11 @@ public class GeoHelper {
 
     public static Address findAddressFromName(Context c, String name) throws IOException {
         Geocoder geocoder = new Geocoder(c);
+
+        if (geocoder.isPresent()) {
+            throw new IOException("Service not Present", null);
+        }
+
         List<Address> adr;
 
         adr = geocoder.getFromLocationName(name, MAX_RESULTS, Const.MAPS_GEOCODER_LIMITS[0],
