@@ -30,6 +30,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -102,15 +103,6 @@ public class BaseActivity extends ActionBarActivity {
     }
 
     /**
-     * Display the Map. Center will be user location or city center.
-     */
-//    public final void goMap() {
-//        final Intent intent = new Intent(getApplicationContext(), MapActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//        startActivity(intent);
-//    }
-
-    /**
      * Display Rink Details
      */
     public final void goRinkDetails(int id) {
@@ -152,7 +144,29 @@ public class BaseActivity extends ActionBarActivity {
 
         if (item.getItemId() == android.R.id.home) {
             // Respond to the action bar's Up/Home button
-            NavUtils.navigateUpFromSameTask(this);
+
+            Intent upIntent = NavUtils.getParentActivityIntent(this);
+            if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+
+                // This activity is NOT part of this app's task, so create a new task
+                // when navigating up, with a synthesized back stack.
+                TaskStackBuilder.create(this)
+                        .addNextIntentWithParentStack(upIntent)
+                        .startActivities();
+            } else {
+                // This activity is part of this app's task, so simply
+                // navigate up to the logical parent activity.
+
+                // NavUtils.navigateUpTo(this, upIntent);
+                /**
+                 * NOTE: there's an issue with NavUtils.navigateUpTo(this, upIntent)
+                 * where it does not launch the parent intent if the activity
+                 * is not present in the stack.
+                 */
+                upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(upIntent);
+                finish();
+            }
             return true;
         } else if (item.getItemId() == R.id.menu_preferences) {
             if (Const.SUPPORTS_HONEYCOMB) {
