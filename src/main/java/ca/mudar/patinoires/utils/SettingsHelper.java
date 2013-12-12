@@ -37,20 +37,11 @@ public class SettingsHelper {
      * re-enable the last unchecked condition and display Toast message.
      */
     public static boolean verifyConditionsError(SharedPreferences prefs) {
-        boolean hasEnabledCondition = false;
-
-        hasEnabledCondition = prefs.getBoolean(Const.PrefsNames.CONDITIONS_SHOW_EXCELLENT, false)
-                || hasEnabledCondition;
-        hasEnabledCondition = prefs.getBoolean(Const.PrefsNames.CONDITIONS_SHOW_GOOD, false)
-                || hasEnabledCondition;
-        hasEnabledCondition = prefs.getBoolean(Const.PrefsNames.CONDITIONS_SHOW_BAD, false)
-                || hasEnabledCondition;
-        hasEnabledCondition = prefs.getBoolean(Const.PrefsNames.CONDITIONS_SHOW_CLOSED, false)
-                || hasEnabledCondition;
-        hasEnabledCondition = prefs.getBoolean(Const.PrefsNames.CONDITIONS_SHOW_UNKNOWN, false)
-                || hasEnabledCondition;
-
-        return hasEnabledCondition;
+        return prefs.getBoolean(Const.PrefsNames.CONDITIONS_SHOW_EXCELLENT, false)
+                || prefs.getBoolean(Const.PrefsNames.CONDITIONS_SHOW_GOOD, false)
+                || prefs.getBoolean(Const.PrefsNames.CONDITIONS_SHOW_BAD, false)
+                || prefs.getBoolean(Const.PrefsNames.CONDITIONS_SHOW_CLOSED, false)
+                || prefs.getBoolean(Const.PrefsNames.CONDITIONS_SHOW_UNKNOWN, false);
     }
 
     /**

@@ -48,8 +48,8 @@ public class StackRemoteViewsFactory implements
         Loader.OnLoadCompleteListener<Cursor> {
     private static final String TAG = "StackRemoteViewsFactory";
     private static final int TYPE_COUNT = 3;  // Three types: loading, empty and listItem
-    private Context mContext;
-    private int mAppWidgetId;
+    private final Context mContext;
+    private final int mAppWidgetId;
     private int indexRinkDescColumn;
     private Cursor mCursor;
     private CursorLoader mLoader;

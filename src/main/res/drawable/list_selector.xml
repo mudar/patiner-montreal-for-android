@@ -43,7 +43,7 @@
     </item>
     <item>
         <shape>
-            <solid android:color="@color/background_1"></solid>
+            <solid android:color="@color/background_1"/>
         </shape>
     </item>
 

@@ -37,12 +37,8 @@
     <string name="menu_about">About</string>
     <string name="menu_preferences">Settings</string>
     <string name="menu_refresh">Refresh</string>
-    <string name="menu_refresh_map">Refresh</string>
-    <string name="menu_refresh_rink">Refresh</string>
     <string name="menu_view_map">Map</string>
     <string name="menu_search">Search</string>
-    <string name="menu_select_conditions">Conditions</string>
-    <string name="menu_share_map">Share</string>
     <string name="menu_favorites_add">Add to favorites</string>
     <string name="menu_favorites_remove">Remove from favorites</string>
     <string name="menu_share">Share</string>
@@ -50,26 +46,13 @@
     <string name="menu_eula">License</string>
     <string name="menu_call_rink">Call</string>
     <string name="menu_map_view_rink">Locate on map</string>
-    <string name="context_menu_favorites_add">Add to favorites</string>
-    <string name="context_menu_favorites_remove">Remove from favorites</string>
-    <string name="context_menu_call_rink">Call</string>
-    <string name="context_menu_map_view_rink">Locate on map</string>
     <string name="btn_skating">Skating</string>
     <string name="btn_hockey">Hockey</string>
     <string name="btn_map">Map</string>
     <string name="btn_favorites">Favorites</string>
     <string name="empty_list">No rinks found…</string>
     <string name="empty_list_favorites">Favorites list is empty. Store your favorite rinks here for faster access…</string>
-    <string name="tab_favorites">Favorites</string>
-    <string name="tab_skating">Skating</string>
-    <string name="tab_hockey">Hockey</string>
-    <string name="tab_all">All</string>
-    <string name="dialog_about_title">About Patiner Montréal</string>
     <string name="logo_open_data">@drawable/logo_open_data_en</string>
-    <string name="dialog_links_title">Useful links</string>
-    <string name="dialog_links_patiner_mtl"><a href="http://www.patinermontreal.ca/">patinermontreal.ca</a></string>
-    <string name="dialog_links_conditions_pdf"><a href="http://ville.montreal.qc.ca/portal/page?_pageid=5977,41729602&amp;_dad=portal&amp;_schema=PORTAL">Conditions at winter activity sites</a></string>
-    <string name="dialog_links_rinks_contact"><a href="http://www11.ville.montreal.qc.ca/sherlock2/servlet/template/sherlock%2CAfficherDocumentInternet.vm/nodocument/154">Skating rinks contact information</a></string>
     <string name="rink_details_conditions">Conditions: %s</string>
     <string name="rink_details_condition_excellent">Excellent</string>
     <string name="rink_details_condition_good">Good</string>
@@ -83,22 +66,11 @@
     <string name="rink_details_is_cleared_false">Not cleared</string>
     <string name="rink_details_is_flooded_false">Not flooded</string>
     <string name="rink_details_is_resurfaced_false">Not resurfaced</string>
-    <string name="rink_details_is_favorite">Favorites</string>
     <string name="rink_details_park_name">Parc</string>
-    <string name="rink_details_park_address">Address: %s</string>
     <string name="rink_details_park_distance">Distance: %s</string>
     <string name="rink_details_park_phone">Phone: %s</string>
-    <string name="rink_details_borough_name">Borough: %s</string>
     <string name="rink_details_borough_updated_at">Last updated by the City: %s</string>
     <string name="rink_details_user_updated_at">Your last update: %s</string>
-    <string name="rink_details_view_map">Locate on map</string>
-    <string name="dialog_updating_conditions">Updating conditions. Please wait…</string>
-    <string name="dialog_updating_all_rinks">Daily updates of rinks and conditions. Please wait…</string>
-    <string name="dialog_updating_result_ok">Updated successfully</string>
-    <string name="dialog_updating_result_error">Update has encountered an error. Please try again.</string>
-    <string name="dialog_network_connection_title">No connection!</string>
-    <string name="dialog_network_connection_message">You need a network connection to update the rinks information. Please turn on mobile network or Wi-Fi in Settings…</string>
-    <string name="search_results">Results for ’<xliff:g id="string">%s</xliff:g>’</string>
     <string name="prefs_breadcrumb">Settings</string>
     <string name="prefs_category_conditions">Rink Conditions</string>
     <string name="prefs_condition_title">Conditions</string>
@@ -108,7 +80,6 @@
     <string name="prefs_condition_bad">Bad</string>
     <string name="prefs_condition_closed">Closed</string>
     <string name="prefs_condition_unknown">Unknown</string>
-    <string name="map_context_park_prefix">Parc </string>
 
     <string name="park_distance_iso">%.1f km</string>
     <string name="park_distance_iso_min">&lt; 100 m</string>
@@ -117,12 +88,10 @@
     <string name="park_distance_imp_min">&lt; 200 ft</string>
 
     <!--Toast messages-->
-    <string name="toast_sync_error_debug">Sync error: %s</string>
     <string name="toast_sync_error">Server connection error!</string>
     <string name="toast_sync_finished">Update completed successfully</string>
     <string name="toast_season_over">The season is over…\nWill be back next Winter!</string>
     <string name="toast_playservices_restart">Restarting Patiner Montréal… Google Play services successfully update!</string>
-    <string name="toast_postal_code_processing">Processing…</string>
     <string name="toast_search_error">Location %1$s not found</string>
     <string name="toast_search_network_connection_error">Search requires an active Internet connection…</string>
     <string name="toast_new_widget">You can also try the Homescreen Widget to view your favorites!</string>
@@ -139,29 +108,21 @@
     <string name="toast_favorites_added_multi_brief">Added to favorites</string>
     <string name="toast_favorites_removed_multi_brief">Removed from favorites</string>
     <string name="toast_prefs_conditions_error">Please check at least one condition…</string>
-    <string name="eula_title">GNU General Public License v3.0</string>
     <string name="eula_accept_btn">Accept</string>
     <string name="eula_decline_btn">Decline</string>
-    <string name="park_total_rinks">1 rink</string>
     <string name="park_total_rinks_plural">%s rinks</string>
-    <string name="menu_map_mylocation">My Location</string>
     <!-- Prefs -->
     <string name="prefs_category_general">General Preferences</string>
     <string name="prefs_category_performance">Performance</string>
-    <string name="prefs_category_extras">Extras</string>
     <string name="prefs_language_title">Language</string>
-    <string name="prefs_language_summary">Change the interface language</string>
     <string name="prefs_language_dialog_title">Set language</string>
     <string name="prefs_language_french">Français</string>
     <string name="prefs_language_english">English</string>
     <string name="prefs_units_title">Distance Units System</string>
-    <string name="prefs_units_summary">Calculate distances using km or mi</string>
     <string name="prefs_units_dialog_title">Set units system</string>
     <string name="prefs_units_iso">Metric (km)</string>
     <string name="prefs_units_imperial">Imperial (mile)</string>
     <string name="prefs_list_sort_title">Sort By</string>
-    <string name="prefs_list_sort_summary">Sort lists by name or distance</string>
-    <string name="prefs_list_sort_summary_todo">By name or distance. Coming soon…</string>
     <string name="prefs_list_sort_dialog_title">Sort lists by</string>
     <string name="prefs_list_sort_name">Alphabetical order</string>
     <string name="prefs_list_sort_distance">Distance</string>
@@ -169,7 +130,6 @@
     <string name="prefs_follow_location_summary">Background location updates. Useful on the move and for DashClock extension.</string>
     <string name="menu_gmaps_directions">Directions</string>
     <string name="dialog_title_maps_chooser">Get STM itinerary using</string>
-    <string name="accessibility_ic_close">Close</string>
     <string name="accessibility_ic_rink">Rink icon</string>
     <string name="accessibility_ic_is_cleared">Cleared</string>
     <string name="accessibility_ic_is_flooded">Flooded</string>

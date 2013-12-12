@@ -53,15 +53,6 @@ public class RemoteExecutor {
         mResolver = resolver;
     }
 
-    /**
-     * Execute a {@link HttpGet} request, passing a valid response through
-     * {@link XmlHandler#parseAndApply(XmlPullParser, ContentResolver)}.
-     */
-    public void executeGet(String url, XmlHandler handler) throws HandlerException {
-        final HttpUriRequest request = new HttpGet(url);
-        execute(request, handler);
-    }
-
     public void executeGet(String url, JsonHandler handler) throws HandlerException {
         final HttpUriRequest request = new HttpGet(url);
         execute(request, handler);

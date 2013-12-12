@@ -126,7 +126,7 @@ public class RinksContract {
                 .appendPath(PATH_BOROUGHS).build();
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.patinoires.borough";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.patinoires.borough";
-        public static final String DEFAULT_SORT = BoroughsColumns.BOROUGH_NAME + " ASC ";
+//        public static final String DEFAULT_SORT = BoroughsColumns.BOROUGH_NAME + " ASC ";
 
         public static Uri buildBoroughUri(String id) {
             return CONTENT_URI.buildUpon().appendPath(id).build();
@@ -142,8 +142,8 @@ public class RinksContract {
                 .appendPath(PATH_PARKS).build();
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.patinoires.park";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.patinoires.park";
-        public static final String DEFAULT_SORT = ParksColumns.PARK_NAME + " ASC ";
-        public static final String GROUP_BY_JOIN_TABLE = " GROUP BY " + ParksColumns.PARK_ID;
+//        public static final String DEFAULT_SORT = ParksColumns.PARK_NAME + " ASC ";
+//        public static final String GROUP_BY_JOIN_TABLE = " GROUP BY " + ParksColumns.PARK_ID;
 
         public static Uri buildParkUri(String id) {
             return CONTENT_URI.buildUpon().appendPath(id).build();
@@ -197,7 +197,7 @@ public class RinksContract {
                 .appendPath(PATH_FAVORITES).build();
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.patinoires.favorite";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.patinoires.favorite";
-        public static final String DEFAULT_SORT = FavoritesColumns.FAVORITE_RINK_ID + " ASC ";
+//        public static final String DEFAULT_SORT = FavoritesColumns.FAVORITE_RINK_ID + " ASC ";
         public static final String NEAREST_FAVORITE_QUERY_LIMIT = "1";
 
         public static Uri buildFavoriteUri(String id) {

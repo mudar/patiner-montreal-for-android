@@ -41,8 +41,8 @@ import ca.mudar.patinoires.utils.ParserUtils;
  * {@link XmlPullParser} to the given {@link XmlHandler}.
  */
 public class LocalExecutor {
-    private Resources mRes;
-    private ContentResolver mResolver;
+    private final Resources mRes;
+    private final ContentResolver mResolver;
 
     public LocalExecutor(Resources res, ContentResolver resolver) {
         mRes = res;

@@ -43,7 +43,7 @@ import java.util.ArrayList;
 /**
  * Abstract class that handles reading and parsing an {@link JSONArray} into a
  * set of {@link ContentProviderOperation}. It catches exceptions and rethrows
- * them as {@link JSONHandlerException}. Any local {@link ContentProvider}
+ * them as {@link JsonHandlerException}. Any local {@link ContentProvider}
  * exceptions are considered unrecoverable.
  * <p/>
  * This class is only designed to handle simple one-way synchronization.

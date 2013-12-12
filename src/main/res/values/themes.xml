@@ -39,7 +39,7 @@
         <item name="windowActionBarOverlay">true</item>
     </style>
 
-    <style name="PreferencesBaseTheme" parent="@android:style/Theme"></style>
+    <style name="PreferencesBaseTheme" parent="@android:style/Theme"/>
 
     <style name="SearchBaseTheme" parent="@style/PatinoiresTheme">
         <item name="actionBarStyle">@style/SearchActionBar</item>
@@ -65,14 +65,14 @@
         <item name="android:textColorLink">@color/hyperlink</item>
     </style>
 
-    <style name="EulaTheme" parent="@style/PatinoiresTheme"></style>
+    <style name="EulaTheme" parent="@style/PatinoiresTheme"/>
 
-    <style name="DetailsTheme" parent="@style/PatinoiresTheme"></style>
+    <style name="DetailsTheme" parent="@style/PatinoiresTheme"/>
 
-    <style name="MapTheme" parent="@style/MapBaseTheme"></style>
+    <style name="MapTheme" parent="@style/MapBaseTheme"/>
 
-    <style name="PreferencesTheme" parent="@style/PreferencesBaseTheme"></style>
+    <style name="PreferencesTheme" parent="@style/PreferencesBaseTheme"/>
 
-    <style name="SearchTheme" parent="@style/SearchBaseTheme"></style>
+    <style name="SearchTheme" parent="@style/SearchBaseTheme"/>
 
 </resources>

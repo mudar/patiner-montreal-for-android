@@ -156,7 +156,7 @@ public class MapClickListener implements
         final int DESC_FR = 0x3;
         final int DESC_EN = 0x4;
         final int CONDITION = 0x5;
-        final int IS_FAVORITE = 0x6;
+        // final int IS_FAVORITE = 0x6;
     }
 
     private static class DialogListItemRink {

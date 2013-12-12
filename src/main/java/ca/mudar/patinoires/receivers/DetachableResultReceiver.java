@@ -28,8 +28,8 @@ import android.os.ResultReceiver;
 
 /**
  * Proxy {@link ResultReceiver} that offers a listener interface that can be
- * detached. Useful for when sending callbacks to a {@link Service} where a
- * listening {@link Activity} can be swapped out during configuration changes.
+ * detached. Useful for when sending callbacks to a Service where a
+ * listening Activity can be swapped out during configuration changes.
  */
 public class DetachableResultReceiver extends ResultReceiver {
     private static final String TAG = "DetachableResultReceiver";
@@ -38,10 +38,6 @@ public class DetachableResultReceiver extends ResultReceiver {
 
     public DetachableResultReceiver(Handler handler) {
         super(handler);
-    }
-
-    public void clearReceiver() {
-        mReceiver = null;
     }
 
     public void setReceiver(Receiver receiver) {

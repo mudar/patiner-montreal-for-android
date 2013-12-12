@@ -56,8 +56,8 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
     private final boolean mIsFavoritesList;
     private boolean phoneNumberEnabled;
     private ActionMode mActionMode;
-    private Context mContext;
-    private OnRinkActionsListener mListener;
+    private final Context mContext;
+    private final OnRinkActionsListener mListener;
 
     public ContextualActionbarListener(Context context, OnRinkActionsListener listener, IMultiChoiceModeAdapter adapter, boolean isFavoritesList) {
         mContext = context;
@@ -147,7 +147,6 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
             mListener.removeFromFavorites(Integer.valueOf(rinkId));
             return true;
         } else {
-            final Uri rinkUri = RinksContract.Rinks.buildRinkUri(rinkId);
             final RinkInfoHolder rinkInfo = getRinkInfo(rinkId);
 
             if (item.getItemId() == R.id.map_view_rink) {
@@ -178,10 +177,10 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
             // Batch operation to allow DB transaction
             final ArrayList<ContentProviderOperation> batch = Lists.newArrayList();
 
-            for (int i = 0; i < nbRinks; i++) {
+            for (String rinkId : rinkIds) {
                 ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(RinksContract.Favorites.CONTENT_URI);
 
-                builder.withValue(RinksContract.FavoritesColumns.FAVORITE_RINK_ID, rinkIds[i]);
+                builder.withValue(RinksContract.FavoritesColumns.FAVORITE_RINK_ID, rinkId);
                 batch.add(builder.build());
             }
 
@@ -192,10 +191,10 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
                 e.printStackTrace();
             } catch (OperationApplicationException e) {
                 e.printStackTrace();
-            } finally {
-                ((PatinoiresApp) mContext.getApplicationContext()).showToastText(R.string.toast_favorites_added_multi_brief, Toast.LENGTH_SHORT);
-                return true;
             }
+
+            ((PatinoiresApp) mContext.getApplicationContext()).showToastText(R.string.toast_favorites_added_multi_brief, Toast.LENGTH_SHORT);
+            return true;
         } else if (item.getItemId() == R.id.favorites_remove) {
 
             String argsJoined = "";
@@ -299,7 +298,7 @@ public class ContextualActionbarListener implements AbsListView.MultiChoiceModeL
                 RinksContract.ParksColumns.PARK_GEO_LNG,
                 RinksContract.ParksColumns.PARK_PHONE
         };
-        final int _ID = 0;
+//        final int _ID = 0;
         final int RINK_ID = 1;
         final int RINK_IS_FAVORITE = 2;
         final int PARK_GEO_LAT = 3;

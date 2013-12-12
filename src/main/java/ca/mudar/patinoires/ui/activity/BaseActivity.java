@@ -23,6 +23,7 @@
 
 package ca.mudar.patinoires.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -46,8 +47,9 @@ import ca.mudar.patinoires.services.SyncService;
 import ca.mudar.patinoires.utils.ConnectionHelper;
 import ca.mudar.patinoires.utils.EulaHelper;
 
-public class BaseActivity extends ActionBarActivity {
-    protected static final String TAG = "BaseActivity";
+@SuppressLint("Registered")
+class BaseActivity extends ActionBarActivity {
+    private static final String TAG = "BaseActivity";
     private static final String SEND_INTENT_TYPE = "text/plain";
     private static boolean hasLaunchedEula = false;
 
@@ -70,7 +72,7 @@ public class BaseActivity extends ActionBarActivity {
          */
         if (!EulaHelper.hasAcceptedEula(this) && !hasLaunchedEula) {
             hasLaunchedEula = true;
-            EulaHelper.showEula(false, this);
+            EulaHelper.showEula(this);
         }
     }
 
@@ -116,7 +118,7 @@ public class BaseActivity extends ActionBarActivity {
     /**
      * Start refresh.
      */
-    public void triggerRefresh(Parcelable receiver, boolean forceUpdate) {
+    protected void triggerRefresh(Parcelable receiver, boolean forceUpdate) {
 
         if (!ConnectionHelper.hasConnection(getApplicationContext())) {
             ConnectionHelper.showDialogNoConnection(this);
@@ -199,7 +201,7 @@ public class BaseActivity extends ActionBarActivity {
             final Intent sendIntent = new Intent();
             sendIntent.putExtras(extras);
             sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.setType(this.SEND_INTENT_TYPE);
+            sendIntent.setType(SEND_INTENT_TYPE);
             startActivity(sendIntent);
             return true;
         } else if (item.getItemId() == R.id.menu_eula) {
@@ -224,7 +226,7 @@ public class BaseActivity extends ActionBarActivity {
             final Intent sendIntent = new Intent();
             sendIntent.putExtras(extras);
             sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.setType(this.SEND_INTENT_TYPE);
+            sendIntent.setType(SEND_INTENT_TYPE);
             startActivity(sendIntent);
             return true;
         }
@@ -237,7 +239,7 @@ public class BaseActivity extends ActionBarActivity {
      * contents of the Favorites ListView. It also updates the context menu of
      * the added/removed favorite rink to toggle the displayed favorites action.
      *
-     * @param resolver
+     * @param resolver The content resolver
      */
     public void notifyAllTabs(ContentResolver resolver) {
         /**

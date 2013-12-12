@@ -36,7 +36,7 @@ public class Const {
     public static final String URL_PLAYSTORE = "http://play.google.com/store/apps/details?id=ca.mudar.patinoires";
     public static final int TABS_INDEX_SKATING = 0x0;
     public static final int TABS_INDEX_HOCKEY = 0x1;
-    public static final int TABS_INDEX_ALL = 0x2;
+//    public static final int TABS_INDEX_ALL = 0x2;
     public static final int TABS_INDEX_FAVORITES = 0x3;
     public static final String TABS_TAG_FAVORITES = "tab_favorites";
     public static final String TABS_TAG_SKATING = "tab_skating";
@@ -50,8 +50,8 @@ public class Const {
     public static final String LOCATION_PROVIDER_DEFAULT = "DefaultLocationProvider";
     public static final String LOCATION_PROVIDER_SEARCH = "SearchLocationProvider";
     public static final String LOCATION_PROVIDER_INTENT = "IntentLocationProvider";
-    public static final String LOCATION_PROVIDER_PREFS = "PrefsLocationProvider";
-    public static final String LOCATION_PROVIDER_SERVICE = "ServiceLocationProvider";
+//    public static final String LOCATION_PROVIDER_PREFS = "PrefsLocationProvider";
+//    public static final String LOCATION_PROVIDER_SERVICE = "ServiceLocationProvider";
     public static final double MAPS_DEFAULT_COORDINATES[] = {
             45.5d, -73.666667d
     };
@@ -72,7 +72,7 @@ public class Const {
     public static final String INTENT_EXTRA_URL_PATH_EN = "rinks";
     public static final String INTENT_EXTRA_LOCAL_SYNC = "sync_assets";
     public static final int INTENT_REQ_CODE_EULA = 0x10;
-    public static final String INTENT_ACTION_WIDGET_RINK = "ca.mudar.patinoires.widget_rink";
+//    public static final String INTENT_ACTION_WIDGET_RINK = "ca.mudar.patinoires.widget_rink";
     public static final String INTENT_ACTION_PASSIVE_LOCATION = "ca.mudar.patinoires.passive_location";
     public static final String TAG_FRAGMENT_SEARCH = "tag_fragment_search";
     public static final String KEY_BUNDLE_SEARCH_ADDRESS = "bundle_search_address";
@@ -87,20 +87,20 @@ public class Const {
     public static final long MILLISECONDS_FOUR_HOURS = 14400000; // 1000*60*60*4
     public static final long MILLISECONDS_FIVE_DAYS = 432000000; // 1000*60*60*24*5
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
-    public static boolean SUPPORTS_JELLY_BEAN = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
-    public static boolean SUPPORTS_ICE_CREAM_SANDWICH = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
-    public static boolean SUPPORTS_HONEYCOMB = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
+    public static final boolean SUPPORTS_JELLY_BEAN = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
+    public static final boolean SUPPORTS_ICE_CREAM_SANDWICH = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+    public static final boolean SUPPORTS_HONEYCOMB = android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
 
     /**
      * Location
      */
     // The default search radius when searching for places nearby.
-    public static int DEFAULT_RADIUS = 150;
+    public static final int DEFAULT_RADIUS = 150;
     // The maximum distance the user should travel between location updates.
-    public static int MIN_DISTANCE = DEFAULT_RADIUS / 2;
+    public static final int MIN_DISTANCE = DEFAULT_RADIUS / 2;
     // The maximum time that should pass before the user gets a passive location update.
-    public static long MAX_TIME = DateUtils.MINUTE_IN_MILLIS * 15;
-    public static int DB_MIN_DISTANCE = MIN_DISTANCE / 2;
+    public static final long MAX_TIME = DateUtils.MINUTE_IN_MILLIS * 15;
+    public static final int DB_MIN_DISTANCE = MIN_DISTANCE / 2;
 
     // Assets
     public static interface LocalAssets {
@@ -111,14 +111,14 @@ public class Const {
     // Search
     public static interface Search {
         final int MIN_LENGTH_SEARCH = 2;
-        final String SCHEME = "content";
+//        final String SCHEME = "content";
     }
 
     public static interface DbValues {
-        final int SORT_DISTANCE = 0x0;
-        final int SORT_RINK = 0x1;
-        final int SORT_PARK = 0x2;
-        final int SORT_BOROUGH = 0x3;
+//        final int SORT_DISTANCE = 0x0;
+//        final int SORT_RINK = 0x1;
+//        final int SORT_PARK = 0x2;
+//        final int SORT_BOROUGH = 0x3;
         final int KIND_PP = 0x4; // paysagée
         final int KIND_PPL = 0x5; // patin libre
         final int KIND_PSE = 0x6; // sport d'équipe

@@ -26,11 +26,11 @@ package ca.mudar.patinoires.appwidget;
 import ca.mudar.patinoires.utils.Helper;
 
 public class WidgetItem {
-    public String name;
-    public String desc;
-    public int rinkId;
-    public int kindId;
-    public int condition;
+    public final String name;
+    public final String desc;
+    public final int rinkId;
+    public final int kindId;
+    public final int condition;
 
     public WidgetItem(String name, String desc, int rinkId, int kindId, int condition) {
         this.name = name;

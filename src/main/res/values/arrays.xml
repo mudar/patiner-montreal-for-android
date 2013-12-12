@@ -22,13 +22,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string-array name="prefs_units_entries">
         <item>@string/prefs_units_iso</item>
         <item>@string/prefs_units_imperial</item>
     </string-array>
-    <string-array name="prefs_units_values">
+    <string-array name="prefs_units_values" tools:ignore="MissingTranslation">
         <item>iso</item>
         <item>imp</item>
     </string-array>
@@ -36,7 +36,7 @@
         <item>@string/prefs_list_sort_distance</item>
         <item>@string/prefs_list_sort_name</item>
     </string-array>
-    <string-array name="prefs_list_sort_values">
+    <string-array name="prefs_list_sort_values" tools:ignore="MissingTranslation">
         <item>distance</item>
         <item>name</item>
     </string-array>
@@ -44,7 +44,7 @@
         <item>@string/prefs_language_english</item>
         <item>@string/prefs_language_french</item>
     </string-array>
-    <string-array name="prefs_language_values">
+    <string-array name="prefs_language_values" tools:ignore="MissingTranslation">
         <item>en</item>
         <item>fr</item>
     </string-array>

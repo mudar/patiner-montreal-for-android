@@ -57,14 +57,13 @@ public class SearchViewQueryListener implements
         SearchMessageHandler.OnMessageHandledListener,
         Runnable {
     protected static final String TAG = "SearchViewQueryListener";
-    protected static final String EXCEPTION_MSG_SUFFIX = "(Android system error)";
-    protected static final int QUERY_MIN_LENGTH = 2;
-    final private Activity mActivity;
+    private static final String EXCEPTION_MSG_SUFFIX = "(Android system error)";
+    private static final int QUERY_MIN_LENGTH = 2;
+    private final Activity mActivity;
+    private final Handler handler;
+    private final OnAddressFoundListener mListener;
     private MenuItem mSearchMenuItem;
     private String mSearchQuery;
-    private Handler handler;
-    private Marker searchedMarker = null;
-    private OnAddressFoundListener mListener;
 
     public SearchViewQueryListener(Activity activity, OnAddressFoundListener listener) {
         mActivity = activity;
@@ -136,8 +135,8 @@ public class SearchViewQueryListener implements
             /**
              * Add marker for found location
              */
-            searchedMarker = mListener.addMapMarker(new MarkerOptions()
-
+// TODO: display infoWindow for map-center Park/Rink, and verify use of searchedMarker
+            final Marker searchedMarker = mListener.addMapMarker(new MarkerOptions()
                     .position(new LatLng(location.getLatitude(), location.getLongitude()))
                     .title(desc)
                     .snippet(null)
@@ -171,13 +170,11 @@ public class SearchViewQueryListener implements
         final Message msg = handler.obtainMessage();
         final Bundle b = new Bundle();
 
-        Address address = null;
-
         try {
             /**
              * Geocode search. Takes time and not very reliable!
              */
-            address = GeoHelper.findAddressFromName(mActivity, mSearchQuery);
+            final Address address = GeoHelper.findAddressFromName(mActivity, mSearchQuery);
 
             if (address == null) {
                 /**

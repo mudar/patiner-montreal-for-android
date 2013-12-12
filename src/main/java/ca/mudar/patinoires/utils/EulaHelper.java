@@ -40,7 +40,7 @@ import ca.mudar.patinoires.ui.activity.EulaActivity;
  * indicating whether the user has accepted.
  */
 public class EulaHelper {
-    protected static String TAG = "EulaHelper";
+    protected static final String TAG = "EulaHelper";
 
     public static boolean hasAcceptedEula(final Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
@@ -50,13 +50,10 @@ public class EulaHelper {
     /**
      * Show End User License Agreement.
      *
-     * @param accepted True IFF user has accepted license already, which means
-     *                 it can be dismissed. If the user hasn't accepted, then the
-     *                 EULA must be accepted or the program exits.
      * @param activity Activity started from.
      */
 
-    public static void showEula(final boolean accepted, final Activity activity) {
+    public static void showEula(final Activity activity) {
         if (!(activity instanceof EulaActivity)) {
             Intent intent = new Intent(activity, EulaActivity.class);
             activity.startActivityForResult(intent, Const.INTENT_REQ_CODE_EULA);

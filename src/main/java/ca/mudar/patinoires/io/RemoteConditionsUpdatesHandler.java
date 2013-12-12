@@ -156,11 +156,11 @@ public class RemoteConditionsUpdatesHandler extends JsonHandler {
 
     public static interface RemoteValues {
 
-        final String RINK_CONDITION_EXCELLENT = "excellente";
-        final String RINK_CONDITION_GOOD = "bonne";
-        final String RINK_CONDITION_BAD = "mauvaise";
+//        final String RINK_CONDITION_EXCELLENT = "excellente";
+//        final String RINK_CONDITION_GOOD = "bonne";
+//        final String RINK_CONDITION_BAD = "mauvaise";
         final String BOOLEAN_TRUE = "true";
-        final String BOOLEAN_FALSE = "false";
-        final String STRING_NULL = "null";
+//        final String BOOLEAN_FALSE = "false";
+//        final String STRING_NULL = "null";
     }
 }

@@ -118,9 +118,9 @@ public class RinksDatabase extends SQLiteOpenHelper {
         final String PARKS = "parks";
         final String RINKS = "rinks";
         final String FAVORITES = "favorites";
-        final String BOROUGHS_JOIN_PARKS_RINKS = "boroughs "
-                + "LEFT OUTER JOIN parks ON boroughs.borough_id=parks.borough_id "
-                + "LEFT OUTER JOIN rinks ON parks.park_id=rinks.park_id ";
+//        final String BOROUGHS_JOIN_PARKS_RINKS = "boroughs "
+//                + "LEFT OUTER JOIN parks ON boroughs.borough_id=parks.borough_id "
+//                + "LEFT OUTER JOIN rinks ON parks.park_id=rinks.park_id ";
         final String BOROUGHS_JOIN_PARKS_RINKS_FAVORITES = "boroughs "
                 + "LEFT OUTER JOIN parks ON boroughs.borough_id=parks.park_borough_id "
                 + "LEFT OUTER JOIN rinks ON parks.park_id=rinks.rink_park_id "

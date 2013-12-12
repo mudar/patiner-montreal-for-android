@@ -75,17 +75,17 @@ public class RinkDetailsFragment extends Fragment
         implements NotifyingAsyncQueryHandler.AsyncQueryListener {
     private static final String TAG = "RinkDetailsFragment";
     private static final String SEND_INTENT_TYPE = "text/plain";
-    protected static int mRinkId = -1;
-    protected static Uri mRinkUri = null;
-    protected PatinoiresApp mAppHelper;
-    protected View mRootView;
-    protected int mIsFavorite = 0;
-    protected double mGeoLat = 0;
-    protected double mGeoLng = 0;
-    protected int mRinkKind = 0;
-    protected String mRinkName = "";
-    protected Resources mResources;
-    protected NotifyingAsyncQueryHandler mHandler;
+    private static int mRinkId = -1;
+    private static Uri mRinkUri = null;
+    private PatinoiresApp mAppHelper;
+    private View mRootView;
+    private int mIsFavorite = 0;
+    private double mGeoLat = 0;
+    private double mGeoLng = 0;
+    private int mRinkKind = 0;
+    private String mRinkName = "";
+    private Resources mResources;
+    private NotifyingAsyncQueryHandler mHandler;
     private OnRinkClickListener mListener;
 
     /**
@@ -230,7 +230,7 @@ public class RinkDetailsFragment extends Fragment
             final Intent sendIntent = new Intent();
             sendIntent.putExtras(extras);
             sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.setType(this.SEND_INTENT_TYPE);
+            sendIntent.setType(SEND_INTENT_TYPE);
             startActivity(sendIntent);
             return true;
         }
@@ -475,7 +475,7 @@ public class RinkDetailsFragment extends Fragment
     /**
      * Handle toggling of starred checkbox.
      */
-    public void onCheckedChanged(boolean wasFavorite) {
+    void onCheckedChanged(boolean wasFavorite) {
         int message = R.string.toast_favorites_added;
 
         if (wasFavorite) {

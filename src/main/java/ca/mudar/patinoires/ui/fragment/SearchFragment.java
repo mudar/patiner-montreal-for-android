@@ -53,7 +53,7 @@ public class SearchFragment extends ListFragment implements
         SearchView.OnQueryTextListener,
         LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = "SearchFragment";
-    private Cursor mCursor = null;
+    private final Cursor mCursor = null;
     private RinksCursorAdapter mAdapter;
     private OnSearchResultClickListener mListener;
     private String mSearchQuery = "";

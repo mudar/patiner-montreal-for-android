@@ -50,7 +50,7 @@ public class LocationAwarenessListener implements LocationListener,
     private LocationRequest mLocationRequest;
     // Stores the current instantiation of the location client in this object
     private LocationClient mLocationClient;
-    private boolean mHasPassiveLocationUpdates;
+    private final boolean mHasPassiveLocationUpdates;
 
     public LocationAwarenessListener(Context context, boolean hasPassiveLocationUpdates) {
         mContext = context;

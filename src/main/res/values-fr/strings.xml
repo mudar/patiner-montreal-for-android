@@ -37,12 +37,8 @@
     <string name="menu_about">À propos</string>
     <string name="menu_preferences">Paramètres</string>
     <string name="menu_refresh">Rafraîchir</string>
-    <string name="menu_refresh_map">Rafraîchir</string>
-    <string name="menu_refresh_rink">Rafraîchir</string>
     <string name="menu_view_map">Carte</string>
     <string name="menu_search">Rechercher</string>
-    <string name="menu_select_conditions">Conditions</string>
-    <string name="menu_share_map">Partager</string>
     <string name="menu_favorites_add">Ajouter aux favoris</string>
     <string name="menu_favorites_remove">Supprimer des favrois</string>
     <string name="menu_share">Partager</string>
@@ -50,26 +46,13 @@
     <string name="menu_eula">Licence</string>
     <string name="menu_call_rink">Appeler</string>
     <string name="menu_map_view_rink">Situer sur la carte</string>
-    <string name="context_menu_favorites_add">Ajouter aux favoris</string>
-    <string name="context_menu_favorites_remove">Supprimer des favoris</string>
-    <string name="context_menu_call_rink">Appeler</string>
-    <string name="context_menu_map_view_rink">Situer sur la carte</string>
     <string name="btn_skating">Patinage</string>
     <string name="btn_hockey">Hockey</string>
     <string name="btn_map">Carte</string>
     <string name="btn_favorites">Favoris</string>
     <string name="empty_list">Aucune patinoire trouvée…</string>
     <string name="empty_list_favorites">La liste des favoris est vide. Sauvegardez vos patinoires préférées ici pour y accéder plus rapidement…</string>
-    <string name="tab_favorites">Favoris</string>
-    <string name="tab_skating">Patinage</string>
-    <string name="tab_hockey">Hockey</string>
-    <string name="tab_all">Tous</string>
-    <string name="dialog_about_title">Patiner Montréal</string>
     <string name="logo_open_data">@drawable/logo_open_data_fr</string>
-    <string name="dialog_links_title">Liens utiles</string>
-    <string name="dialog_links_patiner_mtl"><a href="http://www.patinermontreal.ca/">patinermontreal.ca</a></string>
-    <string name="dialog_links_conditions_pdf"><a href="http://ville.montreal.qc.ca/portal/page?_pageid=5798,40305564&amp;_dad=portal&amp;_schema=PORTAL">Conditions des sites hivernaux</a></string>
-    <string name="dialog_links_rinks_contact"><a href="http://www11.ville.montreal.qc.ca/sherlock2/servlet/template/sherlock%2CAfficherDocumentInternet.vm/nodocument/154">Coordonnées des patinoires</a></string>
     <string name="rink_details_conditions">Conditions : %s</string>
     <string name="rink_details_condition_excellent">Excellentes</string>
     <string name="rink_details_condition_good">Bonnes</string>
@@ -83,22 +66,11 @@
     <string name="rink_details_is_cleared_false">Pas déblayée</string>
     <string name="rink_details_is_flooded_false">Pas arrosée</string>
     <string name="rink_details_is_resurfaced_false">Pas resurfacée</string>
-    <string name="rink_details_is_favorite">Favoris</string>
     <string name="rink_details_park_name">Parc</string>
-    <string name="rink_details_park_address">Adresse : %s</string>
     <string name="rink_details_park_distance">Distance : %s</string>
     <string name="rink_details_park_phone">Téléphone : %s</string>
-    <string name="rink_details_borough_name">Arrondissement : %s</string>
     <string name="rink_details_borough_updated_at">Dernière mise à jour par la ville : %s</string>
     <string name="rink_details_user_updated_at">Votre dernière mise à jour : %s</string>
-    <string name="rink_details_view_map">Situer sur la carte</string>
-    <string name="dialog_updating_conditions">Mise à jour des conditions. Veuillez patienter…</string>
-    <string name="dialog_updating_all_rinks">Mise à jour des patinoires et des conditions. Veuillez patienter…</string>
-    <string name="dialog_updating_result_ok">Mise à jour réussie</string>
-    <string name="dialog_updating_result_error">La mise à jour Le serveur a rencontré une erreur. Veuillez réessayer.</string>
-    <string name="dialog_network_connection_title">Pas de connexion!</string>
-    <string name="dialog_network_connection_message">Une connexion réseau est nécessaire pour la mise à jour des informations des patinoires. Veuillez activer votre connexion au réseau mobile ou Wi-Fi…</string>
-    <string name="search_results">Résultats pour « <xliff:g id="string">%s</xliff:g> »</string>
     <string name="prefs_breadcrumb">Paramètres</string>
     <string name="prefs_category_conditions">Conditions de la patinoire</string>
     <string name="prefs_condition_title">Conditions</string>
@@ -108,7 +80,6 @@
     <string name="prefs_condition_bad">Mauvaises</string>
     <string name="prefs_condition_closed">Fermées</string>
     <string name="prefs_condition_unknown">Inconnues</string>
-    <string name="map_context_park_prefix">Parc </string>
 
     <string name="park_distance_iso">%.1f km</string>
     <string name="park_distance_iso_min">&lt; 100 m</string>
@@ -117,12 +88,10 @@
     <string name="park_distance_imp_min">&lt; 200 pi</string>
 
     <!--Toast messages-->
-    <string name="toast_sync_error_debug">Sync error: %s</string>
     <string name="toast_sync_error">Erreur de connexion&#160;!</string>
     <string name="toast_sync_finished">Mise à jour terminée</string>
     <string name="toast_season_over">La saison est terminée…\nDe retour l’hiver prochain!</string>
     <string name="toast_playservices_restart">Redémarrage de Patiner Montréal… Mise à jour réussie de Google Play services&#160;!</string>
-    <string name="toast_postal_code_processing">Recherche en cours…</string>
     <string name="toast_search_error">Incapable de trouver %1$s</string>
     <string name="toast_search_network_connection_error">Pour cette recherche, connectez-vous à internet…</string>
     <string name="toast_new_widget">Vous pouvez aussi utiliser le widget pour afficher les favoris sur l’écran d’accueil&#160;!</string>
@@ -139,29 +108,21 @@
     <string name="toast_favorites_added_multi_brief">Ajoutées aux favoris</string>
     <string name="toast_favorites_removed_multi_brief">Supprimées des favoris</string>
     <string name="toast_prefs_conditions_error">Veuillez cocher au moins une condition…</string>
-    <string name="eula_title">GNU General Public License v3.0</string>
     <string name="eula_accept_btn">Accepter</string>
     <string name="eula_decline_btn">Refuser</string>
-    <string name="park_total_rinks">1 patinoire</string>
     <string name="park_total_rinks_plural">%s patinoires</string>
-    <string name="menu_map_mylocation">Ma position</string>
     <!-- Prefs -->
     <string name="prefs_category_general">Paramètres généraux</string>
     <string name="prefs_category_performance">Performance</string>
-    <string name="prefs_category_extras">Extras</string>
     <string name="prefs_language_title">Langue</string>
-    <string name="prefs_language_summary">Changer la langue de l’interface</string>
     <string name="prefs_language_dialog_title">Choix de langue</string>
     <string name="prefs_language_french">Français</string>
     <string name="prefs_language_english">English</string>
     <string name="prefs_units_title">Unités de mesure</string>
-    <string name="prefs_units_summary">Afficher les distances en km ou en milles</string>
     <string name="prefs_units_dialog_title">Système des unités de mesure</string>
     <string name="prefs_units_iso">Métrique (km)</string>
     <string name="prefs_units_imperial">Impérial (mile)</string>
     <string name="prefs_list_sort_title">Ordre d’affichage</string>
-    <string name="prefs_list_sort_summary">Modifier l’ordre d’affichage des listes</string>
-    <string name="prefs_list_sort_summary_todo">Ordre alphabétique ou distance. À venir…</string>
     <string name="prefs_list_sort_dialog_title">Trier par</string>
     <string name="prefs_list_sort_name">Ordre alphabétique</string>
     <string name="prefs_list_sort_distance">Distance</string>
@@ -169,7 +130,6 @@
     <string name="prefs_follow_location_summary">Actualisation en arrière-plan de la position géographique. Utile en déplacement et pour l’extension DashClock.</string>
     <string name="menu_gmaps_directions">Itinéraire</string>
     <string name="dialog_title_maps_chooser">Afficher l’itinéraire STM avec</string>
-    <string name="accessibility_ic_close">Fermer</string>
     <string name="accessibility_ic_rink">Icône patinoire</string>
     <string name="accessibility_ic_is_cleared">Déblayée</string>
     <string name="accessibility_ic_is_flooded">Arrosée</string>

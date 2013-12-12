@@ -253,7 +253,7 @@ public class RemoteRinksHandler extends JsonHandler {
     public static interface RemoteValues {
 
         final String RINK_TYPE_PP = "PP"; // paysagée
-        final String RINK_TYPE_PPL = "PPL"; // patin libre
+//        final String RINK_TYPE_PPL = "PPL"; // patin libre
         final String RINK_TYPE_PSE = "PSE"; // sport d'équipe
         final String RINK_TYPE_C = "C"; // citoyens
         final String RINK_TYPE_PSE_SUFFIX = "(PSE)";

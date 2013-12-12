@@ -52,12 +52,12 @@ public class MainActivity extends BaseActivity {
     protected static final String TAG = "MainActivity";
     private static boolean hasLoadedData;
     private static boolean hasLoadedDataLocally = false;
-    protected PatinoiresApp mAppHelper;
+    private PatinoiresApp mAppHelper;
     private SyncStatusUpdaterFragment mSyncStatusUpdaterFragment;
     private String lang;
     private LocationAwarenessListener mLocationAwarenessListener;
 
-    public static void finalizeLoadingData(Context context) {
+    private static void finalizeLoadingData(Context context) {
 
         SharedPreferences prefs = context.getSharedPreferences(Const.APP_PREFS_NAME,
                 Context.MODE_PRIVATE);

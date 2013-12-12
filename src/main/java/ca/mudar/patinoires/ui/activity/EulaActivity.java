@@ -25,7 +25,6 @@
 package ca.mudar.patinoires.ui.activity;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -65,11 +64,6 @@ public class EulaActivity extends BaseActivity {
         v.loadUrl("file:///android_asset/" + Const.LocalAssets.LICENSE);
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
-
     public void acceptEula(View v) {
         Intent intent = new Intent();
         setResult(Const.INTENT_REQ_CODE_EULA, intent);
@@ -84,7 +78,7 @@ public class EulaActivity extends BaseActivity {
         this.finish();
     }
 
-    class MyWebViewClient extends WebViewClient {
+    private class MyWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));

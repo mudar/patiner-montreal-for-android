@@ -94,7 +94,7 @@ public class FavoritesDashClockExtension extends DashClockExtension {
     /**
      * Get the RinkDetailsActivity intent
      *
-     * @param rinkId
+     * @param rinkId The clicked rink
      * @return Intent
      */
     private Intent getOnClickIntent(int rinkId) {

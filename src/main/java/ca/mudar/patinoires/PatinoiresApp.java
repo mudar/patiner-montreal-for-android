@@ -23,6 +23,7 @@
 
 package ca.mudar.patinoires;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -51,7 +52,7 @@ public class PatinoiresApp extends Application {
     private String mListSort;
     private String mLanguage;
     private Toast mToast;
-    private boolean[] conditionsFilter = new boolean[5];
+    private final boolean[] conditionsFilter = new boolean[5];
     private boolean mIsSeasonOver;
     private boolean mHasFavoriteRinks = false;
     private SharedPreferences prefs;
@@ -67,6 +68,7 @@ public class PatinoiresApp extends Application {
             throw new IllegalStateException("Application not created yet!");
     }
 
+    @SuppressLint("ShowToast")
     @Override
     public void onCreate() {
         super.onCreate();
@@ -247,14 +249,6 @@ public class PatinoiresApp extends Application {
 
     public boolean[] getConditionsFilter() {
         return conditionsFilter;
-    }
-
-    public void setConditionsFilter(boolean[] conditions) {
-        this.conditionsFilter = conditions;
-    }
-
-    public boolean getConditionsFilter(int index) {
-        return conditionsFilter[index];
     }
 
     public void setConditionsFilter(boolean condition, int index) {

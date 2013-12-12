@@ -44,10 +44,10 @@ import ca.mudar.patinoires.utils.SettingsHelper;
 public class SettingsActivity extends PreferenceActivity implements
         OnSharedPreferenceChangeListener {
     protected static final String TAG = "SettingsActivity";
-    protected SharedPreferences mSharedPrefs;
-    ListPreference tUnits;
-    ListPreference tListSort;
-    ListPreference tLanguage;
+    private SharedPreferences mSharedPrefs;
+    private ListPreference tUnits;
+    private ListPreference tListSort;
+    private ListPreference tLanguage;
     private PatinoiresApp mAppHelper;
 
     @SuppressWarnings("deprecation")

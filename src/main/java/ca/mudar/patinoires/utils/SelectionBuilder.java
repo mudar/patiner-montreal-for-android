@@ -36,6 +36,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -47,9 +48,9 @@ public class SelectionBuilder {
     private static final String TAG = "SelectionBuilder";
     private static final boolean LOGV = false;
     private String mTable = null;
-    private Map<String, String> mProjectionMap = Maps.newHashMap();
-    private StringBuilder mSelection = new StringBuilder();
-    private ArrayList<String> mSelectionArgs = Lists.newArrayList();
+    private final Map<String, String> mProjectionMap = Maps.newHashMap();
+    private final StringBuilder mSelection = new StringBuilder();
+    private final ArrayList<String> mSelectionArgs = Lists.newArrayList();
 
     /**
      * Reset any internal state, allowing this builder to be recycled.
@@ -82,9 +83,7 @@ public class SelectionBuilder {
 
         mSelection.append("(").append(selection).append(")");
         if (selectionArgs != null) {
-            for (String arg : selectionArgs) {
-                mSelectionArgs.add(arg);
-            }
+            Collections.addAll(mSelectionArgs, selectionArgs);
         }
 
         return this;

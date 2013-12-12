@@ -61,23 +61,22 @@ public class MapFragment extends SupportMapFragment
         implements SearchViewQueryListener.OnAddressFoundListener {
 
     protected static final String TAG = "MapFragment";
-    protected static final int INDEX_OVERLAY_MY_LOCATION = 0x0;
-    protected static final int INDEX_OVERLAY_PLACEMARKS = 0x1;
+//    protected static final int INDEX_OVERLAY_MY_LOCATION = 0x0;
+//    protected static final int INDEX_OVERLAY_PLACEMARKS = 0x1;
     // protected static final float ZOOM_DEFAULT = 12f;
     private static final float ZOOM_NEAR = 16f;
     private static final float ZOOM_FAR = 11f;
     private static final float HUE_MARKER = 228f;
-    private static final float HUE_MARKER_STARRED = BitmapDescriptorFactory.HUE_YELLOW;
-    private static final float DISTANCE_MARKER_HINT = 50f;
+//    private static final float HUE_MARKER_STARRED = BitmapDescriptorFactory.HUE_YELLOW;
+//    private static final float DISTANCE_MARKER_HINT = 50f;
     private GoogleMap mMap;
-    private Location initLocation = null;
-    private Location mMapCenter = null;
-    private LatLng screenCenter = null;
-    private Marker clickedMarker = null;
+    private final Location mMapCenter = null;
+    private final LatLng screenCenter = null;
+    private final Marker clickedMarker = null;
     private Marker searchedMarker = null;
     private boolean hasHintMarker = true;
     private PatinoiresApp mAppHelper;
-    private MenuItem searchItem;
+//    private MenuItem searchItem;
     private DbAsyncTask dbAsyncTask = null;
     private MapClickListener mMapClickListener;
     private SearchViewQueryListener mSearchViewQueryListener;
@@ -216,7 +215,6 @@ public class MapFragment extends SupportMapFragment
      * @param mapCenter The new location
      */
     public void setMapCenter(Location mapCenter) {
-        initLocation = mapCenter;
         animateToPoint(mapCenter);
     }
 

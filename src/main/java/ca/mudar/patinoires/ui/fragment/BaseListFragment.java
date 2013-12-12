@@ -27,9 +27,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
@@ -69,18 +67,17 @@ public abstract class BaseListFragment extends ListFragment implements
         ContextualActionbarListener.OnRinkActionsListener {
 
     private static final String TAG = "BaseListFragment";
+    private final Uri mContentUri;
+    private final Cursor mCursor = null;
     protected int resLayoutListView;
     protected RinksCursorAdapter mAdapter;
     protected ContextualActionbarListener mCABListener = null;
     private PatinoiresApp mAppHelper;
-    private Uri mContentUri;
-    private Cursor mCursor = null;
     private View rootView;
     private String mSort;
     private OnRinkClickListener mListener;
-    private boolean hasFollowLocationChanges = false;
 
-    public BaseListFragment(Uri contentUri) {
+    protected BaseListFragment(Uri contentUri) {
         mContentUri = contentUri;
         resLayoutListView = R.layout.fragment_list_rinks;
     }
@@ -104,11 +101,6 @@ public abstract class BaseListFragment extends ListFragment implements
         super.onCreate(savedInstanceState);
 
         mAppHelper = ((PatinoiresApp) getActivity().getApplicationContext());
-
-        SharedPreferences prefs = getActivity().getSharedPreferences(Const.APP_PREFS_NAME,
-                Context.MODE_PRIVATE);
-        hasFollowLocationChanges = prefs
-                .getBoolean(Const.PrefsNames.FOLLOW_LOCATION_CHANGES, false);
 
         Location myLocation = mAppHelper.getLocation();
 
@@ -186,7 +178,7 @@ public abstract class BaseListFragment extends ListFragment implements
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void destroyContextActionbar() {
+    protected void destroyContextActionbar() {
         try {
             mCABListener.clearActionMode();
             mAdapter.clearSelection();
@@ -364,7 +356,7 @@ public abstract class BaseListFragment extends ListFragment implements
                 ParksColumns.PARK_GEO_DISTANCE,
                 ParksColumns.PARK_PHONE
         };
-        final int _ID = 0;
+        //        final int _ID = 0;
         final int RINK_ID = 1;
         final int RINK_KIND_ID = 2;
         final int RINK_NAME = 3;
@@ -382,7 +374,7 @@ public abstract class BaseListFragment extends ListFragment implements
      * The location listener. Doesn't do anything but listening, DB updates are
      * handled by the app's passive listener.
      */
-    protected class MyLocationListener implements LocationListener {
+    private class MyLocationListener implements LocationListener {
 
         @Override
         public void onLocationChanged(Location location) {

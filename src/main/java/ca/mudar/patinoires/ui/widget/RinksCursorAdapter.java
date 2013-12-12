@@ -27,7 +27,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AlphabetIndexer;
 import android.widget.ImageView;
 import android.widget.SectionIndexer;
@@ -47,7 +46,7 @@ public class RinksCursorAdapter extends SimpleCursorAdapter implements SectionIn
     private static final String TAG = "RinksCursorAdapter";
     private final int bgSelected;
     private AlphabetIndexer mIndexer;
-    private boolean hasIndexer;
+    private final boolean hasIndexer;
     private HashMap<Integer, Boolean> mSelection = new HashMap<Integer, Boolean>();
 
     public RinksCursorAdapter(Context context, int layout, Cursor c, String[] from, int[] to,
@@ -60,11 +59,6 @@ public class RinksCursorAdapter extends SimpleCursorAdapter implements SectionIn
         }
 
         bgSelected = context.getResources().getColor(R.color.listview_color_3);
-    }
-
-    @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return super.newView(context, cursor, parent);
     }
 
     @Override
@@ -145,7 +139,7 @@ public class RinksCursorAdapter extends SimpleCursorAdapter implements SectionIn
         for (int id : mSelection.keySet()) {
             args.add(String.valueOf(id));
         }
-        return args.toArray(new String[0]);
+        return args.toArray(new String[args.size()]);
     }
 
     @Override

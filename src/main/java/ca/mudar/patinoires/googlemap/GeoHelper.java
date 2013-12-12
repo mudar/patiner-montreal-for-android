@@ -39,7 +39,7 @@ public class GeoHelper {
     public static Address findAddressFromName(Context c, String name) throws IOException {
         Geocoder geocoder = new Geocoder(c);
 
-        if (!geocoder.isPresent()) {
+        if (!Geocoder.isPresent()) {
             throw new IOException("Service not Present", null);
         }
 
@@ -50,11 +50,7 @@ public class GeoHelper {
                 Const.MAPS_GEOCODER_LIMITS[3]);
 
         if (!adr.isEmpty()) {
-            final int nbAdresses = adr.size();
-
-            for (int i = 0; i < nbAdresses; i++) {
-                Address address = adr.get(i);
-
+            for (Address address : adr) {
                 if (address.hasLatitude() && address.hasLongitude()) {
                     if (Double.compare(address.getLatitude(), Const.MAPS_GEOCODER_LIMITS[0]) >= 0
                             &&
@@ -72,31 +68,4 @@ public class GeoHelper {
 
         return null;
     }
-
-    public static String findAddressFromLocation(Context c, double latitude, double longitude)
-            throws IOException {
-        Geocoder geocoder = new Geocoder(c);
-
-        List<Address> adr;
-
-        adr = geocoder.getFromLocation(latitude, longitude, 1);
-
-        if (!adr.isEmpty() && (adr.size() == 1)) {
-            Address address = adr.get(0);
-            int nbLines = address.getMaxAddressLineIndex();
-
-            String sAddress = "";
-            for (int i = 0; i < nbLines; i++) {
-                sAddress += address.getAddressLine(i);
-                if (i + 1 < nbLines) {
-                    sAddress += " " + Const.LINE_SEPARATOR;
-                }
-            }
-
-            return sAddress;
-        }
-
-        return null;
-    }
-
 }

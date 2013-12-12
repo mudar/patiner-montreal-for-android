@@ -60,7 +60,7 @@ public class ParserUtils {
     /** Used to split a comma-separated string. */
     private static final Pattern sCommaPattern = Pattern.compile("\\s*,\\s*");
 
-    private static Time sTime = new Time();
+    private static final Time sTime = new Time();
     private static XmlPullParserFactory sFactory;
 
     /**
@@ -109,19 +109,18 @@ public class ParserUtils {
 
     /**
      * @author Andrew Pearson 
-     * {@link http://blog.andrewpearson.org/2010/07/android-why-to-use-json-and-how-to-use.html}
-     * @param archiveQuery URL of JSON resources
+     * {@link //blog.andrewpearson.org/2010/07/android-why-to-use-json-and-how-to-use.html}
+
      * @return String Raw content, requires use of JSONArray() and
      *         getJSONObject()
      * @throws IOException
      * @throws JSONException
      */
     public static JSONTokener newJsonTokenerParser(InputStream input) throws IOException {
-        String queryResult = "";
 
         BufferedInputStream bis = new BufferedInputStream(input);
         ByteArrayBuffer baf = new ByteArrayBuffer(50);
-        int read = 0;
+        int read;
         int bufSize = 512;
         byte[] buffer = new byte[bufSize];
         while (true) {
@@ -132,9 +131,8 @@ public class ParserUtils {
             }
             baf.append(buffer, 0, read);
         }
-        queryResult = new String(baf.toByteArray());
 
-        return new JSONTokener(queryResult);
+        return new JSONTokener(new String(baf.toByteArray()));
     }
 
     /**
