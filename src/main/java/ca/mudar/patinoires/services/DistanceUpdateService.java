@@ -185,9 +185,10 @@ public class DistanceUpdateService extends IntentService {
             prefsEditor.commit();
 
             Log.v(TAG, "Distance calculation took " + (System.currentTimeMillis() - startLocal) + " ms");
-        } else {
-            // Log.v(TAG, "Skipped distance calculation");
         }
+//        else {
+        // Log.v(TAG, "Skipped distance calculation");
+//        }
     }
 
     protected ArrayList<ContentProviderOperation> updateDistance(Uri contentUri,

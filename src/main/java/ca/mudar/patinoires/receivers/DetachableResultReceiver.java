@@ -33,7 +33,6 @@ import android.os.ResultReceiver;
  */
 public class DetachableResultReceiver extends ResultReceiver {
     private static final String TAG = "DetachableResultReceiver";
-
     private Receiver mReceiver;
 
     public DetachableResultReceiver(Handler handler) {
@@ -44,17 +43,18 @@ public class DetachableResultReceiver extends ResultReceiver {
         mReceiver = receiver;
     }
 
-    public interface Receiver {
-        public void onReceiveResult(int resultCode, Bundle resultData);
-    }
-
     @Override
     protected void onReceiveResult(int resultCode, Bundle resultData) {
         if (mReceiver != null) {
             mReceiver.onReceiveResult(resultCode, resultData);
-        } else {
-            // Log.w(TAG, "Dropping result on floor for code " + resultCode +
-            // ": " + resultData.toString());
         }
+//        else {
+        // Log.w(TAG, "Dropping result on floor for code " + resultCode +
+        // ": " + resultData.toString());
+//        }
+    }
+
+    public interface Receiver {
+        public void onReceiveResult(int resultCode, Bundle resultData);
     }
 }

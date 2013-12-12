@@ -47,7 +47,7 @@ public class RinksContract {
      * update time is unknown, usually when inserted from a local file source.
      */
     public static final long UPDATED_UNKNOWN = -1;
-    public static final String CONTENT_AUTHORITY = "ca.mudar.patinoires";
+    public static final String CONTENT_AUTHORITY = "ca.mudar.patinoires.provider";
     private static final String TAG = "RinksContract";
     private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     private static final String PATH_BOROUGHS = "boroughs";
