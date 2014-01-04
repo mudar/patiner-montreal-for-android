@@ -63,7 +63,7 @@ public class AboutActivity extends BaseActivity {
     /**
      * AboutFragment
      */
-    private static class AboutFragment extends Fragment {
+    public static class AboutFragment extends Fragment {
 
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {

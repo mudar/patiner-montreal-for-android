@@ -23,7 +23,6 @@
 
 package ca.mudar.patinoires.ui.activity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -47,8 +46,7 @@ import ca.mudar.patinoires.services.SyncService;
 import ca.mudar.patinoires.utils.ConnectionHelper;
 import ca.mudar.patinoires.utils.EulaHelper;
 
-@SuppressLint("Registered")
-class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends ActionBarActivity {
     private static final String TAG = "BaseActivity";
     private static final String SEND_INTENT_TYPE = "text/plain";
     private static boolean hasLaunchedEula = false;
