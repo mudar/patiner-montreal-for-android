@@ -287,9 +287,9 @@
 
         <provider
             android:name="ca.mudar.patinoires.providers.RinksProvider"
-            android:authorities="ca.mudar.patinoires.provider"
+            android:authorities="ca.mudar.patinoires"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="true" />
 
         <meta-data
             android:name="android.app.default_searchable"
