@@ -84,19 +84,8 @@ These three projects are all released under the [Apache License v2.0][link_apach
 [link_gh_jpmckinney]: https://github.com/jpmckinney
 [link_jbrun]: http://www.jonathanbrun.com/
 [link_dmireault]: http://www.behance.net/dmireault
-
-[link_aeyoun]: https://github.com/Aeyoun
 [link_gpl]: http://www.gnu.org/licenses/gpl.html
-[img_devices]: http://snoozy.mudar.ca/images/snoozy-devices.png
-
 [link_lib_aosp]: http://source.android.com/
 [link_lib_supportv4]: http://developer.android.com/tools/support-library/
 [link_lib_ui_utils]: http://code.google.com/p/android-ui-utils/
 [link_apache]: http://www.apache.org/licenses/LICENSE-2.0
-
-[link_forum_1]: http://forum.xda-developers.com/showthread.php?t=1427539
-[link_forum_2]: http://code.google.com/p/android/issues/detail?id=23789
-[link_forum_3]: http://productforums.google.com/d/topic/mobile/PA5JZH-Oj4o/discussion
-[link_forum_4]: http://forum.xda-developers.com/showthread.php?t=2157431
-[link_forum_5]: http://forum.xda-developers.com/showthread.php?t=2328444
-[link_forum_6]: http://forum.xda-developers.com/showthread.php?t=1757178
