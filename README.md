@@ -1,8 +1,8 @@
-##Patiner Montréal for Android - Daily conditions of outdoor rinks
+## Patiner Montréal for Android - Daily conditions of outdoor rinks
 
 [![Patiner Montréal][img_ic_launcher]][link_patinoires_playstore]
 
-###Enjoy the Winter!
+### Enjoy the Winter!
 
 Patiner Montréal provides you with daily updated information about conditions and services of Montréal's outdoor rinks.
 
@@ -10,7 +10,7 @@ Patiner Montréal for Android is an open source project to promote Open Data in 
 
 This app is powered by The City of Montréal [Open Data Portal][link_od_portal], in compliance with its Open Data [license][link_od_license]. Additional source: [City of Dorval][link_dorval_portal] Leisure and culture Portal.
 
-##Features
+## Features
 * Skating and Hockey rinks.
 * Dails conditions.
 * Sort by distance.
@@ -21,7 +21,7 @@ This app is powered by The City of Montréal [Open Data Portal][link_od_portal],
 * Search and autocomplete.
 * Free app!
 
-##Links
+## Links
 
 * [Website][link_patinoires_website]
 * [Privacy policy][link_patinoires_policy]
@@ -43,7 +43,7 @@ The Android app includes libraries and derivative work of the following projects
 
 These three projects are all released under the [Apache License v2.0][link_apache].
 
-##Code license
+## Code license
 
     Patiner Montréal for Android.
     Information about outdoor rinks in the city of Montréal: conditions,
